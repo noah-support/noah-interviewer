@@ -26,7 +26,7 @@ export default function App() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#111",
+          backgroundColor: "#F6F3EC",
         }}
       >
         <button
@@ -56,7 +56,7 @@ export default function App() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#111",
+        backgroundColor: "#FFFFFF",
         color: "white",
       }}
     >
