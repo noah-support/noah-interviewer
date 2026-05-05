@@ -1,0 +1,12 @@
+livekit==1.1.5
+livekit_api==1.1.0
+livekit_blingfire==1.1.0
+livekit_plugins_ai_coustics==0.2.7
+python-dotenv==1.2.2
+peewee
+psycopg2-binary
+fastapi
+uvicorn
+celery
+redis
+openai

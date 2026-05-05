@@ -1,7 +1,0 @@
-FROM pgvector/pgvector:pg17
-
-ENV POSTGRES_USER=postgres
-ENV POSTGRES_PASSWORD=Newpassword
-ENV POSTGRES_DB=noah
-
-EXPOSE 5432
