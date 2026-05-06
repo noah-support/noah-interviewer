@@ -59,14 +59,9 @@ export default function HomePage() {
 
   async function onEndInterview() {
     if (!interview) return;
-    setEnding(true);
-    try {
-      await endInterview(interview.id, { room: room || undefined });
-      // Navigate first to avoid a flash of the pre-join screen.
-      router.replace("/thank-you");
-    } finally {
-      setEnding(false);
-    }
+    // Navigate immediately so the user sees the "Saving..." spinner right away.
+    const qs = room ? `?room=${encodeURIComponent(room)}` : "";
+    router.replace(`/saving${qs}`);
   }
 
   if (authLoading) return <div className="py-10">Loading...</div>;
@@ -98,8 +93,6 @@ export default function HomePage() {
   }
 
   if (!token) return <div className="py-10">Getting token...</div>;
-  if (ending) return <div className="py-10">Ending interview...</div>;
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white">
       <h1 className="text-2xl font-medium text-(--text-h)">Noah Voice Assistant</h1>

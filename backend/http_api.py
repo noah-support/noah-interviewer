@@ -4,6 +4,7 @@ import hmac
 import json
 import os
 import secrets
+import time
 from contextlib import contextmanager
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
@@ -368,16 +369,35 @@ def end_interview(interview_id: int, body: EndInterviewRequest, authed: Intervie
     if authed.id != interview_id:
         raise HTTPException(status_code=403, detail="Cannot end other interview")
 
-    with db_session():
-        interview = Interview.get_or_none(Interview.id == interview_id)
-        if not interview:
-            raise HTTPException(status_code=404, detail="Interview not found")
+    # Mark interview done immediately, then wait for the summarizer/save job to
+    # persist content/summary. Frontend uses 200 OK as "saved" signal.
+    deadline_s = time.monotonic() + float(os.getenv("END_INTERVIEW_WAIT_S", "30"))
+    last_summary_error: str | None = None
 
-        interview.status = Interview.STATUS_DONE
-        interview.save()
+    while True:
+        with db_session():
+            interview = Interview.get_or_none(Interview.id == interview_id)
+            if not interview:
+                raise HTTPException(status_code=404, detail="Interview not found")
+
+            if interview.status != Interview.STATUS_DONE:
+                interview.status = Interview.STATUS_DONE
+                interview.save()
+
+            content_ready = bool((interview.content or "").strip())
+            summary_ready = bool((interview.summary or "").strip())
+
+        if content_ready or summary_ready:
+            break
+
+        if time.monotonic() >= deadline_s:
+            last_summary_error = "Timed out waiting for summarizer to persist content/summary"
+            break
+
+        time.sleep(0.5)
 
     # `body.room` is accepted for compatibility with older clients but unused.
     _ = body.room
 
-    return {"ok": True}
+    return {"ok": True, "summary_error": last_summary_error}
 

@@ -1,4 +1,5 @@
 import os
+import json
 from typing import TypedDict
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -48,17 +49,46 @@ def summarize_transcript_text(transcript_json: str) -> str:
     return (completion.choices[0].message.content or "").strip()
 
 
+def _messages_only_transcript_json(transcript_json: str) -> str:
+    """
+    Ensure we only persist user/assistant chat messages into Interview.content.
+    LiveKit ChatContext can contain non-message items (config updates, tool calls, etc.).
+    """
+    try:
+        data = json.loads(transcript_json)
+    except Exception:
+        # If it's not JSON, fall back to whatever we got (better than dropping content).
+        return transcript_json
+
+    items = data.get("items")
+    if not isinstance(items, list):
+        return transcript_json
+
+    filtered = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        role = item.get("role")
+        if role not in ("user", "assistant"):
+            continue
+        # Persist only what we need: role + content.
+        filtered.append({"role": role, "content": item.get("content")})
+
+    return json.dumps({"items": filtered}, ensure_ascii=False)
+
+
 @celery_app.task(name="tasks.summarize_interview_turns")
 def summarize_interview_turns(*, interview_id: int, transcript_json: str) -> dict:
-    summary = summarize_transcript_text(transcript_json)
+    minimal_json = _messages_only_transcript_json(transcript_json)
+    summary = summarize_transcript_text(minimal_json)
+    content_json = minimal_json
 
     db.connect(reuse_if_open=True)
     try:
         interview = Interview.get_or_none(Interview.id == interview_id)
         if not interview:
             return {"ok": False, "error": "Interview not found"}
-        # Persist the full transcript JSON so the UI / later jobs can re-use it.
-        interview.content = transcript_json
+        interview.content = content_json
         interview.summary = summary
         interview.save()
         return {"ok": True}
