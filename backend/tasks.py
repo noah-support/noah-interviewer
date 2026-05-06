@@ -1,10 +1,7 @@
 import os
 from typing import TypedDict
-
 from dotenv import load_dotenv
-
 from openai import OpenAI
-
 from celery_app import celery_app
 from database import db
 from models import Interview
@@ -51,7 +48,7 @@ def summarize_transcript_text(transcript_json: str) -> str:
     return (completion.choices[0].message.content or "").strip()
 
 
-@celery_app.task(name="summarize_interview_turns")
+@celery_app.task(name="tasks.summarize_interview_turns")
 def summarize_interview_turns(*, interview_id: int, transcript_json: str) -> dict:
     summary = summarize_transcript_text(transcript_json)
 
@@ -60,9 +57,10 @@ def summarize_interview_turns(*, interview_id: int, transcript_json: str) -> dic
         interview = Interview.get_or_none(Interview.id == interview_id)
         if not interview:
             return {"ok": False, "error": "Interview not found"}
+        # Persist the full transcript JSON so the UI / later jobs can re-use it.
+        interview.content = transcript_json
         interview.summary = summary
         interview.save()
         return {"ok": True}
     finally:
         db.close()
-

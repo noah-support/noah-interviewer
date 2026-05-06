@@ -317,15 +317,15 @@ export default function InterviewsPage() {
               <>
                 <div className="grid grid-cols-2 gap-4 text-left">
                   <div>
-                    <div className="text-sm text-[var(--text)]">username</div>
+                    <div className="text-sm text-[--text]">username</div>
                     <div className="font-medium">{detail.username}</div>
                   </div>
                   <div>
-                    <div className="text-sm text-[var(--text)]">code</div>
+                    <div className="text-sm text-[--text]">code</div>
                     <div className="font-medium">{detail.code}</div>
                   </div>
                   <div className="col-span-2">
-                    <div className="text-sm text-[var(--text)]">status</div>
+                    <div className="text-sm text-[--text]">status</div>
                     <div className="font-medium">{detail.status}</div>
                   </div>
                 </div>
