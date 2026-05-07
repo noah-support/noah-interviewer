@@ -1,3 +1,4 @@
+import os
 import asyncio
 import json
 import re
@@ -21,10 +22,13 @@ from livekit.plugins import silero, openai, elevenlabs
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
 
 from database import db
-from models import Interview
+from models import Interview, Project
 from seeder import reset_and_seed, clean_database
 from http_api import app as fastapi_app
 from tasks import summarize_interview_turns
+
+from rag.embeddings import embed_texts
+from pinecone import Pinecone 
 
 load_dotenv(".env.local", override=True)
 
@@ -38,6 +42,8 @@ class Interviewer(Agent):
         self.interview_id = interview_id
         self.turn_counter = 0
         self.summary_cache = ""
+        self._latest_rag_context_message = ""
+        self.project_namespace = ""
         self._summary_cache_last_refresh_s = 0.0
         self._summary_refresh_task: asyncio.Task | None = None
         super().__init__(
@@ -45,11 +51,120 @@ class Interviewer(Agent):
             chat_ctx=ChatContext(),
         )
 
+    def _build_rag_context_message(self, *, query_text: str) -> str:
+        query = (query_text or "").strip()
+        if not query:
+            return ""
+
+        api_key = os.getenv("PINECONE_API_KEY")
+        if not api_key:
+            return ""
+        namespace = (self.project_namespace or "").strip()
+        if not namespace:
+            return ""
+
+        index_name = os.getenv("PINECONE_INDEX_NAME", "interviewer-docs")
+        max_score = float(os.getenv("RAG_MAX_MATCH_SCORE", "0.85"))
+        top_k = int(os.getenv("RAG_TOP_K", "5"))
+        # Fetch more than we need so the < max_score filter still yields results.
+        fetch_k = max(top_k * 5, 25)
+
+        try:
+            emb = embed_texts([query])[0]
+            pc = Pinecone(api_key=api_key)
+            index = pc.Index(index_name)
+            res = index.query(
+                namespace=namespace,
+                vector=emb,
+                top_k=fetch_k,
+                include_metadata=True,
+            )
+        except Exception as e:
+            print(f"[SYSTEM] pinecone RAG query failed: {e}")
+            return ""
+
+        # Pinecone python client returns either dict-like or object-like results depending on version.
+        matches = None
+        if isinstance(res, dict):
+            matches = res.get("matches")
+        else:
+            matches = getattr(res, "matches", None)
+        if not isinstance(matches, list):
+            return ""
+
+        picked: list[dict] = []
+        for m in matches:
+            if not isinstance(m, dict):
+                # Some client versions return objects; support those too.
+                score = getattr(m, "score", None)
+                md = getattr(m, "metadata", None)
+                m = {"score": score, "metadata": md}
+
+            score = m.get("score")
+            if not isinstance(score, (int, float)):
+                continue
+            if score >= max_score:
+                continue
+
+            md = m.get("metadata")
+            if not isinstance(md, dict):
+                continue
+            text = (md.get("text") or "").strip()
+            if not text:
+                continue
+            if (md.get("source_filename") or "") == "__namespace__":
+                continue
+            picked.append({"score": float(score), "metadata": md, "text": text})
+
+        if not picked:
+            return ""
+
+        picked.sort(key=lambda x: x["score"], reverse=True)
+        picked = picked[:top_k]
+
+        lines: list[str] = []
+        for i, item in enumerate(picked, start=1):
+            md = item["metadata"]
+            source = (md.get("source_filename") or "unknown").strip()
+            chunk_id = md.get("chunk_id")
+            score_pct = item["score"] * 100.0
+            header = f"[KB {i}] {source}"
+            if isinstance(chunk_id, int):
+                header += f" (chunk {chunk_id})"
+            header += f" — match: {score_pct:.1f}%"
+            lines.append(header)
+            lines.append(item["text"])
+            lines.append("")
+
+        return (
+            "Knowledge base context (provided to the interviewer before the interview).\n"
+            "These are background snippets to help you understand the user's domain and speak with better context.\n"
+            "Use them only when relevant; do not treat them as user statements.\n\n"
+            + "\n".join(lines).strip()
+        )
+
     def _load_db_summary(self) -> str:
         db.connect(reuse_if_open=True)
         try:
             interview = Interview.get_or_none(Interview.id == int(self.interview_id))
             return (interview.summary or "").strip() if interview else ""
+        finally:
+            db.close()
+
+    def _load_project_namespace(self) -> str:
+        db.connect(reuse_if_open=True)
+        try:
+            interview = (
+                Interview.select(Interview, Project)
+                .join(Project)
+                .where(Interview.id == int(self.interview_id))
+                .first()
+            )
+            if not interview:
+                return ""
+            project = interview.project
+            ns = (project.namespace or "").strip()
+            return ns or f"project-{project.id}"
         finally:
             db.close()
 
@@ -93,6 +208,15 @@ class Interviewer(Agent):
             content=f"Summary so far (from database):\n{self.summary_cache}",
             created_at=0.0,
         )
+
+        # add message with RAG chunks
+        if (self._latest_rag_context_message or "").strip():
+            recent.add_message(
+                role="system",
+                content=self._latest_rag_context_message,
+                created_at=0.0,
+            )
+
         return recent
 
     def _enqueue_summary_job(self) -> None:
@@ -124,6 +248,10 @@ class Interviewer(Agent):
         print(f"[SYSTEM] setup complete | id: {self.interview_id} | counter: {self.turn_counter}")
         # Prime summary cache once at session start.
         await self._refresh_summary_cache()
+        try:
+            self.project_namespace = await asyncio.to_thread(self._load_project_namespace)
+        except Exception as e:
+            print(f"[SYSTEM] failed to load project namespace: {e}")
         return await super().on_enter()
 
     async def on_exit(self) -> None:
@@ -135,17 +263,21 @@ class Interviewer(Agent):
         except Exception as e:
             print(f"[SYSTEM] failed to enqueue summary job: {e}")
         return await super().on_exit()
+
     async def on_user_turn_completed(self, turn_ctx: llm.ChatContext, new_message: llm.ChatMessage) -> None:
         self.turn_counter += 1
         print(f"[SYSTEM] add turn counter: turncounter = {self.turn_counter}")
-
-        # Force the LLM context to be: DB summary + last 10 items.
-        # Refresh summary cache in background if needed (no DB calls in hot path).
         self._maybe_schedule_summary_refresh()
+        try:
+            self._latest_rag_context_message = await asyncio.to_thread(
+                self._build_rag_context_message,
+                query_text=(new_message.text_content or ""),
+            )
+        except Exception as e:
+            print(f"[SYSTEM] failed to build RAG context message: {e}")
+            self._latest_rag_context_message = ""
         reply_ctx = self._reply_chat_ctx()
-        # LiveKit passes `turn_ctx` by reference as "the context about to be sent";
-        # swap its internal items to fully control what the model sees.
-        turn_ctx._items = list(reply_ctx.items)  # type: ignore[attr-defined]
+        turn_ctx._items = list(reply_ctx.items)
 
         # start job if above SUMMARY_AMOUNT amount
         summary_every = int(os.getenv("SUMMARY_AMOUNT", "5"))
@@ -153,7 +285,6 @@ class Interviewer(Agent):
             try:
                 self._enqueue_summary_job()
                 print("[SYSTEM] periodic summary job enqueued")
-                # Once we request a new summary, start refreshing cache in background.
                 self._maybe_schedule_summary_refresh(force=True)
             except Exception as e:
                 print(f"[SYSTEM] failed to enqueue periodic summary job: {e}")

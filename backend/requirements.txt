@@ -2,6 +2,10 @@ livekit==1.1.5
 livekit_api==1.1.0
 livekit_blingfire==1.1.0
 livekit_plugins_ai_coustics==0.2.7
+livekit-plugins-openai
+livekit-plugins-silero
+livekit-plugins-elevenlabs
+livekit-plugins-turn-detector
 python-dotenv==1.2.2
 peewee
 psycopg2-binary
@@ -10,3 +14,7 @@ uvicorn
 celery
 redis
 openai
+pinecone
+pypdf
+python-docx
+python-multipart

@@ -153,6 +153,7 @@ export default function ProjectsPage() {
             <tr className="text-left">
               <th className="border-b border-(--border) py-3 px-2">id</th>
               <th className="border-b border-(--border) py-3 px-2">title</th>
+              <th className="border-b border-(--border) py-3 px-2">namespace</th>
               <th className="border-b border-(--border) py-3 px-2">created_at</th>
               <th className="border-b border-(--border) py-3 px-2">actions</th>
             </tr>
@@ -162,6 +163,9 @@ export default function ProjectsPage() {
               <tr key={p.id} className="align-top">
                 <td className="border-b border-(--border) py-3 px-2 text-sm">{p.id}</td>
                 <td className="border-b border-(--border) py-3 px-2 text-sm">{p.title}</td>
+                <td className="border-b border-(--border) py-3 px-2 text-sm font-mono">
+                  {p.namespace}
+                </td>
                 <td className="border-b border-(--border) py-3 px-2 text-sm">{p.created_at}</td>
                 <td className="border-b border-(--border) py-3 px-2 text-sm">
                   <div className="flex gap-2 flex-wrap">
@@ -191,7 +195,7 @@ export default function ProjectsPage() {
             ))}
             {!loading && projects.length === 0 ? (
               <tr>
-                <td colSpan={4} className="py-8 text-sm">
+                <td colSpan={5} className="py-8 text-sm">
                   No projects yet.
                 </td>
               </tr>

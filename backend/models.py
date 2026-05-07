@@ -1,4 +1,13 @@
-from peewee import AutoField, CharField, DateTimeField, ForeignKeyField, Model, SQL, TextField
+from peewee import (
+    AutoField,
+    CharField,
+    DateTimeField,
+    ForeignKeyField,
+    IntegerField,
+    Model,
+    SQL,
+    TextField,
+)
 
 from database import db
 
@@ -52,3 +61,31 @@ class Interview(BaseModel):
 
     class Meta:
         table_name = "interviews"
+
+
+class ProjectDocument(BaseModel):
+    STATUS_UPLOADED = "uploaded"
+    STATUS_INDEXED = "indexed"
+    STATUS_FAILED = "failed"
+    STATUS_VALUES = (STATUS_UPLOADED, STATUS_INDEXED, STATUS_FAILED)
+
+    id = AutoField()
+    project = ForeignKeyField(Project, backref="documents", on_delete="CASCADE")
+
+    title = CharField(max_length=255)
+    source_filename = CharField(max_length=255)
+    source_mime = CharField(max_length=255)
+
+    status = CharField(
+        max_length=20,
+        constraints=[
+            SQL("CHECK (status IN ('uploaded','indexed','failed'))"),
+        ],
+    )
+    chunk_count = IntegerField(default=0)
+    error = TextField(null=True)
+
+    created_at = DateTimeField(constraints=[SQL("DEFAULT NOW()")])
+
+    class Meta:
+        table_name = "project_documents"

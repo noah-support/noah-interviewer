@@ -64,15 +64,24 @@ export default function InterviewsPage() {
 
   const headerRight = useMemo(() => {
     return (
-      <button
-        type="button"
-        onClick={() => router.push("/system-manager/projects")}
-        className="px-3 py-2 rounded border border-(--border) hover:opacity-90"
-      >
-        projects
-      </button>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          onClick={() => router.push(`/system-manager/projects/${projectId}/documents`)}
+          className="px-3 py-2 rounded border border-(--border) hover:opacity-90"
+        >
+          documents
+        </button>
+        <button
+          type="button"
+          onClick={() => router.push("/system-manager/projects")}
+          className="px-3 py-2 rounded border border-(--border) hover:opacity-90"
+        >
+          projects
+        </button>
+      </div>
     );
-  }, [router]);
+  }, [router, projectId]);
 
   useEffect(() => {
     let cancelled = false;

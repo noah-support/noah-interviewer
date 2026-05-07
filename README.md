@@ -24,7 +24,16 @@ pip install -r requirements.txt
 python main.py dev
 ```
 
-Required env (loaded from `backend/.env.local`): at minimum `OPENAI_API_KEY` and your LiveKit credentials/URL.
+Required env (loaded from `backend/.env.local`):
+- `OPENAI_API_KEY` (LLM + embeddings)
+- LiveKit credentials/URL (`LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`)
+- **Pinecone (RAG)**:
+  - `PINECONE_API_KEY`
+  - `PINECONE_INDEX_NAME=interviewer-docs` (defaults to `interviewer-docs`)
+
+Notes:
+- The Pinecone index must be configured for **cosine** with **dimension 1024** (matches `text-embedding-3-large` with `dimensions=1024`).
+- Each project uses its own Pinecone **namespace**: `project-<project_id>` (created automatically when you create a project).
 
 ### 3) Celery worker (summarization jobs)
 

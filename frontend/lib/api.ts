@@ -34,7 +34,12 @@ export type MeResponse = {
   project: { id: number; title: string; created_at: string };
 };
 
-export type ProjectRow = { id: number; title: string; created_at: string };
+export type ProjectRow = {
+  id: number;
+  title: string;
+  namespace: string;
+  created_at: string;
+};
 
 export type InterviewRow = {
   id: number;
@@ -48,6 +53,18 @@ export type InterviewDetail = InterviewRow & {
   content: string;
   summary: string;
   project: { id: number; title: string };
+};
+
+export type ProjectDocumentRow = {
+  id: number;
+  project_id: number;
+  title: string;
+  source_filename: string;
+  source_mime: string;
+  status: string;
+  chunk_count: number;
+  error?: string | null;
+  created_at: string;
 };
 
 export async function login(username: string, code: string) {
@@ -160,6 +177,53 @@ export async function logout(): Promise<{ ok: boolean }> {
   return apiFetch<{ ok: boolean }>(`/api/logout`, {
     method: "POST",
     body: JSON.stringify({}),
+  });
+}
+
+export async function getProjectDocuments(
+  projectId: number,
+): Promise<ProjectDocumentRow[]> {
+  return apiFetch<ProjectDocumentRow[]>(`/api/projects/${projectId}/documents`, {
+    method: "GET",
+  });
+}
+
+export async function uploadProjectDocument(
+  projectId: number,
+  payload: { file: File; title?: string },
+): Promise<ProjectDocumentRow> {
+  const fd = new FormData();
+  fd.append("file", payload.file);
+  if (payload.title != null && payload.title.trim()) {
+    fd.append("title", payload.title.trim());
+  }
+
+  const res = await fetch(`${API_BASE}/api/projects/${projectId}/documents`, {
+    method: "POST",
+    credentials: "include",
+    body: fd,
+  });
+
+  if (!res.ok) {
+    let detail: unknown = null;
+    try {
+      detail = await res.json();
+    } catch {
+      // ignore
+    }
+    throw new Error(
+      `API ${res.status} ${res.statusText}${detail ? `: ${JSON.stringify(detail)}` : ""}`,
+    );
+  }
+
+  return (await res.json()) as ProjectDocumentRow;
+}
+
+export async function deleteProjectDocument(
+  documentId: number,
+): Promise<{ ok: boolean }> {
+  return apiFetch<{ ok: boolean }>(`/api/documents/${documentId}`, {
+    method: "DELETE",
   });
 }
 

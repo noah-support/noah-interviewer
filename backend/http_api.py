@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import hashlib
 import hmac
@@ -9,14 +10,19 @@ from contextlib import contextmanager
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
-from fastapi import Depends, FastAPI, HTTPException, Request, Response
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from livekit.api import AccessToken, VideoGrants
 
 from database import db
-from models import Interview, Project
+from models import Interview, Project, ProjectDocument
+
+from rag.ingest import ingest_document
+import os
+
+from pinecone import Pinecone  # type: ignore[import-not-found]
 
 
 SESSION_COOKIE_NAME = "session"
@@ -110,6 +116,7 @@ class EndInterviewRequest(BaseModel):
 class ProjectResponse(BaseModel):
     id: int
     title: str
+    namespace: str
     created_at: str
 
 
@@ -118,6 +125,18 @@ class InterviewResponse(BaseModel):
     username: str
     code: str
     status: str
+    created_at: str
+
+
+class ProjectDocumentResponse(BaseModel):
+    id: int
+    project_id: int
+    title: str
+    source_filename: str
+    source_mime: str
+    status: str
+    chunk_count: int
+    error: Optional[str] = None
     created_at: str
 
 
@@ -152,6 +171,44 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+def _ensure_project_namespaces_on_startup() -> None:
+    """
+    Ensure that starting the backend service results in Pinecone namespaces existing.
+    """
+    with db_session():
+        projects = list(Project.select().order_by(Project.id))
+        for p in projects:
+            ns = (p.namespace or "").strip()
+            if not ns:
+                ns = f"project-{p.id}"
+                p.namespace = ns
+                p.save()
+            try:
+                api_key = os.getenv("PINECONE_API_KEY")
+                if api_key:
+                    index_name = os.getenv("PINECONE_INDEX_NAME", "interviewer-docs")
+                    pc = Pinecone(api_key=api_key)
+                    index = pc.Index(index_name)
+                    index.upsert(
+                        namespace=ns,
+                        vectors=[
+                            {
+                                "id": "__namespace_init__",
+                                "values": [0.0] * 1024,
+                                "metadata": {
+                                    "doc_id": 0,
+                                    "chunk_id": 0,
+                                    "source_filename": "__namespace__",
+                                    "text": "",
+                                },
+                            }
+                        ],
+                    )
+            except Exception as e:
+                print(f"[SYSTEM] failed to touch pinecone namespace {ns!r}: {e}")
 
 
 @app.post("/api/login")
@@ -189,7 +246,13 @@ def list_projects():
     with db_session():
         projects = list(Project.select().order_by(Project.id))
         return [
-            ProjectResponse(id=p.id, title=p.title, created_at=str(p.created_at)) for p in projects
+            ProjectResponse(
+                id=p.id,
+                title=p.title,
+                namespace=(p.namespace or "").strip() or f"project-{p.id}",
+                created_at=str(p.created_at),
+            )
+            for p in projects
         ]
 
 
@@ -201,7 +264,42 @@ def create_project(body: CreateProjectRequest):
             graph="",
             namespace="",
         )
-        return ProjectResponse(id=project.id, title=project.title, created_at=str(project.created_at))
+        project.namespace = f"project-{project.id}"
+        project.save()
+        namespace = project.namespace
+
+    # Ensure namespace exists immediately (best-effort).
+    try:
+        api_key = os.getenv("PINECONE_API_KEY")
+        if api_key:
+            index_name = os.getenv("PINECONE_INDEX_NAME", "interviewer-docs")
+            pc = Pinecone(api_key=api_key)
+            index = pc.Index(index_name)
+            index.upsert(
+                namespace=namespace,
+                vectors=[
+                    {
+                        "id": "__namespace_init__",
+                        "values": [0.0] * 1024,
+                        "metadata": {
+                            "doc_id": 0,
+                            "chunk_id": 0,
+                            "source_filename": "__namespace__",
+                            "text": "",
+                        },
+                    }
+                ],
+            )
+    except Exception as e:
+        print(f"[SYSTEM] failed to touch pinecone namespace: {e}")
+
+    with db_session():
+        return ProjectResponse(
+            id=project.id,
+            title=project.title,
+            namespace=project.namespace,
+            created_at=str(project.created_at),
+        )
 
 
 @app.put("/api/projects/{project_id}", response_model=ProjectResponse)
@@ -212,11 +310,33 @@ def update_project(project_id: int, body: UpdateProjectRequest):
             raise HTTPException(status_code=404, detail="Project not found")
         project.title = body.title
         project.save()
-        return ProjectResponse(id=project.id, title=project.title, created_at=str(project.created_at))
+        return ProjectResponse(
+            id=project.id,
+            title=project.title,
+            namespace=(project.namespace or "").strip() or f"project-{project.id}",
+            created_at=str(project.created_at),
+        )
 
 
 @app.delete("/api/projects/{project_id}")
 def delete_project(project_id: int):
+    with db_session():
+        project = Project.get_or_none(Project.id == project_id)
+        if not project:
+            raise HTTPException(status_code=404, detail="Project not found")
+        namespace = (project.namespace or "").strip() or f"project-{project.id}"
+
+    # Purge vectors best-effort; if it fails, don't delete the DB row.
+    try:
+        api_key = os.getenv("PINECONE_API_KEY")
+        if api_key:
+            index_name = os.getenv("PINECONE_INDEX_NAME", "interviewer-docs")
+            pc = Pinecone(api_key=api_key)
+            index = pc.Index(index_name)
+            index.delete(namespace=namespace, delete_all=True)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Failed to delete namespace vectors: {e}")
+
     with db_session():
         deleted = Project.delete().where(Project.id == project_id).execute()
         if deleted == 0:
@@ -333,6 +453,131 @@ def delete_interview(interview_id: int):
         deleted = Interview.delete().where(Interview.id == interview_id).execute()
         if deleted == 0:
             raise HTTPException(status_code=404, detail="Interview not found")
+        return {"ok": True}
+
+
+@app.get(
+    "/api/projects/{project_id}/documents",
+    response_model=List[ProjectDocumentResponse],
+)
+def list_project_documents(project_id: int):
+    with db_session():
+        project = Project.get_or_none(Project.id == project_id)
+        if not project:
+            raise HTTPException(status_code=404, detail="Project not found")
+
+        docs = list(ProjectDocument.select().where(ProjectDocument.project == project).order_by(ProjectDocument.id))
+        return [
+            ProjectDocumentResponse(
+                id=d.id,
+                project_id=project.id,
+                title=d.title,
+                source_filename=d.source_filename,
+                source_mime=d.source_mime,
+                status=d.status,
+                chunk_count=int(d.chunk_count or 0),
+                error=d.error,
+                created_at=str(d.created_at),
+            )
+            for d in docs
+        ]
+
+
+@app.post(
+    "/api/projects/{project_id}/documents",
+    response_model=ProjectDocumentResponse,
+)
+async def upload_project_document(
+    project_id: int,
+    file: UploadFile = File(...),
+    title: Optional[str] = Form(default=None),
+):
+    data = await file.read()
+    if not data:
+        raise HTTPException(status_code=400, detail="Empty upload")
+
+    with db_session():
+        project = Project.get_or_none(Project.id == project_id)
+        if not project:
+            raise HTTPException(status_code=404, detail="Project not found")
+        if not (project.namespace or "").strip():
+            project.namespace = f"project-{project.id}"
+            project.save()
+
+        doc = ProjectDocument.create(
+            project=project,
+            title=(title or file.filename or "Untitled").strip() or "Untitled",
+            source_filename=(file.filename or "upload").strip() or "upload",
+            source_mime=(file.content_type or "").strip(),
+            status=ProjectDocument.STATUS_UPLOADED,
+            chunk_count=0,
+            error=None,
+        )
+
+    # Ingest outside db_session (embedding + pinecone are network calls).
+    try:
+        result = await asyncio.to_thread(
+            ingest_document,
+            namespace=project.namespace,
+            doc_id=doc.id,
+            filename=doc.source_filename,
+            content_type=doc.source_mime,
+            data=data,
+        )
+        with db_session():
+            doc2 = ProjectDocument.get_by_id(doc.id)
+            doc2.status = ProjectDocument.STATUS_INDEXED
+            doc2.chunk_count = int(result.chunk_count)
+            doc2.error = None
+            doc2.save()
+    except Exception as e:
+        with db_session():
+            doc2 = ProjectDocument.get_by_id(doc.id)
+            doc2.status = ProjectDocument.STATUS_FAILED
+            doc2.error = str(e)
+            doc2.save()
+
+    with db_session():
+        final = ProjectDocument.get_by_id(doc.id)
+        return ProjectDocumentResponse(
+            id=final.id,
+            project_id=final.project.id,
+            title=final.title,
+            source_filename=final.source_filename,
+            source_mime=final.source_mime,
+            status=final.status,
+            chunk_count=int(final.chunk_count or 0),
+            error=final.error,
+            created_at=str(final.created_at),
+        )
+
+
+@app.delete("/api/documents/{document_id}")
+def delete_project_document(document_id: int):
+    with db_session():
+        doc = ProjectDocument.get_or_none(ProjectDocument.id == document_id)
+        if not doc:
+            raise HTTPException(status_code=404, detail="Document not found")
+        project = doc.project
+        namespace = (project.namespace or "").strip()
+        if not namespace:
+            namespace = f"project-{project.id}"
+
+    # Purge vectors best-effort; if it fails, don't delete the DB row.
+    try:
+        api_key = os.getenv("PINECONE_API_KEY")
+        if api_key:
+            index_name = os.getenv("PINECONE_INDEX_NAME", "interviewer-docs")
+            pc = Pinecone(api_key=api_key)
+            index = pc.Index(index_name)
+            index.delete(namespace=namespace, filter={"doc_id": {"$eq": document_id}})
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Failed to delete vectors: {e}")
+
+    with db_session():
+        deleted = ProjectDocument.delete().where(ProjectDocument.id == document_id).execute()
+        if deleted == 0:
+            raise HTTPException(status_code=404, detail="Document not found")
         return {"ok": True}
 
 
