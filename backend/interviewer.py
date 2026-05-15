@@ -503,11 +503,23 @@ async def my_agent(ctx: agents.JobContext):
             model="eleven_flash_v2_5",
         ),
         vad=silero.VAD.load(),
-        preemptive_generation=False,
         turn_handling=TurnHandlingOptions(
-            turn_detection=MultilingualModel(),
-            # Required so the runtime can interrupt an in-flight reply when a new user turn arrives.
-            interruption={"enabled": True},
+            turn_detection=MultilingualModel(
+                unlikely_threshold=float(
+                    os.getenv("TURN_EOU_UNLIKELY_THRESHOLD", "0.78")
+                ),
+            ),
+            endpointing={
+                "min_delay": float(os.getenv("TURN_MIN_ENDPOINTING_DELAY", "1.0")),
+                "max_delay": float(os.getenv("TURN_MAX_ENDPOINTING_DELAY", "7.0")),
+            },
+            interruption={
+                "enabled": True,
+                "min_duration": 0.75,
+                "min_words": 2,
+                "resume_false_interruption": False,
+            },
+            preemptive_generation={"enabled": False},
         ),
     )
 

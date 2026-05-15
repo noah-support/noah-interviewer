@@ -40,8 +40,11 @@ Do not jump into step-by-step deep dive on one process while you are still build
 # Deep dive: every main process
 
 After discovery, you must explore **every** main task or process from the confirmed list — one at a time, in order:
-- Cover steps, tools, handoffs, and what goes wrong for the **current** process before moving on.
+- Within each process, map **one step at a time** (see active_step in state) before moving to the next step or process.
+- For each step you must capture **all** of: what the step is, tools/software, time taken, and handoff (or that there is no handoff) — ask about **one** missing piece per reply until active_step shows no missing_fields.
+- Do **not** move to the next step or process until the state shows the current step/process is complete.
 - When you finish one process, transition naturally to the **next** process that is still open (the state message shows `remaining_processes`).
+- If they mention a **new** task during roundup, map **only** that new task — do **not** walk back through processes already marked complete in state.
 - Do **not** end the interview, give closing remarks, or act as if you are done until **all** processes have been explored (roundup phase in state).
 
 ---
@@ -198,16 +201,44 @@ DIRECTIVE_DEEPDIVE_ALL_PROCESSES_TEMPLATE = (
     "Do not close the interview while any name remains in still to explore."
 )
 
+DIRECTIVE_ACTIVE_STEP_TEMPLATE = (
+    "Directive: Within '{process}', map ONE step at a time. Step progress: {progress}. "
+    "Already mapped steps (do not re-ask unless corrected): {mapped}. "
+    "Focus ONLY on active_step. Do NOT move to the next step or process until every required field "
+    "on active_step is filled (step_name, tools_software_used, time_taken, handoff_to_next_actor). "
+    "Still missing on active_step: {missing}."
+)
+
+DIRECTIVE_STEP_COMPLETE_TEMPLATE = (
+    "Directive: The current step is complete in state. You may move on — next step in this process: '{next_step}'."
+)
+
+DIRECTIVE_PROCESS_STEPS_INCOMPLETE = (
+    "Directive: Not all steps in '{process}' have every required field filled yet. "
+    "Stay on the current active_step — do NOT switch to exceptions or the next process."
+)
+
+DIRECTIVE_EXCEPTIONS_GATE_TEMPLATE = (
+    "Directive: All steps in '{process}' are complete. Explore exceptions (what goes wrong, delays, recovery). "
+    "Do NOT mark the process done or move to '{next_process}' until exceptions are captured in state."
+)
+
 DIRECTIVE_TRANSITION_TO_NEXT_PROCESS_TEMPLATE = (
-    "Directive: When '{current}' is fully covered (including what goes wrong), briefly acknowledge that and "
-    "move to the next process: '{next_process}'. One opening question about how they do '{next_process}'."
+    "Directive: Process '{current}' is fully complete in state (all steps + exceptions). "
+    "Briefly acknowledge, then start '{next_process}' with one opening question."
 )
 
 DIRECTIVE_ROUNDUP = (
     "Directive: Roundup phase. Briefly invite corrections or final remarks on what was discussed. "
     "If they mention a new main process that was not mapped before, note it — the state manager will "
-    "return to deepdive for that process. Do not start a full new discovery unless they clearly add "
-    "major new scope."
+    "return to deepdive for that process only. Do not start a full new discovery unless they clearly add "
+    "major new scope. Do not re-explore processes already completed in state."
+)
+
+DIRECTIVE_SKIP_COMPLETED_PROCESSES_TEMPLATE = (
+    "Directive: CRITICAL — These processes are already fully explored. Do NOT ask about them again, "
+    "re-summarize them, or verify them unless the user explicitly corrects one: {completed}. "
+    "You are mapping ONLY: '{current}'. Skip every completed process above."
 )
 
 DIRECTIVE_PROCESS_NOT_IN_DETAILS_TEMPLATE = (
@@ -257,8 +288,15 @@ Schema:
 - discovery: { "interviewee_role", "identified_main_processes" (array of strings), "is_completed" (boolean) }
 - process_details: object keyed by process name. Each value:
   { "phase": "steps" | "exceptions", "steps": [...], "exceptions": [...], "is_completed": boolean }
-- Each step: { "step_name", "tools_software_used", "time_taken", "handoff_to_next_actor", "comments_to_explore" }
-- comments_to_explore (step-level): at most ONE step per active process may have a non-empty string — a single concrete gap for the interviewer.
+- Each step: { "step_name", "tools_software_used", "time_taken", "handoff_to_next_actor", "comments_to_explore", "is_mapped" (boolean) }
+- steps is an ordered array: APPEND and UPDATE steps in place — NEVER replace the whole array with only the latest step mentioned.
+- Preserve all previously captured steps when new transcript lines arrive; only add or refine the step being discussed.
+- comments_to_explore: at most ONE step in the active process may have a non-empty string — the current focus step only.
+- A step may have is_mapped true ONLY when ALL of these are non-empty strings: step_name, tools_software_used, time_taken, handoff_to_next_actor (use "none" or "n/a" if the user states no handoff).
+- Set comments_to_explore to a single concrete question for the first missing required field on the focus step only; clear it when all four fields are filled.
+- Do not mark later steps is_mapped until they were actually discussed.
+- Do NOT set process phase to "exceptions" until every step in that process has all four required fields filled.
+- Do NOT set process is_completed true until phase "exceptions" is done AND the exceptions array has at least one entry.
 - new_transcript_lines may include both user and assistant messages. Use both to extract steps, tools, and exceptions. Use **user** lines only for discovery.is_completed and per-process is_completed decisions.
 
 Phase: discovery (meta.phase = "discovery")
@@ -285,8 +323,12 @@ Phase: deepdive (meta.phase = "deepdive")
 - ONLY when EVERY process in identified_main_processes has is_completed true: set meta.phase to "roundup" and meta.current_focus_process to null.
 
 Phase: roundup (meta.phase = "roundup")
-- If the interviewee adds a new main process not yet in identified_main_processes: append it, add process_details entry (is_completed false), set meta.phase to "deepdive", set current_focus_process to that new process only — do NOT reset or revisit processes that already have is_completed true.
+- If the interviewee adds a new main process not yet in identified_main_processes: append it to identified_main_processes (at the end), add process_details entry (phase "steps", steps [], exceptions [], is_completed false), set meta.phase to "deepdive", set meta.current_focus_process to that new process name ONLY.
+- NEVER set meta.current_focus_process to any process that already has is_completed true and full step/exception data.
+- NEVER clear, reset, or set is_completed false on process_details entries that were already fully complete — leave their steps and exceptions unchanged.
+- Do NOT re-open or re-map earlier processes when only a new process was added.
 - If they only correct or clarify existing content, keep roundup unless deepdive is required for a new process.
+- If they correct a specific completed process, set that process is_completed false and meta.phase "deepdive" with current_focus_process on that process only; leave all other completed processes untouched.
 
 Tangents (any phase):
 - If the user mentions a new unrelated main process during deepdive: add to identified_main_processes and process_details but keep current_focus_process on the current process; set meta.tangent_to_acknowledge to the new process name.

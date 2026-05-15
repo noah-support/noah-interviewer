@@ -11,22 +11,36 @@ from bpmn_schema import (
     PHASE_ROUNDUP,
     PROCESS_PHASE_EXCEPTIONS,
     PROCESS_PHASE_STEPS,
+    STEP_REQUIRED_FIELDS,
     deepdive_progress,
     discovery_process_names,
+    first_active_step,
     first_incomplete_process_name,
     meta_phase,
+    process_fully_complete,
+    process_ready_for_exceptions,
+    process_summary_for_interviewer,
+    step_gap_comment,
+    step_is_fully_mapped,
+    step_mapping_progress,
+    step_missing_fields,
 )
 from prompts import (
     DIRECTIVES_USER_FACING_RULES,
+    DIRECTIVE_ACTIVE_STEP_TEMPLATE,
     DIRECTIVE_DEEPDIVE_ALL_PROCESSES_TEMPLATE,
     DIRECTIVE_DEEPDIVE_MISSING_DETAIL_HEAD,
     DIRECTIVE_DEEPDIVE_MISSING_DETAIL_TAIL,
     DIRECTIVE_DISCOVERY_IN_PROGRESS,
     DIRECTIVE_DISCOVERY_JUST_CONFIRMED,
+    DIRECTIVE_EXCEPTIONS_GATE_TEMPLATE,
     DIRECTIVE_EXCEPTIONS_PHASE_TEMPLATE,
     DIRECTIVE_PROCESS_NOT_IN_DETAILS_TEMPLATE,
+    DIRECTIVE_PROCESS_STEPS_INCOMPLETE,
     DIRECTIVE_ROUNDUP,
+    DIRECTIVE_SKIP_COMPLETED_PROCESSES_TEMPLATE,
     DIRECTIVE_SCOPE_CHECK_ONLY,
+    DIRECTIVE_STEP_COMPLETE_TEMPLATE,
     DIRECTIVE_TRANSITION_TO_NEXT_PROCESS_TEMPLATE,
     DYNAMIC_WORKING_MEMORY_HEADER,
     format_directive_tangent,
@@ -45,44 +59,133 @@ def _meta_for_interviewer(meta: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _first_step_needing_detail(
+def _append_deepdive_process_directives(
+    lines: list[str],
+    *,
+    active_name: str,
     proc: dict[str, Any],
-) -> tuple[str | None, str | None]:
-    steps = proc.get("steps")
-    if not isinstance(steps, list):
-        return None, None
-    for s in steps:
-        if not isinstance(s, dict):
-            continue
-        name = (s.get("step_name") or "").strip()
-        cte = (s.get("comments_to_explore") or "").strip()
-        if cte:
-            return name or None, cte
-    return None, None
+    progress: dict[str, Any],
+) -> None:
+    completed_str = ", ".join(progress["completed_processes"]) or "(none yet)"
+    remaining_str = ", ".join(progress["remaining_processes"]) or "(none)"
+    progress_label = progress["position"] or (
+        f"{len(progress['completed_processes'])}/{len(progress['all_processes'])}"
+    )
 
-
-def _directive_for_active_process(name: str, proc: dict[str, Any]) -> str:
-    if proc.get("is_completed"):
-        return (
-            f"Directive: Process '{name}' is marked complete internally — do not deep-dive it again "
-            "unless the interviewee corrects something."
+    lines.append("")
+    lines.append(_json_block("deepdive_progress", progress))
+    lines.append("")
+    if progress["completed_processes"]:
+        lines.append("")
+        lines.append(
+            DIRECTIVE_SKIP_COMPLETED_PROCESSES_TEMPLATE.format(
+                completed=completed_str,
+                current=active_name,
+            )
         )
+    lines.append("")
+    lines.append(
+        DIRECTIVE_DEEPDIVE_ALL_PROCESSES_TEMPLATE.format(
+            progress=progress_label,
+            completed=completed_str,
+            remaining=remaining_str,
+            current=active_name,
+        )
+    )
 
     internal = (proc.get("phase") or PROCESS_PHASE_STEPS).strip()
-    step_name, comments = _first_step_needing_detail(proc)
-
-    if internal == PROCESS_PHASE_STEPS and comments:
-        anchor = f" when they described {step_name}" if step_name else ""
-        return (
-            DIRECTIVE_DEEPDIVE_MISSING_DETAIL_HEAD.format(anchor=anchor, focus=name)
-            + comments
-            + DIRECTIVE_DEEPDIVE_MISSING_DETAIL_TAIL
-        )
 
     if internal == PROCESS_PHASE_EXCEPTIONS:
-        return DIRECTIVE_EXCEPTIONS_PHASE_TEMPLATE.format(focus=name)
+        if not process_ready_for_exceptions(proc):
+            lines.append("")
+            lines.append(DIRECTIVE_PROCESS_STEPS_INCOMPLETE.format(process=active_name))
+            internal = PROCESS_PHASE_STEPS
+        else:
+            lines.append("")
+            lines.append(_json_block("active_process", {active_name: process_summary_for_interviewer(proc)}))
+            lines.append("")
+            lines.append(_json_block("exceptions", proc.get("exceptions") if isinstance(proc.get("exceptions"), list) else []))
+            lines.append("")
+            lines.append(DIRECTIVE_EXCEPTIONS_PHASE_TEMPLATE.format(focus=active_name))
+            if not process_fully_complete(proc):
+                next_proc = None
+                for name in progress["all_processes"]:
+                    if name != active_name and name in progress["remaining_processes"]:
+                        next_proc = name
+                        break
+                lines.append("")
+                lines.append(
+                    DIRECTIVE_EXCEPTIONS_GATE_TEMPLATE.format(
+                        process=active_name,
+                        next_process=next_proc or "the next process",
+                    )
+                )
+            return
 
-    return DIRECTIVE_PROCESS_NOT_IN_DETAILS_TEMPLATE.format(focus=name)
+    lines.append("")
+    lines.append(_json_block("active_process", {active_name: process_summary_for_interviewer(proc)}))
+
+    active_step, _ = first_active_step(proc)
+    if active_step:
+        step_prog = step_mapping_progress(proc)
+        mapped_steps = ", ".join(step_prog["mapped_steps"]) or "(none yet)"
+        step_progress_label = step_prog["position"] or (
+            f"{len(step_prog['mapped_steps'])}/{len(step_prog['all_steps']) or 1}"
+        )
+        missing = step_missing_fields(active_step)
+        missing_label = ", ".join(missing) if missing else "(none — all required fields filled)"
+        lines.append("")
+        lines.append(_json_block("step_progress", step_prog))
+        lines.append("")
+        lines.append(
+            DIRECTIVE_ACTIVE_STEP_TEMPLATE.format(
+                process=active_name,
+                progress=step_progress_label,
+                mapped=mapped_steps,
+                missing=missing_label,
+            )
+        )
+        active_view = dict(active_step)
+        active_view["missing_fields"] = missing
+        active_view["required_fields"] = list(STEP_REQUIRED_FIELDS)
+        lines.append("")
+        lines.append(_json_block("active_step", active_view))
+
+        gap = step_gap_comment(active_step) or (active_step.get("comments_to_explore") or "").strip()
+        if gap:
+            step_name = (active_step.get("step_name") or "").strip()
+            anchor = f" when they described {step_name}" if step_name else ""
+            lines.append("")
+            lines.append(
+                DIRECTIVE_DEEPDIVE_MISSING_DETAIL_HEAD.format(anchor=anchor, focus=active_name)
+                + gap
+                + DIRECTIVE_DEEPDIVE_MISSING_DETAIL_TAIL
+            )
+
+        if step_is_fully_mapped(active_step):
+            all_steps = step_prog["all_steps"]
+            current = step_prog["current_step"]
+            if current and current in all_steps:
+                idx = all_steps.index(current)
+                if idx + 1 < len(all_steps):
+                    lines.append("")
+                    lines.append(
+                        DIRECTIVE_STEP_COMPLETE_TEMPLATE.format(
+                            next_step=all_steps[idx + 1],
+                        )
+                    )
+                elif process_ready_for_exceptions(proc):
+                    lines.append("")
+                    lines.append(
+                        "Directive: This was the last step in the process with all fields filled. "
+                        "Next, explore what tends to go wrong for this process (exceptions)."
+                    )
+        return
+
+    lines.append("")
+    lines.append(
+        DIRECTIVE_PROCESS_NOT_IN_DETAILS_TEMPLATE.format(focus=active_name)
+    )
 
 
 def build_discovery_just_confirmed_block(state: dict[str, Any]) -> str:
@@ -196,45 +299,14 @@ def build_dynamic_directive_block(state: dict[str, Any]) -> str:
             proc = {}
 
         progress = deepdive_progress(state)
-        completed_str = ", ".join(progress["completed_processes"]) or "(none yet)"
-        remaining_str = ", ".join(progress["remaining_processes"]) or "(none)"
-        progress_label = progress["position"] or f"{len(progress['completed_processes'])}/{len(progress['all_processes'])}"
-
-        lines.append("")
-        lines.append(_json_block("deepdive_progress", progress))
-        lines.append("")
-        if progress["completed_processes"]:
-            lines.append("")
-            lines.append(
-                "Directive: These processes are already fully explored — do NOT ask about them again: "
-                f"{completed_str}."
-            )
-        lines.append("")
-        lines.append(
-            DIRECTIVE_DEEPDIVE_ALL_PROCESSES_TEMPLATE.format(
-                progress=progress_label,
-                completed=completed_str,
-                remaining=remaining_str,
-                current=active_name,
-            )
+        _append_deepdive_process_directives(
+            lines, active_name=active_name, proc=proc, progress=progress
         )
-        lines.append("")
-        lines.append(_json_block("active_process", {active_name: proc}))
-        lines.append("")
-        lines.append(_directive_for_active_process(active_name, proc))
 
-        remaining = progress["remaining_processes"]
-        if len(remaining) > 1 or (len(remaining) == 1 and remaining[0] != active_name):
-            next_after_current = None
-            found_current = False
-            for name in progress["all_processes"]:
-                if name == active_name:
-                    found_current = True
-                    continue
-                if found_current and name in remaining:
-                    next_after_current = name
-                    break
-            if next_after_current:
+        if process_fully_complete(proc):
+            remaining = progress["remaining_processes"]
+            if remaining:
+                next_after_current = remaining[0]
                 lines.append("")
                 lines.append(
                     DIRECTIVE_TRANSITION_TO_NEXT_PROCESS_TEMPLATE.format(

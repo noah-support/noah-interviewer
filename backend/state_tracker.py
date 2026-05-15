@@ -16,7 +16,12 @@ from bpmn_redis import (
     read_buffer_lines,
     set_state_dict,
 )
-from bpmn_schema import enforce_focus_integrity, normalize_state, parse_state_json
+from bpmn_schema import (
+    enforce_focus_integrity,
+    normalize_state,
+    parse_state_json,
+    preserve_completed_processes,
+)
 from prompts import STATE_TRACKER_SYSTEM
 
 load_dotenv(".env.local", override=True)
@@ -80,6 +85,7 @@ def run_state_tracker(*, room_name: str, allow_empty_buffer: bool = False) -> bo
         return False
 
     normalized = normalize_state(merged)
+    normalized = preserve_completed_processes(current, normalized)
     normalized = enforce_focus_integrity(normalized)
     set_state_dict(room_name, normalized)
     clear_buffer(room_name)

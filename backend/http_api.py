@@ -718,7 +718,7 @@ def end_interview(interview_id: int, body: EndInterviewRequest, authed: Intervie
     if body.room:
         from bpmn_redis import delete_room_discovery_keys
         from discovery_persist import persist_discovery_state_to_db
-        from state_tracker import maybe_flush_tracker
+        from state_tracker import flush_tracker_final
 
         room = body.room.strip()
         if not re.match(rf"^interview-{interview_id}-[0-9a-f]{{8}}$", room):
@@ -726,7 +726,7 @@ def end_interview(interview_id: int, body: EndInterviewRequest, authed: Intervie
         try:
             # Do not call ensure_default_state: if the agent already persisted and removed Redis
             # keys, we must not recreate empty state and overwrite the DB.
-            maybe_flush_tracker(room_name=room)
+            flush_tracker_final(room_name=room)
             persist_discovery_state_to_db(interview_id=interview_id, room_name=room)
             delete_room_discovery_keys(room)
         except Exception as e:
