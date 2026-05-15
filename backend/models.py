@@ -46,6 +46,8 @@ class Interview(BaseModel):
 
     content = TextField()
     summary = TextField()
+    # BPMN / process-discovery state (JSON string); see class docstring for ALTER on legacy DBs.
+    discovery_state_json = TextField(default="")
 
     status = CharField(
         max_length=10,

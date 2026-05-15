@@ -2,14 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  ControlBar,
-  LiveKitRoom,
-  RoomAudioRenderer,
-} from "@livekit/components-react";
-import "@livekit/components-styles";
-
-import { endInterview, me, startInterview, type MeResponse } from "../../lib/api";
+import { InterviewLiveKitSession } from "../../components/interview-livekit-session";
+import { MicCheckModal } from "../../components/mic-check-modal";
+import { me, startInterview, type MeResponse } from "../../lib/api";
+import { btnPrimary } from "../../lib/ui-brand";
 
 export default function HomePage() {
   const router = useRouter();
@@ -22,7 +18,8 @@ export default function HomePage() {
   const [starting, setStarting] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [room, setRoom] = useState<string | null>(null);
-  const [ending, setEnding] = useState(false);
+  const [micModalOpen, setMicModalOpen] = useState(false);
+  const [micCheckKey, setMicCheckKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,7 +41,7 @@ export default function HomePage() {
     };
   }, [router]);
 
-  async function onStartConversation() {
+  async function onConfirmMicAndStart() {
     if (!interview) return;
     setStarting(true);
     try {
@@ -52,6 +49,7 @@ export default function HomePage() {
       setToken(token);
       setRoom(room);
       setConnected(true);
+      setMicModalOpen(false);
     } finally {
       setStarting(false);
     }
@@ -70,66 +68,48 @@ export default function HomePage() {
 
   if (!connected) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-(--bg) px-4">
-        <div className="flex flex-col items-center gap-6">
-          <div className="text-left max-w-xl">
-            <h1 className="text-3xl font-medium">Interview</h1>
-            <p className="mt-2 text-sm">
-              User: <span className="font-medium">{interview.username}</span> · Status:{" "}
-              <span className="font-medium">{interview.status}</span>
-            </p>
-          </div>
+      <>
+        <MicCheckModal
+          key={micCheckKey}
+          open={micModalOpen}
+          onClose={() => setMicModalOpen(false)}
+          onConfirmStart={() => void onConfirmMicAndStart()}
+          starting={starting}
+        />
+        <div className="min-h-screen flex items-center justify-center bg-(--bg) px-4">
+          <div className="flex flex-col items-center gap-6">
+            <div className="text-left max-w-xl">
+              <h1 className="text-3xl font-medium">Interview</h1>
+              <p className="mt-2 text-sm">
+                User: <span className="font-medium">{interview.username}</span> · Status:{" "}
+                <span className="font-medium">{interview.status}</span>
+              </p>
+            </div>
 
-          <button
-            onClick={onStartConversation}
-            disabled={starting}
-            className="px-8 py-4 text-lg rounded bg-blue-600 text-white hover:opacity-90 disabled:opacity-50"
-          >
-            {starting ? "Starting..." : "Click to Start Conversation"}
-          </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMicCheckKey((k) => k + 1);
+                setMicModalOpen(true);
+              }}
+              disabled={starting}
+              className={`px-8 py-4 text-lg ${btnPrimary}`}
+            >
+              Click to Start Conversation
+            </button>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (!token) return <div className="py-10">Getting token...</div>;
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white">
-      <h1 className="text-2xl font-medium text-(--text-h)">Noah Voice Assistant</h1>
-
-      <LiveKitRoom
-        video={false}
-        audio={true}
-        token={token}
-        serverUrl={serverUrl}
-        connect={true}
-        data-lk-theme="default"
-      >
-        <RoomAudioRenderer />
-        <div style={{ marginTop: "20px" }}>
-          <ControlBar
-            variation="minimal"
-            // Keep mic toggle, hide the built-in leave/exit button.
-            controls={{
-              microphone: true,
-              camera: false,
-              screenShare: false,
-              leave: false,
-            }}
-          />
-        </div>
-        <div className="mt-6 flex justify-center">
-          <button
-            type="button"
-            onClick={onEndInterview}
-            disabled={ending}
-            className="px-6 py-3 rounded border border-(--border) hover:opacity-90 disabled:opacity-50"
-          >
-            {ending ? "Ending..." : "End interview"}
-          </button>
-        </div>
-      </LiveKitRoom>
-    </div>
+    <InterviewLiveKitSession
+      serverUrl={serverUrl}
+      token={token}
+      onEndCall={onEndInterview}
+    />
   );
 }
 

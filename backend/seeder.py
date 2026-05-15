@@ -72,11 +72,30 @@ def seed_database() -> None:
         Interview.create(
             project=project,
             username="user",
-            code="demo",
+            code="ABC123",
             status="Ready",
             content="",
             summary="",
+            discovery_state_json="",
         )
+    finally:
+        db.close()
+
+
+def ensure_seeded_if_empty() -> None:
+    """
+    Ensure tables exist and insert the demo project/interview when there are no interviews.
+
+    Used on API startup so the DB is repopulated after e.g. `interviewer.py` exits with
+    `clean_database()`, without requiring `python main.py` (which skips seed when using
+    `uvicorn main:app`).
+    """
+    db.connect(reuse_if_open=True)
+    try:
+        db.create_tables([Project, Interview, ProjectDocument], safe=True)
+        if Interview.select().count() > 0:
+            return
+        seed_database()
     finally:
         db.close()
 
@@ -143,10 +162,11 @@ def reset_and_seed() -> None:
         Interview.create(
             project=project,
             username="user",
-            code="demo",
+            code="ABC123",
             status="Ready",
             content="",
             summary="",
+            discovery_state_json="",
         )
     finally:
         db.close()

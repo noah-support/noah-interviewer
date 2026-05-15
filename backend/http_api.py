@@ -4,6 +4,7 @@ import hashlib
 import hmac
 import json
 import os
+import re
 import secrets
 import time
 from contextlib import contextmanager
@@ -12,7 +13,7 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from livekit.api import AccessToken, VideoGrants
 
@@ -26,6 +27,9 @@ from pinecone import Pinecone  # type: ignore[import-not-found]
 
 
 SESSION_COOKIE_NAME = "session"
+
+_DISCOVERY_ROOM_NAME_RE = re.compile(r"^interview-\d+-[0-9a-f]{8}$")
+_INTERVIEW_CODE_RE = re.compile(r"^[A-Za-z0-9]{6}$")
 
 
 @contextmanager
@@ -100,6 +104,13 @@ class CreateInterviewRequest(BaseModel):
     code: str
     status: Optional[str] = "Ready"
 
+    @field_validator("code")
+    @classmethod
+    def validate_code(cls, v: str) -> str:
+        if not _INTERVIEW_CODE_RE.match(v):
+            raise ValueError("code must be exactly 6 alphanumeric characters")
+        return v
+
 
 class UpdateInterviewRequest(BaseModel):
     username: Optional[str] = None
@@ -107,6 +118,15 @@ class UpdateInterviewRequest(BaseModel):
     status: Optional[str] = None
     content: Optional[str] = None
     summary: Optional[str] = None
+
+    @field_validator("code")
+    @classmethod
+    def validate_code_optional(cls, v: Optional[str]) -> Optional[str]:
+        if v is None:
+            return v
+        if not _INTERVIEW_CODE_RE.match(v):
+            raise ValueError("code must be exactly 6 alphanumeric characters")
+        return v
 
 
 class EndInterviewRequest(BaseModel):
@@ -178,6 +198,10 @@ def _ensure_project_namespaces_on_startup() -> None:
     """
     Ensure that starting the backend service results in Pinecone namespaces existing.
     """
+    from seeder import ensure_seeded_if_empty
+
+    ensure_seeded_if_empty()
+
     with db_session():
         projects = list(Project.select().order_by(Project.id))
         for p in projects:
@@ -239,6 +263,54 @@ def logout(response: Response):
 @app.get("/api/me")
 def me(interview: Interview = Depends(require_auth)):
     return interview_to_me_shape(interview)
+
+
+@app.get("/api/discovery-state/rooms")
+def discovery_state_rooms():
+    """List LiveKit room names that currently have discovery state in Redis (dev / ops)."""
+    try:
+        from bpmn_redis import list_discovery_state_room_names
+
+        return {"rooms": list_discovery_state_room_names()}
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Redis unavailable: {e}")
+
+
+@app.get("/api/discovery-state/snapshot")
+def discovery_state_snapshot(room: str):
+    """Latest parsed discovery JSON + buffer size for one room."""
+    rn = room.strip()
+    if not _DISCOVERY_ROOM_NAME_RE.match(rn):
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid room format (expected interview-<id>-<8 hex chars>)",
+        )
+    try:
+        from bpmn_redis import buffer_length, get_state_raw
+        from bpmn_schema import parse_state_json
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=str(e))
+
+    try:
+        raw = get_state_raw(rn)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Redis unavailable: {e}")
+
+    exists = bool(raw and raw.strip())
+    buf_n = buffer_length(rn)
+    if not exists:
+        return {
+            "room": rn,
+            "exists": False,
+            "state": None,
+            "buffer_line_count": buf_n,
+        }
+    return {
+        "room": rn,
+        "exists": True,
+        "state": parse_state_json(raw),
+        "buffer_line_count": buf_n,
+    }
 
 
 @app.get("/api/projects", response_model=List[ProjectResponse])
@@ -384,6 +456,7 @@ def create_interview(project_id: int, body: CreateInterviewRequest):
             status=status,
             content="",
             summary="",
+            discovery_state_json="",
         )
         return InterviewResponse(
             id=interview.id,
@@ -414,6 +487,7 @@ def get_interview_detail(interview_id: int):
             "status": interview.status,
             "content": interview.content,
             "summary": interview.summary,
+            "discovery_state_json": interview.discovery_state_json or "",
             "created_at": str(interview.created_at),
             "project": {"id": interview.project.id, "title": interview.project.title},
         }
@@ -641,8 +715,22 @@ def end_interview(interview_id: int, body: EndInterviewRequest, authed: Intervie
 
         time.sleep(0.5)
 
-    # `body.room` is accepted for compatibility with older clients but unused.
-    _ = body.room
+    if body.room:
+        from bpmn_redis import delete_room_discovery_keys
+        from discovery_persist import persist_discovery_state_to_db
+        from state_tracker import maybe_flush_tracker
+
+        room = body.room.strip()
+        if not re.match(rf"^interview-{interview_id}-[0-9a-f]{{8}}$", room):
+            raise HTTPException(status_code=400, detail="Invalid room for this interview")
+        try:
+            # Do not call ensure_default_state: if the agent already persisted and removed Redis
+            # keys, we must not recreate empty state and overwrite the DB.
+            maybe_flush_tracker(room_name=room)
+            persist_discovery_state_to_db(interview_id=interview_id, room_name=room)
+            delete_room_discovery_keys(room)
+        except Exception as e:
+            print(f"[SYSTEM] end_interview discovery persist failed: {e}")
 
     return {"ok": True, "summary_error": last_summary_error}
 

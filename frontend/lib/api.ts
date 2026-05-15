@@ -52,6 +52,7 @@ export type InterviewRow = {
 export type InterviewDetail = InterviewRow & {
   content: string;
   summary: string;
+  discovery_state_json?: string;
   project: { id: number; title: string };
 };
 
@@ -170,6 +171,33 @@ export async function endInterview(
       method: "POST",
       body: JSON.stringify(payload),
     },
+  );
+}
+
+export type DiscoveryRoomsResponse = {
+  rooms: string[];
+};
+
+export type DiscoverySnapshotResponse = {
+  room: string;
+  exists: boolean;
+  state: unknown | null;
+  buffer_line_count: number;
+};
+
+export async function getDiscoveryStateRooms(): Promise<DiscoveryRoomsResponse> {
+  return apiFetch<DiscoveryRoomsResponse>("/api/discovery-state/rooms", {
+    method: "GET",
+  });
+}
+
+export async function getDiscoverySnapshot(
+  room: string,
+): Promise<DiscoverySnapshotResponse> {
+  const q = new URLSearchParams({ room: room.trim() });
+  return apiFetch<DiscoverySnapshotResponse>(
+    `/api/discovery-state/snapshot?${q.toString()}`,
+    { method: "GET" },
   );
 }
 

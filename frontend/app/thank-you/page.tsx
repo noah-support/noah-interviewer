@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getInterviewDetail, logout, me, type InterviewDetail } from "../../lib/api";
+import { btnPrimary } from "../../lib/ui-brand";
 
 export default function ThankYouPage() {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function ThankYouPage() {
           <div>
             <div className="text-sm font-medium mb-2">summary</div>
             <textarea
-              className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-transparent"
+              className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-white"
               value={detail?.summary || ""}
               readOnly
             />
@@ -60,7 +61,7 @@ export default function ThankYouPage() {
             type="button"
             onClick={onBackToHome}
             disabled={loading}
-            className="px-6 py-3 rounded bg-blue-600 text-white hover:opacity-90 disabled:opacity-50"
+            className={`px-6 py-3 text-base ${btnPrimary}`}
           >
             {loading ? "Returning..." : "Back to home"}
           </button>

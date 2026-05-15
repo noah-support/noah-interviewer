@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { endInterview, me } from "../../lib/api";
+import { btnSecondary } from "../../lib/ui-brand";
 
 function Spinner() {
   return (
     <div
-      className="h-10 w-10 rounded-full border-4 border-(--border) border-t-blue-600 animate-spin"
+      className="h-10 w-10 rounded-full border-4 border-(--border) border-t-[#3540A8] animate-spin"
       aria-label="Loading"
     />
   );
@@ -57,7 +58,7 @@ export default function SavingPage() {
             <div className="mt-2">
               <button
                 type="button"
-                className="px-4 py-2 rounded border border-(--border) hover:opacity-90"
+                className={`px-4 py-2 text-sm ${btnSecondary}`}
                 onClick={() => router.replace("/thank-you")}
               >
                 Continue

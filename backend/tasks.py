@@ -6,6 +6,7 @@ from openai import OpenAI
 from celery_app import celery_app
 from database import db
 from models import Interview
+from prompts import DEFAULT_TRANSCRIPT_SUMMARY_PROMPT
 
 load_dotenv(".env.local", override=True)
 
@@ -15,16 +16,11 @@ class Turn(TypedDict):
 
 
 def _summary_prompt() -> str:
-    return os.getenv(
-        "SUMMARY_PROMPT",
-        "Summarize the interview conversation so far in a concise, factual way. "
-        "Focus on key goals, constraints, decisions, and any open questions. "
-        "Write in plain text, no bullet symbols.",
-    )
+    return os.getenv("SUMMARY_PROMPT", DEFAULT_TRANSCRIPT_SUMMARY_PROMPT)
 
 
 def _summary_model() -> str:
-    return os.getenv("SUMMARY_MODEL", "gpt-4o-mini")
+    return os.getenv("SUMMARY_MODEL", "gpt-4o")
 
 
 def summarize_transcript_text(transcript_json: str) -> str:

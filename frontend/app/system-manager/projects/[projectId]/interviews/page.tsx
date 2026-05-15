@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import { CodeInput6 } from "../../../../../components/code-input-6";
 import {
   createInterview,
   deleteInterview,
@@ -11,6 +12,7 @@ import {
   type InterviewDetail,
   type InterviewRow,
 } from "../../../../../lib/api";
+import { btnPrimary, btnSecondary } from "../../../../../lib/ui-brand";
 
 function Modal(props: {
   title: string;
@@ -27,7 +29,7 @@ function Modal(props: {
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-medium">{props.title}</h2>
-          <button onClick={props.onClose} className="px-2 py-1 border rounded">
+          <button type="button" onClick={props.onClose} className={`px-2 py-1 text-sm ${btnSecondary}`}>
             Close
           </button>
         </div>
@@ -40,8 +42,31 @@ function Modal(props: {
 
 const STATUS_OPTIONS = ["Ready", "paused", "failed", "done"];
 
+function DiscoveryStateSection(props: { rawJson?: string }) {
+  const formatted = useMemo(() => {
+    const raw = (props.rawJson || "").trim();
+    if (!raw) return "(No discovery state saved yet — run an interview and end the session to persist.)";
+    try {
+      return JSON.stringify(JSON.parse(raw), null, 2);
+    } catch {
+      return raw;
+    }
+  }, [props.rawJson]);
+
+  return (
+    <div className="text-left border-t border-(--border) pt-4 mt-2">
+      <div className="text-sm mb-1 font-medium">Discovery state (saved from Redis)</div>
+      <p className="text-xs opacity-70 mb-2">
+        Last persisted JSON snapshot from the live session. Editable only via a new interview run.
+      </p>
+      <pre className="w-full max-h-72 overflow-auto border border-(--border) rounded px-3 py-2 bg-black/4 dark:bg-white/6 text-xs font-mono whitespace-pre-wrap">
+        {formatted}
+      </pre>
+    </div>
+  );
+}
+
 export default function InterviewsPage() {
-  const router = useRouter();
   const params = useParams();
   const projectId = Number(params.projectId);
 
@@ -61,27 +86,11 @@ export default function InterviewsPage() {
 
   const [detail, setDetail] = useState<InterviewDetail | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
+  const [codeError, setCodeError] = useState<string | null>(null);
 
-  const headerRight = useMemo(() => {
-    return (
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={() => router.push(`/system-manager/projects/${projectId}/documents`)}
-          className="px-3 py-2 rounded border border-(--border) hover:opacity-90"
-        >
-          documents
-        </button>
-        <button
-          type="button"
-          onClick={() => router.push("/system-manager/projects")}
-          className="px-3 py-2 rounded border border-(--border) hover:opacity-90"
-        >
-          projects
-        </button>
-      </div>
-    );
-  }, [router, projectId]);
+  const codeValid = /^[A-Za-z0-9]{6}$/.test(code);
+  const canSaveInterview =
+    Boolean(username.trim()) && codeValid && (modalMode === "create" || modalMode === "edit");
 
   useEffect(() => {
     let cancelled = false;
@@ -117,6 +126,7 @@ export default function InterviewsPage() {
     setModalInterviewId(null);
     setUsername("");
     setCode("");
+    setCodeError(null);
     setStatus("Ready");
     setContent("");
     setSummary("");
@@ -129,13 +139,14 @@ export default function InterviewsPage() {
     setModalMode("edit");
     setModalInterviewId(row.id);
     setDetail(null);
+    setCodeError(null);
     setModalOpen(true);
     setModalLoading(true);
     try {
       const d = await getInterviewDetail(row.id);
       setDetail(d);
       setUsername(d.username);
-      setCode(d.code);
+      setCode(d.code.replace(/[^A-Za-z0-9]/g, "").slice(0, 6).toUpperCase());
       setStatus(d.status);
       setContent(d.content);
       setSummary(d.summary);
@@ -166,19 +177,24 @@ export default function InterviewsPage() {
   }
 
   async function submitEditOrCreate() {
-    if (!username.trim() || !code.trim()) return;
+    if (!username.trim()) return;
+    if (!codeValid) {
+      setCodeError("Access code must be exactly 6 letters or numbers.");
+      return;
+    }
+    setCodeError(null);
     setLoading(true);
     try {
       if (modalMode === "create") {
         await createInterview(projectId, {
           username: username.trim(),
-          code: code.trim(),
+          code: code.trim().toUpperCase(),
           status,
         });
       } else if (modalMode === "edit" && modalInterviewId != null) {
         await updateInterview(modalInterviewId, {
           username: username.trim(),
-          code: code.trim(),
+          code: code.trim().toUpperCase(),
           status,
           content,
           summary,
@@ -186,6 +202,8 @@ export default function InterviewsPage() {
       }
       setModalOpen(false);
       await refresh();
+    } catch (err) {
+      setCodeError(err instanceof Error ? err.message : "Save failed");
     } finally {
       setLoading(false);
     }
@@ -208,11 +226,10 @@ export default function InterviewsPage() {
       <div className="max-w-5xl mx-auto flex items-center justify-between mb-6">
         <h1 className="text-2xl font-medium">Interviews</h1>
         <div className="flex items-center gap-3">
-          {headerRight}
           <button
             type="button"
             onClick={openCreate}
-            className="px-4 py-2 rounded bg-blue-600 text-white hover:opacity-90 disabled:opacity-50"
+            className={`px-4 py-2 text-sm ${btnPrimary}`}
             disabled={loading}
           >
             New Interview
@@ -243,25 +260,28 @@ export default function InterviewsPage() {
                 <td className="border-b border-(--border) py-3 px-2 text-sm">
                   <div className="flex gap-2 flex-wrap">
                     <button
+                      type="button"
                       onClick={() => openEdit(i)}
-                      className="px-2 py-1 border rounded hover:opacity-90"
+                      className={`px-2 py-1 text-sm ${btnSecondary}`}
                       disabled={loading}
                     >
                       edit
                     </button>
                     <button
+                      type="button"
                       onClick={() => deleteInterviewById(i.id)}
-                      className="px-2 py-1 border rounded hover:opacity-90"
+                      className={`px-2 py-1 text-sm ${btnSecondary}`}
                       disabled={loading}
                     >
                       delete
                     </button>
                     <button
+                      type="button"
                       onClick={() => openView(i)}
-                      className="px-2 py-1 border rounded hover:opacity-90"
+                      className={`px-2 py-1 text-sm ${btnSecondary}`}
                       disabled={loading}
                     >
-                      view content/summary
+                      view content / discovery
                     </button>
                   </div>
                 </td>
@@ -285,15 +305,16 @@ export default function InterviewsPage() {
               ? "Create interview"
               : modalMode === "edit"
                 ? "Edit interview"
-                : "Interview content/summary"
+                : "Interview content / summary / discovery state"
           }
+          maxWidthClassName={modalMode === "view" ? "max-w-5xl" : undefined}
           onClose={() => setModalOpen(false)}
           actions={
             modalMode === "view" ? (
               <div className="flex justify-end">
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 border rounded"
+                  className={`px-4 py-2 text-sm ${btnSecondary}`}
                   type="button"
                 >
                   Close
@@ -303,7 +324,7 @@ export default function InterviewsPage() {
               <div className="flex items-center justify-end gap-3">
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 border rounded"
+                  className={`px-4 py-2 text-sm ${btnSecondary}`}
                   type="button"
                   disabled={loading}
                 >
@@ -311,9 +332,9 @@ export default function InterviewsPage() {
                 </button>
                 <button
                   onClick={submitEditOrCreate}
-                  className="px-4 py-2 rounded bg-blue-600 text-white hover:opacity-90 disabled:opacity-50"
+                  className={`px-4 py-2 text-sm ${btnPrimary}`}
                   type="button"
-                  disabled={loading}
+                  disabled={loading || !canSaveInterview}
                 >
                   {loading ? "Saving..." : "Save"}
                 </button>
@@ -342,7 +363,7 @@ export default function InterviewsPage() {
                 <div className="text-left">
                   <div className="text-sm mb-1">content</div>
                   <textarea
-                    className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-transparent"
+                    className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-white"
                     value={detail.content}
                     readOnly
                   />
@@ -351,11 +372,13 @@ export default function InterviewsPage() {
                 <div className="text-left">
                   <div className="text-sm mb-1">summary</div>
                   <textarea
-                    className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-transparent"
+                    className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-white"
                     value={detail.summary}
                     readOnly
                   />
                 </div>
+
+                <DiscoveryStateSection rawJson={detail.discovery_state_json} />
               </>
             ) : (
               <div>Loading details...</div>
@@ -364,29 +387,36 @@ export default function InterviewsPage() {
             <div>Loading interview...</div>
           ) : (
             <>
-              <div className="grid grid-cols-2 gap-4 text-left">
+              <div className="flex flex-col gap-4 text-left">
                 <div className="flex flex-col gap-1">
                   <label className="text-sm">username</label>
                   <input
-                    className="border border-(--border) rounded px-3 py-2 bg-transparent"
+                    className="border border-(--border) rounded px-3 py-2 bg-white max-w-md"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
                 </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm">code</label>
-                  <input
-                    className="border border-(--border) rounded px-3 py-2 bg-transparent"
+                <div className="flex flex-col gap-2">
+                  <span className="text-sm">Access code (6 characters)</span>
+                  <CodeInput6
                     value={code}
-                    onChange={(e) => setCode(e.target.value)}
+                    onChange={(next) => {
+                      setCode(next);
+                      setCodeError(null);
+                    }}
+                    disabled={loading}
+                    aria-label="Interview access code"
                   />
+                  {codeError ? (
+                    <p className="text-sm text-red-600">{codeError}</p>
+                  ) : null}
                 </div>
               </div>
 
               <div className="flex flex-col gap-1 text-left">
                 <label className="text-sm">status</label>
                 <select
-                  className="border border-(--border) rounded px-3 py-2 bg-transparent"
+                  className="border border-(--border) rounded px-3 py-2 bg-white"
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                 >
@@ -401,7 +431,7 @@ export default function InterviewsPage() {
               <div className="flex flex-col gap-1 text-left">
                 <label className="text-sm">content</label>
                 <textarea
-                  className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-transparent"
+                  className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-white"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                 />
@@ -410,7 +440,7 @@ export default function InterviewsPage() {
               <div className="flex flex-col gap-1 text-left">
                 <label className="text-sm">summary</label>
                 <textarea
-                  className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-transparent"
+                  className="w-full min-h-32 border border-(--border) rounded px-3 py-2 bg-white"
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
                 />
