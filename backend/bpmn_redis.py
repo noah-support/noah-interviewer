@@ -9,7 +9,7 @@ from typing import Any
 
 import redis
 
-from bpmn_schema import DEFAULT_BPMN_STATE, parse_state_json, state_to_json
+from hobby_schema import DEFAULT_HOBBY_STATE, parse_state_json, state_to_json
 
 _REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
@@ -35,7 +35,7 @@ def ensure_default_state(room_name: str) -> None:
     sk = state_key(room_name)
     bk = buf_key(room_name)
     if not r.exists(sk):
-        r.set(sk, state_to_json(copy.deepcopy(DEFAULT_BPMN_STATE)))
+        r.set(sk, state_to_json(copy.deepcopy(DEFAULT_HOBBY_STATE)))
     ttl = _ttl_s()
     r.expire(sk, ttl)
     if r.exists(bk):

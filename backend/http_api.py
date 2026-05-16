@@ -287,7 +287,7 @@ def discovery_state_snapshot(room: str):
         )
     try:
         from bpmn_redis import buffer_length, get_state_raw
-        from bpmn_schema import parse_state_json
+        from hobby_schema import parse_state_json
     except Exception as e:
         raise HTTPException(status_code=502, detail=str(e))
 

@@ -1,5 +1,5 @@
 """
-LiveKit voice agent (Noah interviewer): session wiring, RAG, BPMN state, summarization hooks.
+LiveKit voice agent (Noah interviewer): session wiring, discovery state, summarization hooks.
 
 Run from `backend/`:
 
@@ -28,21 +28,18 @@ from livekit.agents import (
 from livekit.agents.llm import ChatMessage
 from livekit.plugins import silero, openai, elevenlabs
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
-from pinecone import Pinecone
 
 from bpmn_redis import append_buffer_line, delete_room_discovery_keys, ensure_default_state
 from database import db
 from discovery_persist import persist_discovery_state_to_db
-from models import Interview, Project
+from models import Interview
 from prompts import (
     AGENT_INSTRUCTIONS_NOAH,
     OPENING_AFTER_FIRST_USER_TURN,
     OPENING_AFTER_SECOND_USER_TURN,
-    RAG_CONTEXT_PREAMBLE,
     SUMMARY_FROM_DB_PREFIX,
     format_greeting_instructions,
 )
-from rag.embeddings import embed_texts
 from tasks import summarize_interview_turns
 from livekit.plugins import groq
 
@@ -60,12 +57,10 @@ class Interviewer(Agent):
         self.turn_counter = 0
         self.tracker_turn_counter = 0
         self.summary_cache = ""
-        self._latest_rag_context_message = ""
         self._bpmn_directive_message = ""
         self._opening_directive_message = ""
         self._opening_user_turn_index = 0
         self.interviewee_username = ""
-        self.project_namespace = ""
         self._summary_cache_last_refresh_s = 0.0
         self._last_discovery_persist_s = 0.0
         self._summary_refresh_task: asyncio.Task | None = None
@@ -74,115 +69,11 @@ class Interviewer(Agent):
             chat_ctx=ChatContext(),
         )
 
-    def _build_rag_context_message(self, *, query_text: str) -> str:
-        query = (query_text or "").strip()
-        if not query:
-            return ""
-
-        api_key = os.getenv("PINECONE_API_KEY")
-        if not api_key:
-            return ""
-        namespace = (self.project_namespace or "").strip()
-        if not namespace:
-            return ""
-
-        index_name = os.getenv("PINECONE_INDEX_NAME", "interviewer-docs")
-        max_score = float(os.getenv("RAG_MAX_MATCH_SCORE", "0.85"))
-        top_k = int(os.getenv("RAG_TOP_K", "5"))
-        # Fetch more than we need so the < max_score filter still yields results.
-        fetch_k = max(top_k * 5, 25)
-
-        try:
-            emb = embed_texts([query])[0]
-            pc = Pinecone(api_key=api_key)
-            index = pc.Index(index_name)
-            res = index.query(
-                namespace=namespace,
-                vector=emb,
-                top_k=fetch_k,
-                include_metadata=True,
-            )
-        except Exception as e:
-            print(f"[SYSTEM] pinecone RAG query failed: {e}")
-            return ""
-
-        # Pinecone python client returns either dict-like or object-like results depending on version.
-        matches = None
-        if isinstance(res, dict):
-            matches = res.get("matches")
-        else:
-            matches = getattr(res, "matches", None)
-        if not isinstance(matches, list):
-            return ""
-
-        picked: list[dict] = []
-        for m in matches:
-            if not isinstance(m, dict):
-                # Some client versions return objects; support those too.
-                score = getattr(m, "score", None)
-                md = getattr(m, "metadata", None)
-                m = {"score": score, "metadata": md}
-
-            score = m.get("score")
-            if not isinstance(score, (int, float)):
-                continue
-            if score >= max_score:
-                continue
-
-            md = m.get("metadata")
-            if not isinstance(md, dict):
-                continue
-            text = (md.get("text") or "").strip()
-            if not text:
-                continue
-            if (md.get("source_filename") or "") == "__namespace__":
-                continue
-            picked.append({"score": float(score), "metadata": md, "text": text})
-
-        if not picked:
-            return ""
-
-        picked.sort(key=lambda x: x["score"], reverse=True)
-        picked = picked[:top_k]
-
-        lines: list[str] = []
-        for i, item in enumerate(picked, start=1):
-            md = item["metadata"]
-            source = (md.get("source_filename") or "unknown").strip()
-            chunk_id = md.get("chunk_id")
-            score_pct = item["score"] * 100.0
-            header = f"[KB {i}] {source}"
-            if isinstance(chunk_id, int):
-                header += f" (chunk {chunk_id})"
-            header += f" — match: {score_pct:.1f}%"
-            lines.append(header)
-            lines.append(item["text"])
-            lines.append("")
-
-        return RAG_CONTEXT_PREAMBLE + "\n".join(lines).strip()
-
     def _load_db_summary(self) -> str:
         db.connect(reuse_if_open=True)
         try:
             interview = Interview.get_or_none(Interview.id == int(self.interview_id))
             return (interview.summary or "").strip() if interview else ""
-        finally:
-            db.close()
-
-    def _load_project_namespace(self) -> str:
-        db.connect(reuse_if_open=True)
-        try:
-            interview = (
-                Interview.select(Interview, Project)
-                .join(Project)
-                .where(Interview.id == int(self.interview_id))
-                .first()
-            )
-            if not interview:
-                return ""
-            project = interview.project
-            ns = (project.namespace or "").strip()
-            return ns or f"project-{project.id}"
         finally:
             db.close()
 
@@ -234,14 +125,6 @@ class Interviewer(Agent):
             content=f"{SUMMARY_FROM_DB_PREFIX}{self.summary_cache}",
             created_at=0.0,
         )
-
-        # add message with RAG chunks
-        if (self._latest_rag_context_message or "").strip():
-            recent.add_message(
-                role="system",
-                content=self._latest_rag_context_message,
-                created_at=0.0,
-            )
 
         if (self._bpmn_directive_message or "").strip():
             recent.add_message(
@@ -305,10 +188,6 @@ class Interviewer(Agent):
             print(f"[SYSTEM] ensure_default_state failed: {e}")
         # Prime summary cache once at session start.
         await self._refresh_summary_cache()
-        try:
-            self.project_namespace = await asyncio.to_thread(self._load_project_namespace)
-        except Exception as e:
-            print(f"[SYSTEM] failed to load project namespace: {e}")
         try:
             self.interviewee_username = await asyncio.to_thread(self._load_interviewee_username)
         except Exception as e:
@@ -417,20 +296,12 @@ class Interviewer(Agent):
         self.turn_counter += 1
         print(f"[SYSTEM] add turn counter: turncounter = {self.turn_counter}")
         self._maybe_schedule_summary_refresh()
-        try:
-            self._latest_rag_context_message = await asyncio.to_thread(
-                self._build_rag_context_message,
-                query_text=(new_message.text_content or ""),
-            )
-        except Exception as e:
-            print(f"[SYSTEM] failed to build RAG context message: {e}")
-            self._latest_rag_context_message = ""
 
         rn = self.room_name
 
         def _tracker_and_directive() -> tuple[bool, str]:
             from bpmn_redis import buffer_length, get_state_dict
-            from bpmn_schema import PHASE_DEEPDIVE, meta_phase
+            from hobby_schema import PHASE_DEEPDIVE, meta_phase
             from directive_prompt import (
                 build_deepdive_entry_block,
                 build_dynamic_directive_block,

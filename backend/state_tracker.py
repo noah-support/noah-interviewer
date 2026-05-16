@@ -16,13 +16,13 @@ from bpmn_redis import (
     read_buffer_lines,
     set_state_dict,
 )
-from bpmn_schema import (
+from hobby_schema import (
     enforce_focus_integrity,
+    enforce_hobbies_on_state,
     enforce_phase_transitions,
-    enforce_steps_on_state,
     normalize_state,
     parse_state_json,
-    preserve_completed_processes,
+    preserve_completed_hobbies,
 )
 from prompts import STATE_TRACKER_SYSTEM
 
@@ -87,8 +87,8 @@ def run_state_tracker(*, room_name: str, allow_empty_buffer: bool = False) -> bo
         return False
 
     normalized = normalize_state(merged)
-    normalized = preserve_completed_processes(current, normalized)
-    normalized = enforce_steps_on_state(normalized)
+    normalized = preserve_completed_hobbies(current, normalized)
+    normalized = enforce_hobbies_on_state(normalized)
     normalized = enforce_phase_transitions(normalized)
     normalized = enforce_focus_integrity(normalized)
     set_state_dict(room_name, normalized)
