@@ -430,8 +430,9 @@ class Interviewer(Agent):
 
         def _tracker_and_directive() -> tuple[bool, str]:
             from bpmn_redis import buffer_length, get_state_dict
+            from bpmn_schema import PHASE_DEEPDIVE, meta_phase
             from directive_prompt import (
-                build_discovery_just_confirmed_block,
+                build_deepdive_entry_block,
                 build_dynamic_directive_block,
             )
             from state_tracker import run_state_tracker
@@ -439,6 +440,7 @@ class Interviewer(Agent):
             before = get_state_dict(rn)
             before_discovery = before.get("discovery") if isinstance(before.get("discovery"), dict) else {}
             before_done = bool(before_discovery.get("is_completed"))
+            before_phase = meta_phase(before)
 
             flushed = True
             if buffer_length(rn) > 0:
@@ -447,10 +449,14 @@ class Interviewer(Agent):
             after = get_state_dict(rn)
             after_discovery = after.get("discovery") if isinstance(after.get("discovery"), dict) else {}
             after_done = bool(after_discovery.get("is_completed"))
+            after_phase = meta_phase(after)
             just_completed = not before_done and after_done
+            just_entered_deepdive = (
+                before_phase != PHASE_DEEPDIVE and after_phase == PHASE_DEEPDIVE
+            )
 
-            if just_completed:
-                directive = build_discovery_just_confirmed_block(after)
+            if just_completed or just_entered_deepdive:
+                directive = build_deepdive_entry_block(after)
             else:
                 directive = build_dynamic_directive_block(after)
             return flushed, directive
@@ -494,10 +500,8 @@ async def my_agent(ctx: agents.JobContext):
     loop = asyncio.get_running_loop()
 
     session = AgentSession(
-        # stt=elevenlabs.STT(model_id="scribe_v2_realtime"),
-        stt=groq.STT(model="whisper-large-v3-turbo"),
-        # llm=openai.LLM(model="gpt-5.4-mini"),
-        llm=groq.LLM(model="openai/gpt-oss-120b"),
+        stt=elevenlabs.STT(model_id="scribe_v2_realtime"),
+        llm=openai.LLM(model="gpt-5.4-mini"),
         tts=elevenlabs.TTS(
             voice_id="1SM7GgM6IMuvQlz2BwM3",
             model="eleven_flash_v2_5",
@@ -511,7 +515,7 @@ async def my_agent(ctx: agents.JobContext):
             ),
             endpointing={
                 "min_delay": float(os.getenv("TURN_MIN_ENDPOINTING_DELAY", "1.0")),
-                "max_delay": float(os.getenv("TURN_MAX_ENDPOINTING_DELAY", "7.0")),
+                "max_delay": float(os.getenv("TURN_MAX_ENDPOINTING_DELAY", "4.0")),
             },
             interruption={
                 "enabled": True,

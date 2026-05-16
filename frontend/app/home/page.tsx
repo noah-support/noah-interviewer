@@ -109,6 +109,11 @@ export default function HomePage() {
       serverUrl={serverUrl}
       token={token}
       onEndCall={onEndInterview}
+      onLeaveAfterError={() => {
+        setConnected(false);
+        setToken(null);
+        setRoom(null);
+      }}
     />
   );
 }

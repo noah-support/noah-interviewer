@@ -18,6 +18,8 @@ from bpmn_redis import (
 )
 from bpmn_schema import (
     enforce_focus_integrity,
+    enforce_phase_transitions,
+    enforce_steps_on_state,
     normalize_state,
     parse_state_json,
     preserve_completed_processes,
@@ -86,6 +88,8 @@ def run_state_tracker(*, room_name: str, allow_empty_buffer: bool = False) -> bo
 
     normalized = normalize_state(merged)
     normalized = preserve_completed_processes(current, normalized)
+    normalized = enforce_steps_on_state(normalized)
+    normalized = enforce_phase_transitions(normalized)
     normalized = enforce_focus_integrity(normalized)
     set_state_dict(room_name, normalized)
     clear_buffer(room_name)

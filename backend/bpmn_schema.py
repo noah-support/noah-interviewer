@@ -12,6 +12,7 @@ PHASE_ROUNDUP = "roundup"
 
 PROCESS_PHASE_STEPS = "steps"
 PROCESS_PHASE_EXCEPTIONS = "exceptions"
+PROCESS_PHASE_CONFIRM = "confirm"
 
 # All must be non-empty before a step is considered mapped or before advancing.
 STEP_REQUIRED_FIELDS: tuple[str, ...] = (
@@ -28,6 +29,18 @@ STEP_FIELD_GAP_PROMPTS: dict[str, str] = {
     "handoff_to_next_actor": "Ask who they hand this off to next, or if it stays with them.",
 }
 
+EXCEPTION_REQUIRED_FIELDS: tuple[str, ...] = (
+    "what_goes_wrong",
+    "impact",
+    "recovery",
+)
+
+EXCEPTION_FIELD_GAP_PROMPTS: dict[str, str] = {
+    "what_goes_wrong": "Ask what typically goes wrong or where things get stuck in this process.",
+    "impact": "Ask how often that happens and what impact it has on their work.",
+    "recovery": "Ask how they usually recover or fix it when that happens.",
+}
+
 
 def default_step() -> dict[str, Any]:
     return {
@@ -40,11 +53,22 @@ def default_step() -> dict[str, Any]:
     }
 
 
+def default_exception() -> dict[str, Any]:
+    return {
+        "what_goes_wrong": "",
+        "impact": "",
+        "recovery": "",
+        "comments_to_explore": "",
+        "is_mapped": False,
+    }
+
+
 def default_process_detail() -> dict[str, Any]:
     return {
         "phase": PROCESS_PHASE_STEPS,
         "steps": [],
         "exceptions": [],
+        "summary_confirmed": False,
         "is_completed": False,
     }
 
@@ -149,9 +173,38 @@ def normalize_state(data: dict[str, Any]) -> dict[str, Any]:
     out["process_details"] = normalized_pd
 
     out = enforce_steps_on_state(out)
+    out = enforce_phase_transitions(out)
     out = enforce_focus_integrity(out)
 
     return out
+
+
+def enforce_phase_transitions(state: dict[str, Any]) -> dict[str, Any]:
+    """Keep meta.phase aligned with discovery / process completion gates."""
+    out = copy.deepcopy(state)
+    discovery = out.get("discovery") if isinstance(out.get("discovery"), dict) else {}
+    meta = out.get("meta") if isinstance(out.get("meta"), dict) else {}
+    names = discovery_process_names(out)
+
+    if bool(discovery.get("is_completed")) and names and meta_phase(out) == PHASE_DISCOVERY:
+        out.setdefault("meta", {})["phase"] = PHASE_DEEPDIVE
+
+    if names and all_processes_completed(out):
+        out.setdefault("meta", {})["phase"] = PHASE_ROUNDUP
+        out["meta"]["current_focus_process"] = None
+
+    return out
+
+
+def process_deepdive_subphase(proc: dict[str, Any]) -> str:
+    if not isinstance(proc, dict):
+        return PROCESS_PHASE_STEPS
+    internal = str(proc.get("phase") or PROCESS_PHASE_STEPS).strip().lower()
+    if internal == PROCESS_PHASE_EXCEPTIONS:
+        return PROCESS_PHASE_EXCEPTIONS
+    if internal == PROCESS_PHASE_CONFIRM:
+        return PROCESS_PHASE_CONFIRM
+    return PROCESS_PHASE_STEPS
 
 
 def _normalize_process_detail(proc: dict[str, Any]) -> dict[str, Any]:
@@ -167,8 +220,15 @@ def _normalize_process_detail(proc: dict[str, Any]) -> dict[str, Any]:
         out["phase"] = PROCESS_PHASE_STEPS
     elif internal == PROCESS_PHASE_EXCEPTIONS:
         out["phase"] = PROCESS_PHASE_EXCEPTIONS
+    elif internal == PROCESS_PHASE_CONFIRM:
+        out["phase"] = PROCESS_PHASE_CONFIRM
     else:
         out["phase"] = PROCESS_PHASE_STEPS
+    if not isinstance(out.get("summary_confirmed"), bool):
+        if out.get("is_completed"):
+            out["summary_confirmed"] = True
+        else:
+            out["summary_confirmed"] = False
     steps = out.get("steps")
     normalized_steps: list[dict[str, Any]] = []
     if isinstance(steps, list):
@@ -177,7 +237,29 @@ def _normalize_process_detail(proc: dict[str, Any]) -> dict[str, Any]:
                 normalized_steps.append(_normalize_step(s))
     out["steps"] = normalized_steps
     exc = out.get("exceptions")
-    out["exceptions"] = exc if isinstance(exc, list) else []
+    normalized_exceptions: list[dict[str, Any]] = []
+    if isinstance(exc, list):
+        for item in exc:
+            if isinstance(item, dict):
+                normalized_exceptions.append(_normalize_exception(item))
+            elif isinstance(item, str) and item.strip():
+                normalized_exceptions.append(
+                    _normalize_exception({"what_goes_wrong": item.strip()})
+                )
+    out["exceptions"] = normalized_exceptions
+    return out
+
+
+def _normalize_exception(exc: dict[str, Any]) -> dict[str, Any]:
+    out = default_exception()
+    out.update(exc)
+    if not isinstance(out.get("is_mapped"), bool):
+        out["is_mapped"] = False
+    for key in (*EXCEPTION_REQUIRED_FIELDS, "comments_to_explore"):
+        if not isinstance(out.get(key), str):
+            out[key] = str(out.get(key) or "")
+    if out.get("is_mapped") and not exception_is_fully_mapped(out):
+        out["is_mapped"] = False
     return out
 
 
@@ -225,37 +307,66 @@ def all_steps_fully_mapped(proc: dict[str, Any]) -> bool:
     return True
 
 
+def exception_missing_fields(exc: dict[str, Any]) -> list[str]:
+    return [f for f in EXCEPTION_REQUIRED_FIELDS if not (exc.get(f) or "").strip()]
+
+
+def exception_is_fully_mapped(exc: dict[str, Any]) -> bool:
+    return len(exception_missing_fields(exc)) == 0
+
+
+def exception_gap_comment(exc: dict[str, Any]) -> str:
+    missing = exception_missing_fields(exc)
+    if not missing:
+        return ""
+    return EXCEPTION_FIELD_GAP_PROMPTS.get(missing[0], f"Ask about {missing[0]}.")
+
+
+def all_exceptions_fully_mapped(proc: dict[str, Any]) -> bool:
+    excs = proc.get("exceptions")
+    if not isinstance(excs, list) or not excs:
+        return False
+    for item in excs:
+        if not isinstance(item, dict):
+            return False
+        if not exception_is_fully_mapped(_normalize_exception(item)):
+            return False
+    return True
+
+
 def process_ready_for_exceptions(proc: dict[str, Any]) -> bool:
     return all_steps_fully_mapped(proc)
 
 
+def process_ready_for_confirm(proc: dict[str, Any]) -> bool:
+    return process_ready_for_exceptions(proc) and all_exceptions_fully_mapped(proc)
+
+
 def process_fully_complete(proc: dict[str, Any]) -> bool:
-    if not isinstance(proc, dict) or not proc.get("is_completed"):
+    if not isinstance(proc, dict):
         return False
-    if not all_steps_fully_mapped(proc):
+    if not proc.get("summary_confirmed") or not proc.get("is_completed"):
         return False
-    exc = proc.get("exceptions")
-    return isinstance(exc, list) and len(exc) > 0
+    return process_ready_for_confirm(proc)
 
 
 def enforce_process_steps(proc: dict[str, Any]) -> dict[str, Any]:
-    """Ensure is_mapped matches filled fields; one focus step; gate exceptions phase."""
+    """Ensure steps/exceptions mapping, phase gates, and summary confirmation."""
     out = _normalize_process_detail(proc if isinstance(proc, dict) else {})
     steps_in = out.get("steps")
     if not isinstance(steps_in, list):
         out["steps"] = []
-        return out
 
     normalized_steps: list[dict[str, Any]] = []
-    focus_idx: int | None = None
-    for s in steps_in:
+    step_focus_idx: int | None = None
+    for s in steps_in if isinstance(steps_in, list) else []:
         if not isinstance(s, dict):
             continue
         step = _normalize_step(s)
         if not step_is_fully_mapped(step):
             step["is_mapped"] = False
-            if focus_idx is None:
-                focus_idx = len(normalized_steps)
+            if step_focus_idx is None:
+                step_focus_idx = len(normalized_steps)
                 step["comments_to_explore"] = step_gap_comment(step)
             else:
                 step["comments_to_explore"] = ""
@@ -263,14 +374,62 @@ def enforce_process_steps(proc: dict[str, Any]) -> dict[str, Any]:
             step["is_mapped"] = True
             step["comments_to_explore"] = ""
         normalized_steps.append(step)
-
     out["steps"] = normalized_steps
+
+    if process_ready_for_exceptions(out) and out.get("phase") == PROCESS_PHASE_STEPS:
+        out["phase"] = PROCESS_PHASE_EXCEPTIONS
+
+    exc_in = out.get("exceptions")
+    if not isinstance(exc_in, list):
+        exc_in = []
+    if out.get("phase") == PROCESS_PHASE_EXCEPTIONS and process_ready_for_exceptions(out):
+        if not exc_in:
+            exc_in = [default_exception()]
+
+    # Never stay in exceptions / confirm while steps are still incomplete.
+    if out.get("phase") in (PROCESS_PHASE_EXCEPTIONS, PROCESS_PHASE_CONFIRM):
+        if not process_ready_for_exceptions(out):
+            out["phase"] = PROCESS_PHASE_STEPS
+
+    normalized_exceptions: list[dict[str, Any]] = []
+    exc_focus_idx: int | None = None
+    for item in exc_in:
+        if isinstance(item, dict):
+            exc = _normalize_exception(item)
+        elif isinstance(item, str) and item.strip():
+            exc = _normalize_exception({"what_goes_wrong": item.strip()})
+        else:
+            continue
+        if not exception_is_fully_mapped(exc):
+            exc["is_mapped"] = False
+            if exc_focus_idx is None:
+                exc_focus_idx = len(normalized_exceptions)
+                exc["comments_to_explore"] = exception_gap_comment(exc)
+            else:
+                exc["comments_to_explore"] = ""
+        else:
+            exc["is_mapped"] = True
+            exc["comments_to_explore"] = ""
+        normalized_exceptions.append(exc)
+    out["exceptions"] = normalized_exceptions
 
     if out.get("phase") == PROCESS_PHASE_EXCEPTIONS and not process_ready_for_exceptions(out):
         out["phase"] = PROCESS_PHASE_STEPS
 
+    if process_ready_for_confirm(out) and not out.get("summary_confirmed"):
+        out["phase"] = PROCESS_PHASE_CONFIRM
+    elif out.get("phase") == PROCESS_PHASE_CONFIRM and not process_ready_for_confirm(out):
+        out["phase"] = (
+            PROCESS_PHASE_EXCEPTIONS
+            if process_ready_for_exceptions(out)
+            else PROCESS_PHASE_STEPS
+        )
+
     if out.get("is_completed") and not process_fully_complete(out):
         out["is_completed"] = False
+
+    if out.get("summary_confirmed") and process_ready_for_confirm(out):
+        out["is_completed"] = True
 
     return out
 
@@ -285,6 +444,48 @@ def enforce_steps_on_state(state: dict[str, Any]) -> dict[str, Any]:
             pd[key] = enforce_process_steps(proc)
     out["process_details"] = pd
     return out
+
+
+def first_active_exception(proc: dict[str, Any]) -> tuple[dict[str, Any] | None, int | None]:
+    excs = proc.get("exceptions")
+    if not isinstance(excs, list):
+        return None, None
+    for i, item in enumerate(excs):
+        if not isinstance(item, dict):
+            continue
+        exc = _normalize_exception(item)
+        if not exception_is_fully_mapped(exc):
+            return exc, i
+    return None, None
+
+
+def exception_mapping_progress(proc: dict[str, Any]) -> dict[str, Any]:
+    excs = proc.get("exceptions") if isinstance(proc.get("exceptions"), list) else []
+    labels: list[str] = []
+    mapped: list[str] = []
+    for item in excs:
+        if not isinstance(item, dict):
+            continue
+        exc = _normalize_exception(item)
+        label = (exc.get("what_goes_wrong") or "").strip() or "unnamed issue"
+        labels.append(label)
+        if exception_is_fully_mapped(exc):
+            mapped.append(label)
+    current_exc, idx = first_active_exception(proc if isinstance(proc, dict) else {})
+    current_label = (
+        (current_exc.get("what_goes_wrong") or "").strip() if current_exc else None
+    ) or None
+    position = ""
+    if current_label and current_label in labels:
+        position = f"{labels.index(current_label) + 1} of {len(labels)}"
+    elif idx is not None and labels:
+        position = f"{idx + 1} of {len(labels)}"
+    return {
+        "all_exceptions": labels,
+        "mapped_exceptions": mapped,
+        "current_exception": current_label,
+        "position": position,
+    }
 
 
 def first_active_step(proc: dict[str, Any]) -> tuple[dict[str, Any] | None, int | None]:
@@ -331,11 +532,25 @@ def step_mapping_progress(proc: dict[str, Any]) -> dict[str, Any]:
 def process_summary_for_interviewer(proc: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(proc, dict):
         proc = {}
-    exc = proc.get("exceptions")
+    subphase = process_deepdive_subphase(proc)
+    steps = proc.get("steps") if isinstance(proc.get("steps"), list) else []
+    excs = proc.get("exceptions") if isinstance(proc.get("exceptions"), list) else []
+    steps_done = all_steps_fully_mapped(proc) if steps else False
+    excs_done = all_exceptions_fully_mapped(proc) if excs else False
     return {
+        "deepdive_subphase": subphase,
+        "deepdive_subphase_label": (
+            "1 of 2 — walk through each step"
+            if subphase == PROCESS_PHASE_STEPS
+            else "2 of 2 — what goes wrong (exceptions)"
+            if subphase == PROCESS_PHASE_EXCEPTIONS
+            else "confirm your understanding"
+        ),
         "phase": proc.get("phase") or PROCESS_PHASE_STEPS,
+        "steps_complete": steps_done,
+        "exceptions_complete": excs_done,
         "is_completed": bool(proc.get("is_completed")),
-        "exceptions": exc if isinstance(exc, list) else [],
+        "summary_confirmed": bool(proc.get("summary_confirmed")),
     }
 
 

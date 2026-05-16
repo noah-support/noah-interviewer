@@ -8,18 +8,24 @@ import "@livekit/components-styles";
 import { AgentSessionProvider } from "@/components/agents-ui/agent-session-provider";
 import { AgentAudioVisualizerAura } from "@/components/agents-ui/agent-audio-visualizer-aura";
 import { AgentControlBar } from "@/components/agents-ui/agent-control-bar";
+import { InterviewAgentErrorScreen } from "@/components/interview-agent-error-screen";
+import { useInterviewAgentError } from "@/hooks/use-interview-agent-error";
 import { agentStateLabel } from "@/lib/agent-state-label";
+import { errorFromUnknown } from "@/lib/interview-agent-error";
 
 type InterviewLiveKitSessionProps = {
   serverUrl: string;
   token: string;
   onEndCall: () => void;
+  /** Called when the user leaves after a fatal agent error (return to start screen). */
+  onLeaveAfterError?: () => void;
 };
 
 export function InterviewLiveKitSession({
   serverUrl,
   token,
   onEndCall,
+  onLeaveAfterError,
 }: InterviewLiveKitSessionProps) {
   const tokenSource = useMemo(
     () =>
@@ -35,6 +41,15 @@ export function InterviewLiveKitSession({
   const sessionRef = useRef(session);
   sessionRef.current = session;
 
+  const {
+    fatalError,
+    tryingAgain,
+    markUserLeave,
+    reportError,
+    handleStartFailure,
+    retrySession,
+  } = useInterviewAgentError({ session, agent });
+
   useEffect(() => {
     const s = sessionRef.current;
     void s
@@ -43,14 +58,38 @@ export function InterviewLiveKitSession({
           microphone: { enabled: true },
         },
       })
-      .catch((err) => {
-        console.warn("[LiveKit] session.start failed:", err);
-      });
+      .catch(handleStartFailure);
 
     return () => {
       void s.end().catch(() => undefined);
     };
-  }, [serverUrl, token]);
+  }, [serverUrl, token, handleStartFailure]);
+
+  function handleDisconnect() {
+    markUserLeave();
+    onEndCall();
+  }
+
+  function handleLeaveAfterError() {
+    markUserLeave();
+    void session.end().catch(() => undefined);
+    if (onLeaveAfterError) {
+      onLeaveAfterError();
+    } else {
+      onEndCall();
+    }
+  }
+
+  if (fatalError) {
+    return (
+      <InterviewAgentErrorScreen
+        error={fatalError}
+        tryingAgain={tryingAgain}
+        onTryAgain={() => void retrySession()}
+        onLeave={handleLeaveAfterError}
+      />
+    );
+  }
 
   return (
     <AgentSessionProvider session={session}>
@@ -86,7 +125,15 @@ export function InterviewLiveKitSession({
             screenShare: false,
             chat: false,
           }}
-          onDisconnect={onEndCall}
+          onDisconnect={handleDisconnect}
+          onDeviceError={({ error }) => {
+            reportError(
+              errorFromUnknown(
+                error,
+                "Could not access your microphone. Check browser permissions and try again.",
+              ),
+            );
+          }}
           className="w-full max-w-md border-neutral-200 bg-white shadow-sm"
         />
       </div>
