@@ -46,6 +46,42 @@ def _cookie_secret() -> str:
     return os.getenv("SESSION_SECRET") or os.getenv("LIVEKIT_API_SECRET") or "dev-session-secret"
 
 
+def _session_cookie_params() -> Dict[str, Any]:
+    """
+    Session cookie attributes for Set-Cookie / delete_cookie.
+
+    Cross-origin deployments (frontend on one domain, API on another) require
+    SameSite=None and Secure=True or the browser blocks/stores-but-won't-send the cookie.
+    """
+    explicit_samesite = os.getenv("SESSION_COOKIE_SAMESITE", "").strip().lower()
+    explicit_secure = os.getenv("SESSION_COOKIE_SECURE", "").strip().lower()
+
+    if explicit_samesite in ("lax", "strict", "none"):
+        samesite = explicit_samesite
+    else:
+        origins = os.getenv("CORS_ORIGINS", "")
+        cross_site_https = any(
+            o.strip().startswith("https://") and "localhost" not in o and "127.0.0.1" not in o
+            for o in origins.split(",")
+        )
+        samesite = "none" if cross_site_https else "lax"
+
+    if explicit_secure in ("1", "true", "yes"):
+        secure = True
+    elif explicit_secure in ("0", "false", "no"):
+        secure = False
+    else:
+        secure = samesite == "none"
+
+    if samesite == "none":
+        secure = True
+
+    params: Dict[str, Any] = {"httponly": True, "path": "/", "samesite": samesite}
+    if secure:
+        params["secure"] = True
+    return params
+
+
 def sign_cookie(payload: Dict[str, Any]) -> str:
     secret = _cookie_secret().encode("utf-8")
     payload_json = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
@@ -253,16 +289,14 @@ def login(body: LoginRequest, response: Response):
     response.set_cookie(
         key=SESSION_COOKIE_NAME,
         value=session_value,
-        httponly=True,
-        samesite="lax",
-        path="/",
+        **_session_cookie_params(),
     )
     return {"ok": True}
 
 
 @app.post("/api/logout")
 def logout(response: Response):
-    response.delete_cookie(key=SESSION_COOKIE_NAME, path="/")
+    response.delete_cookie(key=SESSION_COOKIE_NAME, **_session_cookie_params())
     return {"ok": True}
 
 

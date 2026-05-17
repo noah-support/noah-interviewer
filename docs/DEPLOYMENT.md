@@ -223,6 +223,8 @@ CORS_ORIGINS=https://app.your-domain.com
 
 Set `SESSION_SECRET` to a strong random value (do not rely on `LIVEKIT_API_SECRET` in production).
 
+**Session cookies (login → `/api/me`):** When the frontend and API are on different domains, the API must set `SameSite=None; Secure` on the `session` cookie. This is automatic when `CORS_ORIGINS` includes a non-localhost `https://` origin (e.g. `https://interview.noah.support`). Override with `SESSION_COOKIE_SAMESITE=none` and `SESSION_COOKIE_SECURE=true` on the **api** service if needed.
+
 ## 6. First deploy checklist
 
 1. Addons running (Postgres, Redis).
@@ -278,6 +280,7 @@ docker compose -f docker-compose.prod.yml up --build
 | Celery exits: `rediss:// URL must have parameter ssl_cert_reqs` | Rebuild with latest `celery_app.py` / `redis_config.py`, or set `REDIS_SSL_CERT_REQS=CERT_REQUIRED` |
 | DB empty after agent restart | `CLEAN_DATABASE_ON_EXIT` still `true` |
 | CORS error in browser | `CORS_ORIGINS` missing frontend URL |
+| Login OK but `/api/me` 401, cookie blocked in DevTools | Session cookie needs `SameSite=None; Secure` for cross-origin — set `CORS_ORIGINS=https://interview.noah.support` and redeploy **api** |
 | `Missing OPENAI_API_KEY` in Celery | Secret group not attached to **celery** service |
 
 ## File reference
