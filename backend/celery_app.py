@@ -2,18 +2,16 @@ import os
 
 from celery import Celery
 from env_loader import load_app_env
-
-
-def _redis_url() -> str:
-    return os.getenv("REDIS_URL", "redis://localhost:6379/0")
+from redis_config import normalize_redis_url_for_celery, redis_url
 
 load_app_env()
 
+_broker_url = normalize_redis_url_for_celery(redis_url())
 
 celery_app = Celery(
     "noah_interviewer",
-    broker=_redis_url(),
-    backend=_redis_url(),
+    broker=_broker_url,
+    backend=_broker_url,
     include=["tasks"],
 )
 
@@ -28,4 +26,3 @@ celery_app.conf.update(
 # Ensure task decorators in `tasks.py` are registered when workers boot.
 # (Celery only registers tasks from imported modules.)
 import tasks  # noqa: E402,F401
-

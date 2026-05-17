@@ -75,6 +75,14 @@ Local `docker-compose.yml` uses pgvector; the app uses Peewee + Pinecone for vec
 1. **Addons → Create addon → Redis**
 2. Map `REDIS_MASTER_URL` (or TLS URL) → `REDIS_URL` on **api**, **agent**, and **celery**.
 
+Northflank TLS addons typically provide a `rediss://` URL. The backend appends the `ssl_cert_reqs` query parameter Celery requires (default `CERT_REQUIRED`). Override with `REDIS_SSL_CERT_REQS` if needed (`CERT_REQUIRED`, `CERT_OPTIONAL`, `CERT_NONE`).
+
+Example (TLS URL from addon — no manual query params needed):
+
+```text
+REDIS_URL=rediss://:password@redis-addon:6379/0
+```
+
 Example (non-TLS internal URL):
 
 ```text
@@ -267,6 +275,7 @@ docker compose -f docker-compose.prod.yml up --build
 | Hub login fails | API unreachable, wrong `NEXT_PUBLIC_API_URL`, or CORS |
 | No agent in room | Agent down, wrong `LIVEKIT_*` on agent vs Cloud project, or token mismatch |
 | Summaries never update | Celery not running or `REDIS_URL` mismatch |
+| Celery exits: `rediss:// URL must have parameter ssl_cert_reqs` | Rebuild with latest `celery_app.py` / `redis_config.py`, or set `REDIS_SSL_CERT_REQS=CERT_REQUIRED` |
 | DB empty after agent restart | `CLEAN_DATABASE_ON_EXIT` still `true` |
 | CORS error in browser | `CORS_ORIGINS` missing frontend URL |
 | `Missing OPENAI_API_KEY` in Celery | Secret group not attached to **celery** service |

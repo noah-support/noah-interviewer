@@ -10,12 +10,11 @@ from typing import Any
 import redis
 
 from hobby_schema import DEFAULT_HOBBY_STATE, parse_state_json, state_to_json
-
-_REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+from redis_config import redis_client
 
 
 def _client() -> redis.Redis:
-    return redis.from_url(_REDIS_URL, decode_responses=True)
+    return redis_client()
 
 
 def _ttl_s() -> int:
