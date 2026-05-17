@@ -1,0 +1,15 @@
+**/.git
+**/.gitignore
+**/.env*
+**/.venv
+**/venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.mypy_cache
+**/.next
+**/node_modules
+**/.DS_Store
+**/agent-transcripts
+**/*.md
+!docs/DEPLOYMENT.md

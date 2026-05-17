@@ -6,9 +6,9 @@ from __future__ import annotations
 
 import os
 
-from dotenv import load_dotenv
+from env_loader import load_app_env
 
-load_dotenv(".env.local", override=True)
+load_app_env()
 
 from http_api import app  # noqa: E402 — ASGI app (e.g. uvicorn main:app)
 from seeder import reset_and_seed  # noqa: E402

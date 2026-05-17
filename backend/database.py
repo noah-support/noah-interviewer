@@ -1,9 +1,11 @@
+import os
+
 from peewee import PostgresqlDatabase
 
 db = PostgresqlDatabase(
-    'noah',
-    user='postgres',
-    password='Newpassword',
-    host='localhost',
-    port=5434
+    os.getenv("POSTGRES_DB", "noah"),
+    user=os.getenv("POSTGRES_USER", "postgres"),
+    password=os.getenv("POSTGRES_PASSWORD", "Newpassword"),
+    host=os.getenv("POSTGRES_HOST", "localhost"),
+    port=int(os.getenv("POSTGRES_PORT", "5434")),
 )

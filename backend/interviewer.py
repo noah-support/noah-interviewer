@@ -14,7 +14,7 @@ import os
 import re
 import time
 
-from dotenv import load_dotenv
+from env_loader import load_app_env
 from livekit import agents
 from livekit.agents import (
     AgentServer,
@@ -43,7 +43,7 @@ from prompts import (
 from tasks import summarize_interview_turns
 from livekit.plugins import groq
 
-load_dotenv(".env.local", override=True)
+load_app_env()
 
 print("--- STARTING WITH URL:", os.getenv("LIVEKIT_URL"), "---")
 
@@ -457,7 +457,14 @@ async def my_agent(ctx: agents.JobContext):
 if __name__ == "__main__":
     from seeder import clean_database
 
+    _clean_on_exit = os.getenv("CLEAN_DATABASE_ON_EXIT", "true").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+
     try:
         agents.cli.run_app(server)
     finally:
-        clean_database()
+        if _clean_on_exit:
+            clean_database()

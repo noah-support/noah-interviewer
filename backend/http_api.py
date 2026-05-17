@@ -181,6 +181,12 @@ def require_auth(request: Request) -> Interview:
 
 app = FastAPI()
 
+
+@app.get("/health")
+def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
 # Dev defaults: allow both Vite and Next dev servers.
 origins_env = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000")
 allowed_origins = [o.strip() for o in origins_env.split(",") if o.strip()]

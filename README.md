@@ -99,3 +99,12 @@ npm run dev
 Env:
 - `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:8000`)
 - `NEXT_PUBLIC_LIVEKIT_URL` must be set (used by `/home`)
+
+## Production deployment (Northflank)
+
+Docker images and a step-by-step Northflank guide live in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
+- `backend/Dockerfile` — API, LiveKit agent, and Celery (different start commands per service)
+- `frontend/Dockerfile` — Next.js production build
+- `docker/livekit/Dockerfile` — optional self-hosted LiveKit (prefer LiveKit Cloud in production)
+- `docker-compose.prod.yml` — optional full-stack smoke test

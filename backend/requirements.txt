@@ -6,6 +6,7 @@ livekit-plugins-openai
 livekit-plugins-silero
 livekit-plugins-elevenlabs
 livekit-plugins-turn-detector
+livekit-plugins-groq
 python-dotenv==1.2.2
 peewee
 psycopg2-binary

@@ -1,13 +1,13 @@
 import os
 
 from celery import Celery
-from dotenv import load_dotenv
+from env_loader import load_app_env
 
 
 def _redis_url() -> str:
     return os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
-load_dotenv(".env.local", override=True)
+load_app_env()
 
 
 celery_app = Celery(

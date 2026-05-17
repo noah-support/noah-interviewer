@@ -1,14 +1,14 @@
 import os
 import json
 from typing import TypedDict
-from dotenv import load_dotenv
+from env_loader import load_app_env
 from openai import OpenAI
 from celery_app import celery_app
 from database import db
 from models import Interview
 from prompts import DEFAULT_TRANSCRIPT_SUMMARY_PROMPT
 
-load_dotenv(".env.local", override=True)
+load_app_env()
 
 class Turn(TypedDict):
     party: str

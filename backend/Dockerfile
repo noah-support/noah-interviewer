@@ -1,13 +1,43 @@
-# Use the official LiveKit Server image as the base
-FROM livekit/livekit-server:latest
+# syntax=docker/dockerfile:1
+# Shared image for API, LiveKit agent worker, and Celery.
+ARG PYTHON_VERSION=3.11.9
+FROM python:${PYTHON_VERSION}-slim
 
-# Expose the ports LiveKit needs to communicate:
-# 7880: HTTP (API & WebRTC signaling)
-# 7881: TCP (WebRTC fallback)
-# 7882/udp: UDP (WebRTC media routing)
-EXPOSE 7880 7881 7882/udp
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Start the server in development mode.
-# This automatically binds the server to local interfaces and 
-# sets the API Key to "devkey" and the Secret to "secret".
-CMD ["--dev"]
+ARG UID=10001
+RUN adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "/app" \
+    --shell "/sbin/nologin" \
+    --uid "${UID}" \
+    appuser
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    python3-dev \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Pre-download Silero VAD, turn detector, and other agent assets at build time.
+RUN python -m livekit.agents download-files
+
+COPY . .
+
+RUN chown -R appuser:appuser /app
+USER appuser
+
+ENV CLEAN_DATABASE_ON_EXIT=false
+
+# Override per service on Northflank (api / agent / celery).
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
