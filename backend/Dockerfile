@@ -29,13 +29,18 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Pre-download Silero VAD, turn detector, and other agent assets at build time.
-RUN python -m livekit.agents download-files
-
 COPY . .
 
-RUN chown -R appuser:appuser /app
+# Cache model weights under /app so the non-root runtime user can read them.
+ENV HF_HOME=/app/.cache/huggingface \
+    XDG_CACHE_HOME=/app/.cache
+
+RUN mkdir -p /app/.cache && chown -R appuser:appuser /app
+
 USER appuser
+
+# livekit.agents has no __main__; download via registered plugins (see download_agent_assets.py).
+RUN python download_agent_assets.py
 
 ENV CLEAN_DATABASE_ON_EXIT=false
 
