@@ -584,9 +584,11 @@ async def my_agent(ctx: agents.JobContext):
 
 
 if __name__ == "__main__":
-    from seeder import clean_database
-
     try:
         agents.cli.run_app(server)
     finally:
-        clean_database()
+        # Dev-only: wiping the DB on agent exit breaks harness / evaluation runs.
+        if os.getenv("NOAH_CLEAN_DB_ON_AGENT_EXIT", "").strip() in ("1", "true", "yes"):
+            from seeder import clean_database
+
+            clean_database()

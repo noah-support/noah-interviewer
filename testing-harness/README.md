@@ -1,0 +1,126 @@
+## AI Interviewee Testing Harness
+
+This folder contains the **interviewee side** of a BPMN reconstruction testing harness. It provides:
+
+- **Personas** (`personas/<project>/<subject>.yaml`) that encode identity + process knowledge.
+- A **persona prep tool** that converts Prosaview subject JSON into persona YAML.
+- A **runner** that connects to an interviewer (ElevenLabs or LiveKit), records a transcript, and exits.
+
+### Sentinel (end-of-interview)
+
+The interviewer must end its final message with the exact sentinel string on a line by itself:
+
+`[[INTERVIEW_COMPLETE]]`
+
+The harness strips this sentinel from stored transcripts, generates one final closing reply, then disconnects.
+
+### Setup
+
+```bash
+cd testing-harness
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install -e ".[dev]"
+cp config.example.env .env
+```
+
+### Prepare personas
+
+Single file:
+
+```bash
+python tools/prepare_personas.py \
+  --input datasets/ComputerRepair_1/S0_ComputerRepair_1.json \
+  --output-dir personas/ComputerRepair_1/
+```
+
+Batch:
+
+```bash
+python tools/prepare_personas.py \
+  --input-dir datasets/ComputerRepair_1/ \
+  --output-dir personas/ComputerRepair_1/
+```
+
+Notes:
+
+- The generator rejects outputs containing process-modeling terms (`BPMN`, `gateway`, `node`, `flowchart`, `branch`, `task`) and retries once.
+- It will not overwrite existing persona YAMLs unless `--force` is passed.
+
+### Run all interviewees for a project (sequential)
+
+```bash
+# ElevenLabs — hosted agent only; one aggregate JSON in results/
+python runner.py project --project ComputerRepair_1 --interviewer elevenlabs --mode full
+
+# LiveKit — full Noah DB lifecycle; one aggregate JSON in results/
+python runner.py project --project ComputerRepair_1 --interviewer livekit --mode full
+```
+
+See [TESTING.md](TESTING.md) for prerequisites and output format.
+
+### Run a single interview
+
+Smoke mode (turn cap 10, writes to `transcripts/_smoke/`):
+
+```bash
+python runner.py \
+  --persona personas/ComputerRepair_1/S0.yaml \
+  --interviewer elevenlabs \
+  --mode smoke
+```
+
+Full mode (turn cap 80, writes to `transcripts/<project>/`):
+
+```bash
+python runner.py \
+  --persona personas/ComputerRepair_1/S0.yaml \
+  --interviewer livekit \
+  --mode full
+```
+
+### Transcript format
+
+The runner writes one JSON file per interview:
+
+- `transcripts/<project>/<subject_label>__<interviewer>__<timestamp>.json`
+
+Schema fields:
+
+- `schema_version`: `"1.0"`
+- `persona_id`, `project`, `subject_label`, `interviewer`
+- `started_at`, `ended_at` (UTC, `...Z`)
+- `ended_by`: `sentinel` | `turn_cap` | `error` | `manual`
+- `turn_count`
+- `turns[]`: `{ index, role, text, timestamp }`
+
+### Transport contracts
+
+#### ElevenLabs (text-only ConvAI)
+
+Environment:
+
+- `ELEVENLABS_API_KEY`
+- `ELEVENLABS_AGENT_ID`
+
+Contract:
+
+- Harness connects in **chat mode** (text-only) and receives interviewer turns via the agent response callback.
+- Harness sends interviewee replies as ConvAI `user_message` events.
+
+#### LiveKit (text streams, not custom data-channel JSON)
+
+Environment:
+
+- `LIVEKIT_URL` (e.g. `ws://localhost:7880`)
+- `LIVEKIT_ROOM` (room name to join)
+- `LIVEKIT_IDENTITY` (optional; default `harness-interviewee`)
+- Either `LIVEKIT_TOKEN` **or** (`LIVEKIT_API_KEY` + `LIVEKIT_API_SECRET`) to mint one
+
+Contract:
+
+- Interviewer must be configured in text mode and publish text output as LiveKit **text streams**:
+  - Interviewee → interviewer: topic `lk.chat` (`send_text(..., topic="lk.chat")`)
+  - Interviewer → interviewee: topic `lk.transcription` (text stream attributes include `lk.segment_id`, `lk.transcription_final`)
+

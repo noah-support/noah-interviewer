@@ -1,0 +1,27 @@
+id: ComputerRepair_1__S0
+project: ComputerRepair_1
+subject_label: S0
+identity:
+  name: Marta
+  role: Repair Coordinator
+  company: Northwind Computer Services
+  department: Service Operations
+  years_in_role: 4
+personality:
+  tone: friendly but a bit rushed
+  quirks:
+    - mentions coworker "Tom" who handles hardware
+    - occasionally complains about the new ticketing system
+knowledge:
+  what_i_do: |
+    I handle repair cost estimates and coordinate with the workshop.
+  what_i_receive: |
+    Jobs come in from the front desk after intake.
+  what_i_hand_off: |
+    Once the customer approves, I pass it to the repair team.
+  decision_points: |
+    I decide whether we can quote from photos or need the machine in person.
+  exceptions_and_edge_cases: |
+    If parts are back-ordered I call the customer and adjust the timeline.
+  things_i_only_hear_about: |
+    Shipping logistics for bulk parts orders.

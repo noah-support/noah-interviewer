@@ -1,0 +1,109 @@
+{
+  "fragments": [
+    {
+      "id": "Default_init",
+      "type": "START_EVENT",
+      "branch": "0.0.",
+      "inComing": [],
+      "outComing": [
+        "Pr5"
+      ]
+    },
+    {
+      "id": "Pr5",
+      "name": "Provide_Repair_Cost_Calculation ",
+      "type": "TASK",
+      "branch": "0.0.",
+      "inComing": [
+        "Default_init"
+      ],
+      "outComing": [
+        "G0"
+      ]
+    },
+    {
+      "id": "G0",
+      "name": "G0",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.",
+      "inComing": [
+        "Pr5"
+      ],
+      "outComing": [
+        "Re1",
+        "Ch2"
+      ]
+    },
+    {
+      "id": "Re1",
+      "name": "Return_Computer_Without_Repair ",
+      "type": "TASK",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "G0"
+      ],
+      "outComing": [
+        "XORCLOSE6"
+      ]
+    },
+    {
+      "id": "Ch2",
+      "name": "Check_and_Configure_Software ",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "G0"
+      ],
+      "outComing": [
+        "Ch8"
+      ]
+    },
+    {
+      "id": "Ch8",
+      "name": "Check_and_Repair_Hardware ",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "Ch2"
+      ],
+      "outComing": [
+        "Te8"
+      ]
+    },
+    {
+      "id": "Te8",
+      "name": "Test_System_Functionality ",
+      "type": "TASK",
+      "branch": "0.0.0.2.",
+      "inComing": [
+        "Ch8"
+      ],
+      "outComing": [
+        "XORCLOSE6"
+      ]
+    },
+    {
+      "id": "XORCLOSE6",
+      "name": "XORCLOSE6",
+      "type": "EXCLUSIVE_GATEWAY",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "Re1",
+        "Te8"
+      ],
+      "outComing": [
+        "END"
+      ]
+    },
+    {
+      "id": "END",
+      "name": "END_EVENT",
+      "type": "END_EVENT",
+      "branch": "0.0.0.1.",
+      "inComing": [
+        "XORCLOSE6"
+      ],
+      "outComing": []
+    }
+  ]
+}
