@@ -12,7 +12,36 @@ import typer
 import yaml
 from openai import OpenAI
 
+from interviewees.env import load_harness_env, require_env
+from interviewees.persona_layout import (
+    default_personas_root,
+    iter_persona_folders,
+    prompt_file_in_folder,
+)
+
 app = typer.Typer(add_completion=False)
+
+
+@app.callback()
+def _load_dotenv() -> None:
+    """Load testing-harness/.env before any subcommand."""
+    load_harness_env()
+
+# From personas/devide.txt: process basename -> Prosaview dataset folder name.
+PROCESS_BASENAME_TO_DATASET: dict[str, str] = {
+    "process1": "caseHandling_1",
+    "process2": "complaint_1",
+    "process3": "ComputerRepair_1",
+    "process4": "ComputerRepair_2",
+    "process5": "E2_proc",
+    "process6": "ITIL",
+    "process7": "permition_2",
+    "process8": "steelmaking_1",
+}
+
+
+def _default_datasets_root() -> Path:
+    return Path(__file__).resolve().parents[1] / "datasets" / "ProsaviewDataSets-main"
 
 
 FORBIDDEN_WORDS = [
@@ -81,7 +110,10 @@ def _load_fragments(input_path: Path) -> list[Fragment]:
         raise ValueError("Top-level JSON must be an object")
     frags = raw.get("fragments")
     if not isinstance(frags, list):
-        raise ValueError("JSON must contain fragments: []")
+        raise ValueError(
+            f"{input_path.name} must contain a top-level fragments array "
+            "(Prosaview BPMN fragment format)."
+        )
 
     parsed: list[Fragment] = []
     for f in frags:
@@ -102,6 +134,103 @@ def _load_fragments(input_path: Path) -> list[Fragment]:
             )
         )
     return parsed
+
+
+def _prefix_fragments(fragments: list[Fragment], *, prefix: str) -> list[Fragment]:
+    def pid(node_id: str) -> str:
+        return f"{prefix}{node_id}" if node_id else node_id
+
+    return [
+        Fragment(
+            id=pid(f.id),
+            name=f.name,
+            type=f.type,
+            branch=f.branch,
+            in_coming=[pid(x) for x in f.in_coming],
+            out_coming=[pid(x) for x in f.out_coming],
+        )
+        for f in fragments
+    ]
+
+
+def _find_dataset_dir(datasets_root: Path, dataset_name: str) -> Path:
+    if not datasets_root.is_dir():
+        raise FileNotFoundError(f"Datasets root not found: {datasets_root}")
+    want = dataset_name.lower()
+    for child in datasets_root.iterdir():
+        if child.is_dir() and child.name.lower() == want:
+            return child
+    raise FileNotFoundError(
+        f"No dataset folder matching {dataset_name!r} under {datasets_root}"
+    )
+
+
+def _has_fragments(path: Path) -> bool:
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return False
+    return isinstance(raw, dict) and isinstance(raw.get("fragments"), list)
+
+
+def _resolve_fragment_source(
+    process_path: Path,
+    *,
+    datasets_root: Path | None,
+) -> Path:
+    """Use local process JSON if it has fragments; else Prosaview S0_* from datasets."""
+    if _has_fragments(process_path):
+        return process_path
+
+    if datasets_root is None:
+        raise ValueError(
+            f"{process_path} is not Prosaview fragments JSON. "
+            "Pass --datasets-root or replace the file with a fragments export."
+        )
+
+    dataset_name = PROCESS_BASENAME_TO_DATASET.get(process_path.stem)
+    if not dataset_name:
+        raise ValueError(
+            f"No dataset mapping for {process_path.name} "
+            f"(add to PROCESS_BASENAME_TO_DATASET in prepare_personas.py)"
+        )
+
+    dataset_dir = _find_dataset_dir(datasets_root, dataset_name)
+    candidates = sorted(dataset_dir.glob("S0_*.json"))
+    if not candidates:
+        candidates = sorted(dataset_dir.glob("S*_*.json"))
+    if not candidates:
+        raise FileNotFoundError(f"No S*_*.json subject files in {dataset_dir}")
+
+    return candidates[0]
+
+
+def _load_merged_fragments_from_folder(
+    folder: Path,
+    *,
+    datasets_root: Path | None = None,
+) -> tuple[list[Fragment], list[str]]:
+    process_files = sorted(folder.glob("process*.json"))
+    if not process_files:
+        raise ValueError(f"No process*.json files in {folder}")
+
+    merged: list[Fragment] = []
+    sources: list[str] = []
+    for path in process_files:
+        source = _resolve_fragment_source(path, datasets_root=datasets_root)
+        if source == path:
+            sources.append(path.name)
+        elif datasets_root is not None:
+            try:
+                rel = source.relative_to(datasets_root)
+                sources.append(f"{path.name} <- {rel}")
+            except ValueError:
+                sources.append(f"{path.name} <- {source.name}")
+        else:
+            sources.append(f"{path.name} <- {source.name}")
+        frags = _load_fragments(source)
+        merged.extend(_prefix_fragments(frags, prefix=f"{path.stem}__"))
+    return merged, sources
 
 
 def _build_graph(fragments: list[Fragment]) -> tuple[dict[str, Fragment], dict[str, list[str]]]:
@@ -207,6 +336,10 @@ def _infer_defaults(nodes: dict[str, Fragment], *, project: str, subject_label: 
 
     # Simple stable names by subject label.
     name_by_subject = {
+        "A": "Marta",
+        "B": "Tom",
+        "C": "Elena",
+        "D": "Jamal",
         "S0": "Marta",
         "S1": "Tom",
         "S2": "Elena",
@@ -245,16 +378,17 @@ def _contains_forbidden(text: str) -> list[str]:
     return hits
 
 
+OUTPUT_TEST_PROJECT = "output-test"
+
+
 def _openai_knowledge(
     summary: dict,
     *,
     model: str,
     persona_id: str,
+    multi_process: bool = False,
 ) -> dict[str, str]:
-    api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY is not set")
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=require_env("OPENAI_API_KEY"))
 
     system = (
         "You write persona knowledge for an interviewee in a process-mining study. "
@@ -263,8 +397,16 @@ def _openai_knowledge(
         "Do not use these words anywhere: BPMN, gateway, node, flowchart, branch, task."
     )
 
+    multi_note = ""
+    if multi_process:
+        multi_note = (
+            "This persona covers several related work processes merged together. "
+            "Describe your knowledge across all of them without listing process names.\n\n"
+        )
+
     user = (
         f"Persona id: {persona_id}\n\n"
+        f"{multi_note}"
         "Here is a cleaned summary of the subject's partial process knowledge, "
         "derived from a process graph:\n\n"
         f"{json.dumps(summary, indent=2, ensure_ascii=False)}\n\n"
@@ -367,46 +509,193 @@ def _iter_inputs(input_path: Path | None, input_dir: Path | None) -> Iterable[Pa
             yield p
 
 
-@app.command()
-def main(
-    input: Path | None = typer.Option(None, "--input", exists=False, readable=True),
-    input_dir: Path | None = typer.Option(None, "--input-dir", exists=False, readable=True),
-    output_dir: Path = typer.Option(..., "--output-dir"),
-    openai_model: str = typer.Option("gpt-4o", "--openai-model"),
-    force: bool = typer.Option(False, "--force"),
+def _prepare_prosaview_file(
+    in_path: Path,
+    *,
+    output_dir: Path,
+    openai_model: str,
+    force: bool,
 ) -> None:
-    """Convert Prosaview BPMN fragment JSON into a persona YAML spec."""
-    if (input is None) == (input_dir is None):
-        raise typer.BadParameter("Provide exactly one of --input or --input-dir")
+    subject_label, project = _parse_subject_label_and_project(in_path)
+    persona_id = f"{project}__{subject_label}"
 
-    if input is not None:
-        _require_file(input)
-    else:
-        if not input_dir.exists() or not input_dir.is_dir():
-            raise typer.BadParameter(f"Input dir not found: {input_dir}")
+    fragments = _load_fragments(in_path)
+    nodes, edges = _build_graph(fragments)
+    summary = _summarize_for_llm(nodes, edges)
+    defaults = _infer_defaults(nodes, project=project, subject_label=subject_label)
 
-    for in_path in _iter_inputs(input, input_dir):
-        subject_label, project = _parse_subject_label_and_project(in_path)
-        persona_id = f"{project}__{subject_label}"
+    knowledge = _openai_knowledge(summary, model=openai_model, persona_id=persona_id)
 
-        fragments = _load_fragments(in_path)
+    out_path = output_dir / f"{subject_label}.yaml"
+    _write_persona_yaml(
+        out_path,
+        persona_id=persona_id,
+        project=project,
+        subject_label=subject_label,
+        defaults=defaults,
+        knowledge=knowledge,
+        force=force,
+    )
+    typer.echo(f"Wrote {out_path}")
+
+
+def _prepare_personas_root(
+    personas_root: Path,
+    *,
+    datasets_root: Path | None,
+    openai_model: str,
+    force: bool,
+) -> None:
+    if not personas_root.is_dir():
+        raise typer.BadParameter(f"Personas root not found: {personas_root}")
+
+    folders = iter_persona_folders(personas_root)
+    if not folders:
+        raise typer.BadParameter(f"No persona folders under {personas_root}")
+
+    for folder in folders:
+        subject_label = folder.name
+        persona_id = f"{OUTPUT_TEST_PROJECT}__{subject_label}"
+        process_files = sorted(folder.glob("process*.json"))
+
+        try:
+            fragments, sources = _load_merged_fragments_from_folder(
+                folder,
+                datasets_root=datasets_root,
+            )
+        except (ValueError, FileNotFoundError) as e:
+            raise typer.BadParameter(f"{folder.name}: {e}") from e
+
         nodes, edges = _build_graph(fragments)
         summary = _summarize_for_llm(nodes, edges)
-        defaults = _infer_defaults(nodes, project=project, subject_label=subject_label)
+        summary["persona_process_files"] = [p.name for p in process_files]
+        summary["fragment_sources"] = sources
+        defaults = _infer_defaults(
+            nodes,
+            project=OUTPUT_TEST_PROJECT,
+            subject_label=subject_label,
+        )
+        knowledge = _openai_knowledge(
+            summary,
+            model=openai_model,
+            persona_id=persona_id,
+            multi_process=len(process_files) > 1,
+        )
 
-        knowledge = _openai_knowledge(summary, model=openai_model, persona_id=persona_id)
-
-        out_path = output_dir / f"{subject_label}.yaml"
+        out_path = prompt_file_in_folder(folder)
         _write_persona_yaml(
             out_path,
             persona_id=persona_id,
-            project=project,
+            project=OUTPUT_TEST_PROJECT,
             subject_label=subject_label,
             defaults=defaults,
             knowledge=knowledge,
             force=force,
         )
-        typer.echo(f"Wrote {out_path}")
+        typer.echo(f"Wrote {out_path} ({len(process_files)} process files)")
+
+
+@app.command("batch")
+def batch(
+    personas_root: Path = typer.Option(
+        default_personas_root(),
+        "--personas-root",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        help="Root containing persona folders A, B, C, D (default: testing-harness/personas/)",
+    ),
+    datasets_root: Path = typer.Option(
+        _default_datasets_root(),
+        "--datasets-root",
+        exists=False,
+        file_okay=False,
+        dir_okay=True,
+        help="Prosaview datasets used when process*.json lacks fragments",
+    ),
+    openai_model: str = typer.Option("gpt-4o", "--openai-model"),
+    force: bool = typer.Option(False, "--force"),
+) -> None:
+    """
+    Prepare one prompt.yaml per folder under personas/ from all process*.json files.
+
+    Example: python tools/prepare_personas.py batch
+    """
+    ds_root = datasets_root if datasets_root.is_dir() else None
+    if ds_root is None:
+        typer.echo(
+            f"Datasets root not found ({datasets_root}); "
+            "each process*.json must already be fragments JSON.",
+            err=True,
+        )
+    _prepare_personas_root(
+        personas_root.resolve(),
+        datasets_root=ds_root,
+        openai_model=openai_model,
+        force=force,
+    )
+
+
+@app.command()
+def main(
+    input: Path | None = typer.Option(None, "--input", exists=False, readable=True),
+    input_dir: Path | None = typer.Option(None, "--input-dir", exists=False, readable=True),
+    personas_root: Path | None = typer.Option(
+        None,
+        "--personas-root",
+        exists=False,
+        file_okay=False,
+        dir_okay=True,
+        help="Prepare one YAML per subfolder (process*.json merged); writes {name}.yaml alongside",
+    ),
+    output_dir: Path | None = typer.Option(
+        None,
+        "--output-dir",
+        help="Output directory (required for --input / --input-dir)",
+    ),
+    openai_model: str = typer.Option("gpt-4o", "--openai-model"),
+    force: bool = typer.Option(False, "--force"),
+) -> None:
+    """Convert BPMN fragment JSON into persona YAML (Prosaview files or personas/<folder>/)."""
+    modes = sum(
+        1
+        for x in (input is not None, input_dir is not None, personas_root is not None)
+        if x
+    )
+    if modes != 1:
+        raise typer.BadParameter(
+            "Provide exactly one of: --input, --input-dir, or --personas-root"
+        )
+
+    if personas_root is not None:
+        typer.echo(
+            "Prefer: python tools/prepare_personas.py batch",
+            err=True,
+        )
+        ds = _default_datasets_root()
+        _prepare_personas_root(
+            personas_root.resolve(),
+            datasets_root=ds if ds.is_dir() else None,
+            openai_model=openai_model,
+            force=force,
+        )
+        return
+
+    if output_dir is None:
+        raise typer.BadParameter("--output-dir is required with --input or --input-dir")
+
+    if input is not None:
+        _require_file(input)
+    elif not input_dir.exists() or not input_dir.is_dir():
+        raise typer.BadParameter(f"Input dir not found: {input_dir}")
+
+    for in_path in _iter_inputs(input, input_dir):
+        _prepare_prosaview_file(
+            in_path,
+            output_dir=output_dir,
+            openai_model=openai_model,
+            force=force,
+        )
 
 
 if __name__ == "__main__":

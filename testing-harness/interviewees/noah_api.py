@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from typing import Any
 import httpx
 
+from interviewees.env import load_harness_env
+
 
 @dataclass(frozen=True)
 class LiveKitSession:
@@ -36,6 +38,7 @@ class NoahApiClient:
     """Cookie-authenticated client; create one instance per interview session."""
 
     def __init__(self, base_url: str | None = None) -> None:
+        load_harness_env()
         url = (base_url or os.environ.get("NOAH_API_URL") or "http://localhost:8000").rstrip(
             "/"
         )
@@ -50,6 +53,22 @@ class NoahApiClient:
 
     def __exit__(self, *args: object) -> None:
         self.close()
+
+    def list_projects(self) -> list[dict[str, Any]]:
+        r = self._client.get("/api/projects")
+        r.raise_for_status()
+        data = r.json()
+        if not isinstance(data, list):
+            raise RuntimeError("Expected list from GET /api/projects")
+        return data
+
+    def find_or_create_project_by_title(self, title: str) -> int:
+        """Return project id for an exact title match, creating the project if missing."""
+        for project in self.list_projects():
+            if str(project.get("title") or "") == title:
+                return int(project["id"])
+        created = self.create_project(title)
+        return int(created["id"])
 
     def create_project(self, title: str) -> dict[str, Any]:
         r = self._client.post("/api/projects", json={"title": title})

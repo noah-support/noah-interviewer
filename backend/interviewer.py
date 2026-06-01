@@ -24,7 +24,9 @@ from livekit.agents import (
     ConversationItemAddedEvent,
     TurnHandlingOptions,
     llm,
+    room_io,
 )
+from livekit.agents.voice.room_io.types import TextInputEvent
 from livekit.agents.llm import ChatMessage
 from livekit.plugins import silero, openai, elevenlabs
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
@@ -53,6 +55,45 @@ print("--- STARTING WITH URL:", os.getenv("LIVEKIT_URL"), "---")
 _ROOM_INTERVIEW_ID_RE = re.compile(r"^interview-(?P<id>\d+)-")
 
 
+def _env_flag(name: str) -> bool:
+    return os.getenv(name, "").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+        "on",
+    )
+
+
+def _interviewer_text_only() -> bool:
+    return _env_flag("NOAH_INTERVIEWER_TEXT_ONLY")
+
+
+def _run_tracker_and_directive(room_name: str) -> str:
+    from bpmn_redis import buffer_length, get_state_dict
+    from bpmn_schema import PHASE_DEEPDIVE, meta_phase
+    from directive_prompt import build_deepdive_entry_block, build_dynamic_directive_block
+    from state_tracker import run_state_tracker
+
+    before = get_state_dict(room_name)
+    before_discovery = before.get("discovery") if isinstance(before.get("discovery"), dict) else {}
+    before_done = bool(before_discovery.get("is_completed"))
+    before_phase = meta_phase(before)
+
+    if buffer_length(room_name) > 0:
+        run_state_tracker(room_name=room_name, allow_empty_buffer=False)
+
+    after = get_state_dict(room_name)
+    after_discovery = after.get("discovery") if isinstance(after.get("discovery"), dict) else {}
+    after_done = bool(after_discovery.get("is_completed"))
+    after_phase = meta_phase(after)
+    just_completed = not before_done and after_done
+    just_entered_deepdive = before_phase != PHASE_DEEPDIVE and after_phase == PHASE_DEEPDIVE
+
+    if just_completed or just_entered_deepdive:
+        return build_deepdive_entry_block(after)
+    return build_dynamic_directive_block(after)
+
+
 class Interviewer(Agent):
     def __init__(self, *, interview_id: str, room_name: str) -> None:
         self.interview_id = interview_id
@@ -61,6 +102,7 @@ class Interviewer(Agent):
         self.tracker_turn_counter = 0
         self.summary_cache = ""
         self._latest_rag_context_message = ""
+        self._rag_disabled = False
         self._bpmn_directive_message = ""
         self._opening_directive_message = ""
         self._opening_user_turn_index = 0
@@ -75,6 +117,9 @@ class Interviewer(Agent):
         )
 
     def _build_rag_context_message(self, *, query_text: str) -> str:
+        if self._rag_disabled:
+            return ""
+
         query = (query_text or "").strip()
         if not query:
             return ""
@@ -169,7 +214,8 @@ class Interviewer(Agent):
         finally:
             db.close()
 
-    def _load_project_namespace(self) -> str:
+    def _load_project_context(self) -> tuple[str, bool]:
+        """Return (pinecone namespace, rag_disabled). RAG off for output-test* projects."""
         db.connect(reuse_if_open=True)
         try:
             interview = (
@@ -179,10 +225,12 @@ class Interviewer(Agent):
                 .first()
             )
             if not interview:
-                return ""
+                return "", _env_flag("NOAH_DISABLE_RAG")
             project = interview.project
-            ns = (project.namespace or "").strip()
-            return ns or f"project-{project.id}"
+            ns = (project.namespace or "").strip() or f"project-{project.id}"
+            title = (project.title or "").strip().lower()
+            rag_disabled = _env_flag("NOAH_DISABLE_RAG") or title.startswith("output-test")
+            return ns, rag_disabled
         finally:
             db.close()
 
@@ -306,9 +354,13 @@ class Interviewer(Agent):
         # Prime summary cache once at session start.
         await self._refresh_summary_cache()
         try:
-            self.project_namespace = await asyncio.to_thread(self._load_project_namespace)
+            ns, rag_disabled = await asyncio.to_thread(self._load_project_context)
+            self.project_namespace = ns
+            self._rag_disabled = rag_disabled
+            if rag_disabled:
+                print("[SYSTEM] RAG disabled for this interview (output-test project or NOAH_DISABLE_RAG)")
         except Exception as e:
-            print(f"[SYSTEM] failed to load project namespace: {e}")
+            print(f"[SYSTEM] failed to load project context: {e}")
         try:
             self.interviewee_username = await asyncio.to_thread(self._load_interviewee_username)
         except Exception as e:
@@ -393,15 +445,16 @@ class Interviewer(Agent):
             print(f"[SYSTEM] failed to enqueue summary job: {e}")
         return await super().on_exit()
 
-    async def on_user_turn_completed(self, turn_ctx: llm.ChatContext, new_message: llm.ChatMessage) -> None:
-        user_text = (new_message.text_content or "").strip()
-        if user_text:
+    async def _on_user_text_for_discovery(self, user_text: str) -> None:
+        """Feed the state manager from a user turn (STT path or lk.chat text stream)."""
+        text = (user_text or "").strip()
+        if text:
             try:
                 await asyncio.to_thread(
                     append_buffer_line,
                     self.room_name,
                     "user",
-                    user_text,
+                    text,
                 )
             except Exception as e:
                 print(f"[SYSTEM] append user buffer failed: {e}")
@@ -417,61 +470,26 @@ class Interviewer(Agent):
         self.turn_counter += 1
         print(f"[SYSTEM] add turn counter: turncounter = {self.turn_counter}")
         self._maybe_schedule_summary_refresh()
-        try:
-            self._latest_rag_context_message = await asyncio.to_thread(
-                self._build_rag_context_message,
-                query_text=(new_message.text_content or ""),
-            )
-        except Exception as e:
-            print(f"[SYSTEM] failed to build RAG context message: {e}")
+        if not self._rag_disabled:
+            try:
+                self._latest_rag_context_message = await asyncio.to_thread(
+                    self._build_rag_context_message,
+                    query_text=text,
+                )
+            except Exception as e:
+                print(f"[SYSTEM] failed to build RAG context message: {e}")
+                self._latest_rag_context_message = ""
+        else:
             self._latest_rag_context_message = ""
 
-        rn = self.room_name
-
-        def _tracker_and_directive() -> tuple[bool, str]:
-            from bpmn_redis import buffer_length, get_state_dict
-            from bpmn_schema import PHASE_DEEPDIVE, meta_phase
-            from directive_prompt import (
-                build_deepdive_entry_block,
-                build_dynamic_directive_block,
-            )
-            from state_tracker import run_state_tracker
-
-            before = get_state_dict(rn)
-            before_discovery = before.get("discovery") if isinstance(before.get("discovery"), dict) else {}
-            before_done = bool(before_discovery.get("is_completed"))
-            before_phase = meta_phase(before)
-
-            flushed = True
-            if buffer_length(rn) > 0:
-                flushed = run_state_tracker(room_name=rn, allow_empty_buffer=False)
-
-            after = get_state_dict(rn)
-            after_discovery = after.get("discovery") if isinstance(after.get("discovery"), dict) else {}
-            after_done = bool(after_discovery.get("is_completed"))
-            after_phase = meta_phase(after)
-            just_completed = not before_done and after_done
-            just_entered_deepdive = (
-                before_phase != PHASE_DEEPDIVE and after_phase == PHASE_DEEPDIVE
-            )
-
-            if just_completed or just_entered_deepdive:
-                directive = build_deepdive_entry_block(after)
-            else:
-                directive = build_dynamic_directive_block(after)
-            return flushed, directive
-
         try:
-            _flushed_ok, directive = await asyncio.to_thread(_tracker_and_directive)
+            directive = await asyncio.to_thread(_run_tracker_and_directive, self.room_name)
             self._bpmn_directive_message = directive
+            await asyncio.to_thread(self._persist_discovery_debounced)
         except Exception as e:
             print(f"[SYSTEM] state tracker / directive failed: {e}")
             self._bpmn_directive_message = ""
 
-        reply_ctx = self._reply_chat_ctx()
-        turn_ctx._items = list(reply_ctx.items)
-
-        # start job if above SUMMARY_AMOUNT amount
         summary_every = int(os.getenv("SUMMARY_AMOUNT", "5"))
         if self.turn_counter >= summary_every:
             try:
@@ -481,7 +499,33 @@ class Interviewer(Agent):
             except Exception as e:
                 print(f"[SYSTEM] failed to enqueue periodic summary job: {e}")
             self.turn_counter = 0
+
+    async def on_user_turn_completed(self, turn_ctx: llm.ChatContext, new_message: llm.ChatMessage) -> None:
+        await self._on_user_text_for_discovery(new_message.text_content or "")
+        reply_ctx = self._reply_chat_ctx()
+        turn_ctx._items = list(reply_ctx.items)
         return await super().on_user_turn_completed(turn_ctx, new_message)
+
+
+async def _noah_text_input_cb(
+    session: AgentSession,
+    ev: TextInputEvent,
+    *,
+    agent: Interviewer,
+) -> None:
+    """
+    Text on lk.chat uses generate_reply(), which bypasses on_user_turn_completed.
+    Run the same discovery buffer + state tracker before replying.
+    """
+    await session.interrupt()
+    user_text = (ev.text or "").strip()
+    if user_text:
+        await agent._on_user_text_for_discovery(user_text)
+    session.generate_reply(
+        user_input=ev.text,
+        input_modality="text",
+        chat_ctx=agent._reply_chat_ctx(),
+    )
 
 
 server = AgentServer()
@@ -498,36 +542,52 @@ async def my_agent(ctx: agents.JobContext):
     interview_id = m.group("id")
 
     loop = asyncio.get_running_loop()
-
-    session = AgentSession(
-        stt=elevenlabs.STT(model_id="scribe_v2_realtime"),
-        llm=openai.LLM(model="gpt-5.4-mini"),
-        tts=elevenlabs.TTS(
-            voice_id="1SM7GgM6IMuvQlz2BwM3",
-            model="eleven_flash_v2_5",
-        ),
-        vad=silero.VAD.load(),
-        turn_handling=TurnHandlingOptions(
-            turn_detection=MultilingualModel(
-                unlikely_threshold=float(
-                    os.getenv("TURN_EOU_UNLIKELY_THRESHOLD", "0.78")
-                ),
-            ),
-            endpointing={
-                "min_delay": float(os.getenv("TURN_MIN_ENDPOINTING_DELAY", "1.0")),
-                "max_delay": float(os.getenv("TURN_MAX_ENDPOINTING_DELAY", "4.0")),
-            },
-            interruption={
-                "enabled": True,
-                "min_duration": 0.75,
-                "min_words": 2,
-                "resume_false_interruption": False,
-            },
-            preemptive_generation={"enabled": False},
-        ),
-    )
+    text_only = _interviewer_text_only()
 
     agent = Interviewer(interview_id=interview_id, room_name=room_name)
+
+    async def text_input_cb(session: AgentSession, ev: TextInputEvent) -> None:
+        await _noah_text_input_cb(session, ev, agent=agent)
+
+    if text_only:
+        session = AgentSession(llm=openai.LLM(model="gpt-5.4-mini"))
+        room_options = room_io.RoomOptions(
+            text_input=room_io.TextInputOptions(text_input_cb=text_input_cb),
+            text_output=True,
+            audio_input=False,
+            audio_output=False,
+        )
+    else:
+        session = AgentSession(
+            stt=elevenlabs.STT(model_id="scribe_v2_realtime"),
+            llm=openai.LLM(model="gpt-5.4-mini"),
+            tts=elevenlabs.TTS(
+                voice_id="1SM7GgM6IMuvQlz2BwM3",
+                model="eleven_flash_v2_5",
+            ),
+            vad=silero.VAD.load(),
+            turn_handling=TurnHandlingOptions(
+                turn_detection=MultilingualModel(
+                    unlikely_threshold=float(
+                        os.getenv("TURN_EOU_UNLIKELY_THRESHOLD", "0.78")
+                    ),
+                ),
+                endpointing={
+                    "min_delay": float(os.getenv("TURN_MIN_ENDPOINTING_DELAY", "1.0")),
+                    "max_delay": float(os.getenv("TURN_MAX_ENDPOINTING_DELAY", "4.0")),
+                },
+                interruption={
+                    "enabled": True,
+                    "min_duration": 0.75,
+                    "min_words": 2,
+                    "resume_false_interruption": False,
+                },
+                preemptive_generation={"enabled": False},
+            ),
+        )
+        room_options = room_io.RoomOptions(
+            text_input=room_io.TextInputOptions(text_input_cb=text_input_cb),
+        )
 
     @session.on("conversation_item_added")
     def on_conversation_item_added(event: ConversationItemAddedEvent):
@@ -559,7 +619,7 @@ async def my_agent(ctx: agents.JobContext):
         except Exception as e:
             print(f"[SYSTEM] failed to load interviewee username before start: {e}")
 
-        await session.start(room=ctx.room, agent=agent)
+        await session.start(room=ctx.room, agent=agent, room_options=room_options)
 
         def _initial_directive() -> str:
             from bpmn_redis import get_state_dict

@@ -1,0 +1,42 @@
+{
+    "Atividades": [
+        { "id": "Al0", "nome": "Student Opens Ticket", "tipo": "Tarefa" },
+        { "id": "Cr8", "nome": "CRA Opens Process in Sipac", "tipo": "Tarefa" },
+        { "id": "En8", "nome": "Forward Process for Checking Pending Issues", "tipo": "Tarefa" },
+        { "id": "En0", "nome": "Forward to Coordination", "tipo": "Tarefa" },
+        { "id": "Av1", "nome": "Notify Student About Pending Issues", "tipo": "Tarefa" },
+        { "id": "La0", "nome": "Enter in Academic System", "tipo": "Tarefa" },
+        { "id": "Co3", "nome": "Notify Approval", "tipo": "Tarefa" },
+        { "id": "Co5", "nome": "Notify Disapproval", "tipo": "Tarefa" },
+        { "id": "Fe5", "nome": "Close Ticket", "tipo": "Tarefa" }
+    ],
+    "Situacoes": [
+        { "esquerda": [{"id": "Cr8"}], "operador": "DEP", "direita": [{"id": "Al0"}] },
+        { "esquerda": [{"id": "En8"}], "operador": "DEP", "direita": [{"id": "Al0"}] },
+        { "esquerda": [{"id": "En0"}], "operador": "DEP", "direita": [{"id": "Al0"}] },
+        { "esquerda": [{"id": "En8"}], "operador": "DEP", "direita": [{"id": "Cr8"}] },
+        { "esquerda": [{"id": "En0"}], "operador": "DEP", "direita": [{"id": "Cr8"}] },
+        { "esquerda": [{"id": "En0"}], "operador": "DEP", "direita": [{"id": "En8"}] },
+        { "esquerda": [{"id": "Av1"}], "operador": "DEP", "direita": [{"id": "Al0"}] },
+        { "esquerda": [{"id": "Av1"}], "operador": "DEP", "direita": [{"id": "Cr8"}] },
+        { "esquerda": [{"id": "Av1"}], "operador": "DEP", "direita": [{"id": "En8"}] },
+        { "esquerda": [{"id": "En0"}], "operador": "XOR", "direita": [{"id": "Av1"}] },
+        { "esquerda": [{"id": "La0"}], "operador": "DEP", "direita": [{"id": "Al0"}] },
+        { "esquerda": [{"id": "La0"}], "operador": "DEP", "direita": [{"id": "Cr8"}] },
+        { "esquerda": [{"id": "La0"}], "operador": "DEP", "direita": [{"id": "En8"}] },
+        { "esquerda": [{"id": "La0"}], "operador": "DEP", "direita": [{"id": "En0"}] },
+        { "esquerda": [{"id": "Av1"}], "operador": "XOR", "direita": [{"id": "La0"}] },
+        { "esquerda": [{"id": "Co3"}], "operador": "DEP", "direita": [{"id": "Al0"}] },
+        { "esquerda": [{"id": "Co3"}], "operador": "DEP", "direita": [{"id": "Cr8"}] },
+        { "esquerda": [{"id": "Co3"}], "operador": "DEP", "direita": [{"id": "En8"}] },
+        { "esquerda": [{"id": "Co3"}], "operador": "DEP", "direita": [{"id": "En0"}] },
+        { "esquerda": [{"id": "Co3"}], "operador": "DEP", "direita": [{"id": "La0"}] },
+        { "esquerda": [{"id": "Av1"}], "operador": "XOR", "direita": [{"id": "Co3"}] },
+        { "esquerda": [{"id": "Co5"}], "operador": "DEP", "direita": [{"id": "Al0"}] },
+        { "esquerda": [{"id": "Co5"}], "operador": "DEP", "direita": [{"id": "Cr8"}] },
+        { "esquerda": [{"id": "Co5"}], "operador": "DEP", "direita": [{"id": "En8"}] },
+        { "esquerda": [{"id": "Co5"}], "operador": "DEP", "direita": [{"id": "En0"}] },
+        { "esquerda": [{"id": "Av1"}], "operador": "XOR", "direita": [{"id": "Co5"}] },
+        { "esquerda": [{"id": "La0"}], "operador": "XOR", "direita": [{"id": "Co5"}] }
+    ]
+}

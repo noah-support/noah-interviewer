@@ -42,6 +42,7 @@ from prompts import (
     DIRECTIVE_DEEPDIVE_ALL_PROCESSES_TEMPLATE,
     DIRECTIVE_DEEPDIVE_MISSING_DETAIL_HEAD,
     DIRECTIVE_DEEPDIVE_MISSING_DETAIL_TAIL,
+    DIRECTIVE_DEEPDIVE_NO_CLOSE,
     DIRECTIVE_DEEPDIVE_OPEN_FIRST_PROCESS,
     DIRECTIVE_DEEPDIVE_OPEN_NEXT_PROCESS,
     DIRECTIVE_DISCOVERY_IN_PROGRESS,
@@ -444,6 +445,15 @@ def build_dynamic_directive_block(state: dict[str, Any]) -> str:
             lines.append("")
             lines.append(
                 DIRECTIVE_DEEPDIVE_OPEN_NEXT_PROCESS.format(process=active_name)
+            )
+
+        remaining = progress.get("remaining_processes") or []
+        if remaining:
+            lines.append("")
+            lines.append(
+                DIRECTIVE_DEEPDIVE_NO_CLOSE.format(
+                    remaining=", ".join(remaining),
+                )
             )
 
         _append_deepdive_process_directives(

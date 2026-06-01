@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import os
 from dataclasses import dataclass
 from typing import Any
 
 from livekit import api, rtc
+
+logger = logging.getLogger(__name__)
 
 from interviewees.core.end_signal import contains_sentinel
 from interviewees.core.persona import Persona
@@ -17,6 +20,7 @@ from interviewees.core.transcript import (
     transcript_filename,
     write_transcript,
 )
+from interviewees.env import load_harness_env
 from interviewees.noah_api import InterviewRecord, LiveKitSession, NoahApiClient
 
 TOPIC_CHAT = "lk.chat"
@@ -51,6 +55,7 @@ def _env(name: str) -> str:
 
 
 def _load_connection_from_env() -> LiveKitConnection:
+    load_harness_env()
     url = _env("LIVEKIT_URL")
     room = _env("LIVEKIT_ROOM")
     identity = _env("LIVEKIT_IDENTITY") or "harness-interviewee"
@@ -60,8 +65,8 @@ def _load_connection_from_env() -> LiveKitConnection:
         raise RuntimeError("LIVEKIT_URL is not set")
     if not room:
         raise RuntimeError(
-            "LIVEKIT_ROOM is not set. Use project mode (runner project) for automatic "
-            "token/room via the Noah API, or set LIVEKIT_ROOM manually."
+            "LIVEKIT_ROOM is not set. For Noah runs, use `runner.py interview --interviewer noah` "
+            "(auto-provisions via the Noah API) or set LIVEKIT_ROOM in testing-harness/.env."
         )
 
     if not token:
@@ -83,6 +88,7 @@ def _load_connection_from_env() -> LiveKitConnection:
 
 
 def connection_from_session(lk: LiveKitSession, *, url: str | None = None) -> LiveKitConnection:
+    load_harness_env()
     livekit_url = (url or _env("LIVEKIT_URL")).strip()
     if not livekit_url:
         raise RuntimeError("LIVEKIT_URL is not set")
@@ -92,6 +98,14 @@ def connection_from_session(lk: LiveKitSession, *, url: str | None = None) -> Li
         identity=lk.username,
         token=lk.token,
     )
+
+
+def _interviewer_idle_timeout_s() -> float:
+    raw = (os.environ.get("INTERVIEWER_IDLE_TIMEOUT_S") or "180").strip()
+    try:
+        return max(30.0, float(raw))
+    except ValueError:
+        return 180.0
 
 
 def _parse_bool(value: str | None) -> bool | None:
@@ -165,10 +179,21 @@ async def run_interview(
 
     ended_by = "manual"
     last_interviewer_text = ""
+    idle_timeout_s = _interviewer_idle_timeout_s()
 
     try:
         while True:
-            interviewer_text = await incoming.get()
+            try:
+                interviewer_text = await asyncio.wait_for(
+                    incoming.get(), timeout=idle_timeout_s
+                )
+            except asyncio.TimeoutError:
+                logger.warning(
+                    "No interviewer message on lk.transcription for %.0fs; ending run.",
+                    idle_timeout_s,
+                )
+                ended_by = "idle_timeout"
+                break
             last_interviewer_text = interviewer_text
             reply, should_disconnect = session.handle_interviewer_message(interviewer_text)
             if reply:

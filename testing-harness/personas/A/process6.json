@@ -1,0 +1,143 @@
+{
+    "Atividades": [
+        
+        {
+            "tipo": "Tarefa",
+            "nome": "Open",
+            "id": "Op4"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Update",
+            "id": "Up6"
+        },
+         {
+            "tipo": "Tarefa",
+            "nome": "Reassignment",
+            "id": "Re3"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Operator Update",
+            "id": "Op5"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Assignment",
+            "id": "As8"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Status Change",
+            "id": "St3"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Closed",
+            "id": "Cl6"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Caused by CI",
+            "id": "Ca2"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Quality Indicator Fixed",
+            "id": "Qu1"
+        } 
+        ,
+        {
+            "tipo": "Tarefa",
+            "nome": "Finish",
+            "id": "Fi6"
+        }                     
+    ],
+    "Situacoes":[
+        {
+            "esquerda": [{"id": "Up6"}],
+            "operador": "DEP",
+            "direita": [{"id": "Op4"}]
+        },
+        {
+            "esquerda": [{"id": "Re3"}],
+            "operador": "DEP",
+            "direita": [{"id": "Up6"}]
+        },       
+        {
+            "esquerda": [{"id": "Op5"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re3"}]
+        },
+        {
+            "esquerda": [{"id": "As8"}],
+            "operador": "DEP",
+            "direita": [{"id": "Op5"}]
+        },
+        {
+            "esquerda": [{"id": "St3"}],
+            "operador": "DEP",
+            "direita": [{"id": "As8"}]
+        }   
+        ,
+         {
+            "esquerda": [{"id": "Cl6"}],
+            "operador": "DEPC",
+            "direita": [{"id": "St3"}]
+        }   
+        ,
+        {
+            "esquerda": [{"id": "Cl6"}],
+            "operador": "DEP",
+            "direita": [{"id": "As8"}]
+        }   
+        ,
+         {
+            "esquerda": [{"id": "Ca2"}],
+            "operador": "DEP",
+            "direita": [{"id": "Cl6"}]
+        }   
+        ,
+         {
+            "esquerda": [{"id": "Qu1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ca2"}]
+        }   
+        ,
+         {
+            "esquerda": [{"id": "Fi6"}],
+            "operador": "DEP",
+            "direita": [{"id": "Qu1"}]
+        }   
+        ,
+         {
+            "esquerda": [{"id": "Fi6"}],
+            "operador": "DEPC",
+            "direita": [{"id": "Qu1"}]
+        }   
+        ,
+        {
+            "esquerda": [{"id": "Op4"}],
+            "operador": "JMP",
+            "direita": [{"id": "As8"}]
+        }     
+        ,
+        {
+            "esquerda": [{"id": "As8"}],
+            "operador": "JMP",
+            "direita": [{"id": "As8"}]
+        }   
+        ,
+        {
+            "esquerda": [{"id": "Cl6"}],
+            "operador": "JMP",
+            "direita": [{"id": "Fi6"}]
+        }    
+         ,
+        {
+            "esquerda": [{"id": "Ca2"}],
+            "operador": "JMP",
+            "direita": [{"id": "Fi6"}]
+        }     
+    ]
+}

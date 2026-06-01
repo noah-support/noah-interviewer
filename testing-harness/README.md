@@ -2,9 +2,9 @@
 
 This folder contains the **interviewee side** of a BPMN reconstruction testing harness. It provides:
 
-- **Personas** (`personas/<project>/<subject>.yaml`) that encode identity + process knowledge.
-- A **persona prep tool** that converts Prosaview subject JSON into persona YAML.
-- A **runner** that connects to an interviewer (ElevenLabs or LiveKit), records a transcript, and exits.
+- **Personas** — one folder per interviewee (`personas/A/`, `B/`, …) with `process*.json` BPMN fragments; prepared YAML at `personas/{name}.yaml`.
+- A **persona prep tool** that merges process files per folder into one persona YAML.
+- A **batch runner** that runs all personas against Noah (LiveKit) or ElevenLabs.
 
 ### Sentinel (end-of-interview)
 
@@ -25,102 +25,77 @@ pip install -e ".[dev]"
 cp config.example.env .env
 ```
 
-### Prepare personas
+### Prepare personas (output-test layout)
 
-Single file:
-
-```bash
-python tools/prepare_personas.py \
-  --input datasets/ComputerRepair_1/S0_ComputerRepair_1.json \
-  --output-dir personas/ComputerRepair_1/
-```
-
-Batch:
+Each subfolder under `personas/` (`A/`, `B/`, …) holds `process*.json` files. The batch command merges them and writes **`personas/{folder}/prompt.yaml`** (one per folder):
 
 ```bash
-python tools/prepare_personas.py \
-  --input-dir datasets/ComputerRepair_1/ \
-  --output-dir personas/ComputerRepair_1/
+python tools/prepare_personas.py batch
 ```
+
+If a `process*.json` is not already Prosaview **fragments** JSON, the tool loads `S0_*.json` from `datasets/ProsaviewDataSets-main/` using the mapping in `personas/devide.txt`.
+
+Legacy Prosaview single-subject mode still works with `--input` / `--input-dir` and `--output-dir`.
 
 Notes:
 
 - The generator rejects outputs containing process-modeling terms (`BPMN`, `gateway`, `node`, `flowchart`, `branch`, `task`) and retries once.
 - It will not overwrite existing persona YAMLs unless `--force` is passed.
 
-### Run all interviewees for a project (sequential)
+### Batch output test (all personas)
 
 ```bash
-# ElevenLabs — hosted agent only; one aggregate JSON in results/
-python runner.py project --project ComputerRepair_1 --interviewer elevenlabs --mode full
+# Noah — DB project output-test-noah, LiveKit, combined JSON in --output-dir
+python3 runner.py --interviewer noah --output-dir ./out
 
-# LiveKit — full Noah DB lifecycle; one aggregate JSON in results/
-python runner.py project --project ComputerRepair_1 --interviewer livekit --mode full
+# ElevenLabs — ConvAI only; no DB or JSON export
+python3 runner.py --interviewer elevenlabs --output-dir ./out
 ```
 
-See [TESTING.md](TESTING.md) for prerequisites and output format.
+Shows a progress bar per persona folder (`A`, `B`, `C`, `D`). See [TESTING.md](TESTING.md) for prerequisites.
 
-### Run a single interview
+**Noah JSON export** (`{output-dir}/output-test-noah_{timestamp}.json`):
 
-Smoke mode (turn cap 10, writes to `transcripts/_smoke/`):
-
-```bash
-python runner.py \
-  --persona personas/ComputerRepair_1/S0.yaml \
-  --interviewer elevenlabs \
-  --mode smoke
+```json
+{
+  "A": {
+    "content": { "items": [ { "role": "user", "content": "..." } ] },
+    "discovery_state_json": { },
+    "summary": "..."
+  }
+}
 ```
 
-Full mode (turn cap 80, writes to `transcripts/<project>/`):
+Fields match the Postgres `Interview` row: `content`, `discovery_state_json`, `summary`.
+
+### Run a single interview (debugging)
 
 ```bash
-python runner.py \
-  --persona personas/ComputerRepair_1/S0.yaml \
-  --interviewer livekit \
+python3 runner.py interview \
+  --persona personas/A/prompt.yaml \
+  --interviewer noah \
   --mode full
 ```
 
+Use `--interviewer elevenlabs` or `noah` (`noah` maps to the LiveKit client).
+
 ### Transcript format
 
-The runner writes one JSON file per interview:
+Per-interview harness transcripts (optional, under `transcripts/`):
 
 - `transcripts/<project>/<subject_label>__<interviewer>__<timestamp>.json`
 
-Schema fields:
-
-- `schema_version`: `"1.0"`
-- `persona_id`, `project`, `subject_label`, `interviewer`
-- `started_at`, `ended_at` (UTC, `...Z`)
-- `ended_by`: `sentinel` | `turn_cap` | `error` | `manual`
-- `turn_count`
-- `turns[]`: `{ index, role, text, timestamp }`
+Schema: `schema_version`, `persona_id`, `project`, `subject_label`, `interviewer`, `turns[]`, `ended_by`.
 
 ### Transport contracts
 
 #### ElevenLabs (text-only ConvAI)
 
-Environment:
+- `ELEVENLABS_API_KEY`, `ELEVENLABS_AGENT_ID`
+- Chat/text mode; harness sends `user_message`, receives agent responses.
 
-- `ELEVENLABS_API_KEY`
-- `ELEVENLABS_AGENT_ID`
+#### Noah / LiveKit (text streams)
 
-Contract:
-
-- Harness connects in **chat mode** (text-only) and receives interviewer turns via the agent response callback.
-- Harness sends interviewee replies as ConvAI `user_message` events.
-
-#### LiveKit (text streams, not custom data-channel JSON)
-
-Environment:
-
-- `LIVEKIT_URL` (e.g. `ws://localhost:7880`)
-- `LIVEKIT_ROOM` (room name to join)
-- `LIVEKIT_IDENTITY` (optional; default `harness-interviewee`)
-- Either `LIVEKIT_TOKEN` **or** (`LIVEKIT_API_KEY` + `LIVEKIT_API_SECRET`) to mint one
-
-Contract:
-
-- Interviewer must be configured in text mode and publish text output as LiveKit **text streams**:
-  - Interviewee → interviewer: topic `lk.chat` (`send_text(..., topic="lk.chat")`)
-  - Interviewer → interviewee: topic `lk.transcription` (text stream attributes include `lk.segment_id`, `lk.transcription_final`)
-
+- `NOAH_API_URL`, `LIVEKIT_URL`, and token or `LIVEKIT_API_KEY` + `LIVEKIT_API_SECRET`
+- Topics: `lk.chat` (out), `lk.transcription` (in)
+- Batch mode provisions token/room via the Noah API per interview.

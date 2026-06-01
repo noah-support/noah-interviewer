@@ -1,0 +1,176 @@
+{
+    "Atividades": [
+        {
+            "tipo": "Tarefa",
+            "nome": "New Complaint Received",
+            "id": "No6"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Open a New Case",
+            "id": "Ab1"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Forward Complaint Internally",
+            "id": "En8"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Forward Complaint Externally",
+            "id": "En4"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Receive References",
+            "id": "Re2"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Confirm External Reference",
+            "id": "Co1"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Insert Reference into Incident Record",
+            "id": "In3"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Inform Complainant",
+            "id": "In1"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Analyze Complaint",
+            "id": "An1"
+        }
+    ],
+    "Situacoes": [
+        {
+            "esquerda": [{"id": "Ab1"}],
+            "operador": "DEP",
+            "direita": [{"id": "No6"}]
+        },
+        {
+            "esquerda": [{"id": "En8"}],
+            "operador": "DEP",
+            "direita": [{"id": "No6"}]
+        },
+        {
+            "esquerda": [{"id": "En4"}],
+            "operador": "DEP",
+            "direita": [{"id": "No6"}]
+        },
+        {
+            "esquerda": [{"id": "Re2"}],
+            "operador": "DEP",
+            "direita": [{"id": "No6"}]
+        },
+        {
+            "esquerda": [{"id": "En8"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ab1"}]
+        },
+        {
+            "esquerda": [{"id": "En4"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ab1"}]
+        },
+        {
+            "esquerda": [{"id": "Re2"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ab1"}]
+        },
+        {
+            "esquerda": [{"id": "Co1"}],
+            "operador": "DEP",
+            "direita": [{"id": "No6"}]
+        },
+        {
+            "esquerda": [{"id": "Co1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ab1"}]
+        },
+        {
+            "esquerda": [{"id": "Co1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re2"}]
+        },
+        {
+            "esquerda": [{"id": "In3"}],
+            "operador": "DEP",
+            "direita": [{"id": "No6"}]
+        },
+        {
+            "esquerda": [{"id": "In3"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ab1"}]
+        },
+        {
+            "esquerda": [{"id": "In3"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re2"}]
+        },
+        {
+            "esquerda": [{"id": "In3"}],
+            "operador": "DEP",
+            "direita": [{"id": "Co1"}]
+        },
+        {
+            "esquerda": [{"id": "In1"}],
+            "operador": "DEP",
+            "direita": [{"id": "No6"}]
+        },
+        {
+            "esquerda": [{"id": "In1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ab1"}]
+        },
+        {
+            "esquerda": [{"id": "In1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re2"}]
+        },
+        {
+            "esquerda": [{"id": "In1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Co1"}]
+        },
+        {
+            "esquerda": [{"id": "In1"}],
+            "operador": "DEP",
+            "direita": [{"id": "In3"}]
+        },
+        {
+            "esquerda": [{"id": "An1"}],
+            "operador": "DEP",
+            "direita": [{"id": "No6"}]
+        },
+        {
+            "esquerda": [{"id": "An1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ab1"}]
+        },
+        {
+            "esquerda": [{"id": "An1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re2"}]
+        },
+        {
+            "esquerda": [{"id": "An1"}],
+            "operador": "DEP",
+            "direita": [{"id": "Co1"}]
+        },
+        {
+            "esquerda": [{"id": "An1"}],
+            "operador": "DEP",
+            "direita": [{"id": "In3"}]
+        },
+        {
+            "esquerda": [{"id": "In1"}],
+            "operador": "XOR",
+            "direita": [{"id": "An1"}]
+        }
+    ]
+}

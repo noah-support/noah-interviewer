@@ -428,6 +428,11 @@ def enforce_process_steps(proc: dict[str, Any]) -> dict[str, Any]:
     if out.get("is_completed") and not process_fully_complete(out):
         out["is_completed"] = False
 
+    # Tracker sometimes sets summary_confirmed after a conversational "you got it" without
+    # full step/exception mapping — keep state and directives aligned with real gaps.
+    if out.get("summary_confirmed") and not process_ready_for_confirm(out):
+        out["summary_confirmed"] = False
+
     if out.get("summary_confirmed") and process_ready_for_confirm(out):
         out["is_completed"] = True
 

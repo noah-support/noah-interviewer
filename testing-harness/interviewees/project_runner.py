@@ -1,37 +1,67 @@
-"""Run a full project test: sequential interviews per persona, aggregate JSON."""
+"""Batch output-test runner: sequential interviews per persona folder."""
 
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
 
 import typer
+from rich.progress import BarColumn, Progress, TaskProgressColumn, TextColumn
 
 from interviewees.core.persona import load_persona
 from interviewees.elevenlabs_client import run_interview as run_elevenlabs_interview
 from interviewees.livekit_client import run_interview as run_livekit_interview
-from interviewees.noah_api import NoahApiClient
+from interviewees.noah_api import InterviewRecord, NoahApiClient
+from interviewees.persona_layout import (
+    PERSONA_PROMPT_FILENAME,
+    default_personas_root,
+    iter_persona_folders,
+    prompt_file_in_folder,
+)
 
-InterviewerKind = Literal["livekit", "elevenlabs"]
+OUTPUT_TEST_PROJECT_NOAH = "output-test-noah"
+InterviewerKind = Literal["noah", "elevenlabs"]
 
 
-def _utc_now_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+@dataclass(frozen=True)
+class PersonaSpec:
+    folder_name: str
+    yaml_path: Path
 
 
-def _results_dir() -> Path:
-    return Path(__file__).resolve().parents[1] / "results"
+@dataclass(frozen=True)
+class BatchRunResult:
+    interview_count: int
+    interviewer: InterviewerKind
+    json_export_path: Path | None
 
 
-def discover_personas(personas_dir: Path) -> list[Path]:
-    if not personas_dir.is_dir():
-        raise typer.BadParameter(f"Personas directory not found: {personas_dir}")
-    paths = sorted(personas_dir.glob("*.yaml"))
-    if not paths:
-        raise typer.BadParameter(f"No persona YAML files in {personas_dir}")
-    return paths
+def discover_persona_folders(personas_root: Path | None = None) -> list[PersonaSpec]:
+    """Discover persona folders; each must contain prompt.yaml from persona prep batch."""
+    root = personas_root or default_personas_root()
+    if not root.is_dir():
+        raise typer.BadParameter(f"Personas root not found: {root}")
+
+    specs: list[PersonaSpec] = []
+    for folder in iter_persona_folders(root):
+        yaml_path = prompt_file_in_folder(folder)
+        if not yaml_path.is_file():
+            legacy = root / f"{folder.name}.yaml"
+            if legacy.is_file():
+                yaml_path = legacy
+            else:
+                raise typer.BadParameter(
+                    f"Missing {PERSONA_PROMPT_FILENAME} in {folder.name}/ "
+                    f"(run: python tools/prepare_personas.py batch)"
+                )
+        specs.append(PersonaSpec(folder_name=folder.name, yaml_path=yaml_path))
+
+    if not specs:
+        raise typer.BadParameter(f"No persona folders under {root}")
+    return specs
 
 
 def _parse_content_json(content: str) -> Any:
@@ -44,213 +74,177 @@ def _parse_content_json(content: str) -> Any:
         return text
 
 
-def _write_aggregate(
-    *,
-    project_name: str,
-    interviewer: InterviewerKind,
-    mode: str,
-    started_at: str,
-    interview_results: list[dict[str, Any]],
-    project_id: int | None = None,
-    project_title: str | None = None,
-) -> Path:
-    ended_at = _utc_now_iso()
-    aggregate: dict[str, Any] = {
-        "schema_version": "1.0",
-        "project_name": project_name,
-        "mode": mode,
-        "interviewer": interviewer,
-        "started_at": started_at,
-        "ended_at": ended_at,
-        "interview_count": len(interview_results),
-        "interviews": interview_results,
-    }
-    if project_id is not None:
-        aggregate["project_id"] = project_id
-    if project_title is not None:
-        aggregate["project_title"] = project_title
+def _parse_discovery_state_json(raw: str) -> Any:
+    text = (raw or "").strip()
+    if not text:
+        return None
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        return {"_parse_error": True, "_raw": text}
 
-    out_dir = _results_dir()
-    out_dir.mkdir(parents=True, exist_ok=True)
+
+def _export_entry_from_record(db: InterviewRecord) -> dict[str, Any]:
+    raw_state = str(db.raw.get("discovery_state_json") or "")
+    return {
+        "content": _parse_content_json(db.content),
+        "discovery_state_json": _parse_discovery_state_json(raw_state),
+        "summary": db.summary or "",
+    }
+
+
+def _write_noah_output_json(
+    *,
+    output_dir: Path,
+    entries: dict[str, dict[str, Any]],
+) -> Path:
+    output_dir.mkdir(parents=True, exist_ok=True)
     ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    out_path = out_dir / f"{project_name}__{interviewer}__{mode}__{ts}.json"
+    out_path = output_dir / f"output-test-noah_{ts}.json"
     out_path.write_text(
-        json.dumps(aggregate, indent=2, ensure_ascii=False) + "\n",
+        json.dumps(entries, indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
     return out_path
 
 
-async def run_project_elevenlabs(
+async def run_output_test_batch(
     *,
-    project_name: str,
-    personas_dir: Path,
-    mode: str,
-    openai_model: str,
-    transcript_dir: str | None,
-    verbose: bool,
-) -> Path:
-    """Run all personas sequentially against the hosted ElevenLabs ConvAI agent."""
-    persona_paths = discover_personas(personas_dir)
-    started_at = _utc_now_iso()
-    interview_results: list[dict[str, Any]] = []
-
-    for persona_path in persona_paths:
-        persona = load_persona(persona_path)
-        typer.echo(f"Starting ElevenLabs interview for {persona.id}...", err=True)
-
-        transcript, transcript_path = await run_elevenlabs_interview(
-            persona,
-            mode=mode,
-            openai_model=openai_model,
-            transcript_dir=transcript_dir,
-            verbose=verbose,
-        )
-
-        interview_results.append(
-            {
-                "persona_id": persona.id,
-                "subject_label": persona.subject_label,
-                "persona_path": str(persona_path),
-                "harness_transcript_path": transcript_path,
-                "harness_transcript": transcript.model_dump(),
-                "ended_by": transcript.ended_by,
-            }
-        )
-
-    return _write_aggregate(
-        project_name=project_name,
-        interviewer="elevenlabs",
-        mode=mode,
-        started_at=started_at,
-        interview_results=interview_results,
-    )
-
-
-async def run_project_livekit(
-    *,
-    project_name: str,
-    personas_dir: Path,
-    mode: str,
-    openai_model: str,
-    transcript_dir: str | None,
-    verbose: bool,
-    api_base_url: str | None,
-    persist_wait_timeout_s: float,
-    project_title: str | None = None,
-) -> Path:
-    """
-    Create a DB project, one interview per persona, run LiveKit sequentially, write aggregate JSON.
-    """
-    persona_paths = discover_personas(personas_dir)
-    started_at = _utc_now_iso()
-
-    title = project_title or f"Harness {project_name} {_utc_now_iso()}"
-
-    admin = NoahApiClient(api_base_url)
-    try:
-        project = admin.create_project(title)
-        project_id = int(project["id"])
-    finally:
-        admin.close()
-
-    interview_results: list[dict[str, Any]] = []
-
-    for persona_path in persona_paths:
-        persona = load_persona(persona_path)
-        username = persona.subject_label[:20]
-
-        typer.echo(
-            f"Starting LiveKit interview for {persona.id} (DB username={username})...",
-            err=True,
-        )
-
-        with NoahApiClient(api_base_url) as api:
-            lk = api.provision_livekit_session(project_id, username=username)
-
-            result = await run_livekit_interview(
-                persona,
-                mode=mode,
-                openai_model=openai_model,
-                transcript_dir=transcript_dir,
-                verbose=verbose,
-                livekit_session=lk,
-                noah_api=api,
-                persist_wait_timeout_s=persist_wait_timeout_s,
-            )
-
-        db = result.db_record
-        entry: dict[str, Any] = {
-            "persona_id": persona.id,
-            "subject_label": persona.subject_label,
-            "persona_path": str(persona_path),
-            "interview_id": lk.interview_id,
-            "username": lk.username,
-            "code": lk.code,
-            "room": lk.room,
-            "harness_transcript_path": result.transcript_path,
-            "harness_transcript": result.transcript.model_dump(),
-            "ended_by": result.ended_by,
-            "end_api_response": result.end_api_response,
-        }
-        if db is not None:
-            entry["db"] = {
-                "status": db.status,
-                "content": _parse_content_json(db.content),
-                "summary": db.summary,
-                "discovery_state": db.discovery_state,
-            }
-        else:
-            entry["db"] = None
-            typer.echo(
-                f"Warning: no DB record fetched for interview {lk.interview_id}",
-                err=True,
-            )
-
-        interview_results.append(entry)
-
-    return _write_aggregate(
-        project_name=project_name,
-        interviewer="livekit",
-        mode=mode,
-        started_at=started_at,
-        interview_results=interview_results,
-        project_id=project_id,
-        project_title=title,
-    )
-
-
-async def run_project(
-    *,
-    project_name: str,
     interviewer: InterviewerKind,
-    personas_dir: Path,
-    mode: str,
-    openai_model: str,
-    transcript_dir: str | None,
-    verbose: bool,
+    output_dir: Path,
+    personas_root: Path | None = None,
+    mode: str = "full",
+    openai_model: str = "gpt-4o",
+    transcript_dir: str | None = None,
+    verbose: bool = False,
     api_base_url: str | None = None,
     persist_wait_timeout_s: float = 60.0,
-    project_title: str | None = None,
-) -> Path:
-    """Dispatch to LiveKit or ElevenLabs project runner."""
+) -> BatchRunResult:
+    """Run all persona folders sequentially (Noah with DB + JSON export; ElevenLabs only)."""
+    specs = discover_persona_folders(personas_root)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
     if interviewer == "elevenlabs":
-        return await run_project_elevenlabs(
-            project_name=project_name,
-            personas_dir=personas_dir,
+        return await _run_batch_elevenlabs(
+            specs=specs,
             mode=mode,
             openai_model=openai_model,
             transcript_dir=transcript_dir,
             verbose=verbose,
         )
-    return await run_project_livekit(
-        project_name=project_name,
-        personas_dir=personas_dir,
+
+    return await _run_batch_noah(
+        specs=specs,
+        output_dir=output_dir,
         mode=mode,
         openai_model=openai_model,
         transcript_dir=transcript_dir,
         verbose=verbose,
         api_base_url=api_base_url,
         persist_wait_timeout_s=persist_wait_timeout_s,
-        project_title=project_title,
+    )
+
+
+async def _run_batch_elevenlabs(
+    *,
+    specs: list[PersonaSpec],
+    mode: str,
+    openai_model: str,
+    transcript_dir: str | None,
+    verbose: bool,
+) -> BatchRunResult:
+    total = len(specs)
+    with Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        TextColumn("({task.completed}/{task.total})"),
+    ) as progress:
+        task_id = progress.add_task("Interviews", total=total)
+        for spec in specs:
+            progress.update(task_id, description=f"Running {spec.folder_name}")
+            persona = load_persona(spec.yaml_path)
+            await run_elevenlabs_interview(
+                persona,
+                mode=mode,
+                openai_model=openai_model,
+                transcript_dir=transcript_dir,
+                verbose=verbose,
+            )
+            progress.advance(task_id)
+
+    return BatchRunResult(
+        interview_count=total,
+        interviewer="elevenlabs",
+        json_export_path=None,
+    )
+
+
+async def _run_batch_noah(
+    *,
+    specs: list[PersonaSpec],
+    output_dir: Path,
+    mode: str,
+    openai_model: str,
+    transcript_dir: str | None,
+    verbose: bool,
+    api_base_url: str | None,
+    persist_wait_timeout_s: float,
+) -> BatchRunResult:
+    admin = NoahApiClient(api_base_url)
+    try:
+        project_id = admin.find_or_create_project_by_title(OUTPUT_TEST_PROJECT_NOAH)
+    finally:
+        admin.close()
+
+    export_entries: dict[str, dict[str, Any]] = {}
+    total = len(specs)
+
+    with Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TaskProgressColumn(),
+        TextColumn("({task.completed}/{task.total})"),
+    ) as progress:
+        task_id = progress.add_task("Interviews", total=total)
+        for spec in specs:
+            progress.update(task_id, description=f"Running {spec.folder_name}")
+            persona = load_persona(spec.yaml_path)
+            username = persona.subject_label[:20]
+
+            with NoahApiClient(api_base_url) as api:
+                lk = api.provision_livekit_session(project_id, username=username)
+                result = await run_livekit_interview(
+                    persona,
+                    mode=mode,
+                    openai_model=openai_model,
+                    transcript_dir=transcript_dir,
+                    verbose=verbose,
+                    livekit_session=lk,
+                    noah_api=api,
+                    persist_wait_timeout_s=persist_wait_timeout_s,
+                )
+
+            db = result.db_record
+            if db is None:
+                typer.echo(
+                    f"Warning: no DB record for {spec.folder_name} "
+                    f"(interview_id={lk.interview_id})",
+                    err=True,
+                )
+                export_entries[spec.folder_name] = {
+                    "content": None,
+                    "discovery_state_json": None,
+                    "summary": "",
+                }
+            else:
+                export_entries[spec.folder_name] = _export_entry_from_record(db)
+
+            progress.advance(task_id)
+
+    json_path = _write_noah_output_json(output_dir=output_dir, entries=export_entries)
+    return BatchRunResult(
+        interview_count=total,
+        interviewer="noah",
+        json_export_path=json_path,
     )

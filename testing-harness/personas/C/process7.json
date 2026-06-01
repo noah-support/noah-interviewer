@@ -1,0 +1,121 @@
+{
+    "Atividades": [
+        {
+            "tipo": "Tarefa",
+            "nome": "Project_Arrival",
+            "id": "Pr6"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Register_Project ",
+            "id": "Re8"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Retrieve_Project",
+            "id": "Re7"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Evaluate",
+            "id": "Ev0"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Fill_Report",
+            "id": "Fi2"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Visit_in_Loco",
+            "id": "Vi4"
+        },
+        {
+            "tipo": "Evento",
+            "nome": "Issue_Permit",
+            "id": "Is3"
+        },
+        {
+            "tipo": "Evento",
+            "nome": "Request_Changes",
+            "id": "Re6"
+        }
+    ],
+    "Situacoes": [
+        {
+            "esquerda": [{"id": "Re8"}],
+            "operador": "DEP",
+            "direita": [{"id": "Pr6"}]
+        },
+        {
+            "esquerda": [{"id": "Re7"}],
+            "operador": "DEP",
+            "direita": [{"id": "Pr6"}]
+        },
+        {
+            "esquerda": [{"id": "Ev0"}],
+            "operador": "DEP",
+            "direita": [{"id": "Pr6"}]
+        },
+        {
+            "esquerda": [{"id": "Fi2"}],
+            "operador": "DEP",
+            "direita": [{"id": "Pr6"}]
+        },
+        {
+            "esquerda": [{"id": "Ev0"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re8"}]
+        },
+        {
+            "esquerda": [{"id": "Ev0"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re7"}]
+        },
+        {
+            "esquerda": [{"id": "Fi2"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ev0"}]
+        },
+        {
+            "esquerda": [{"id": "Re8"}],
+            "operador": "XOR",
+            "direita": [{"id": "Re7"}]
+        },
+        {
+            "esquerda": [{"id": "Is3"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ev0"}]
+        },
+        {
+            "esquerda": [{"id": "Is3"}],
+            "operador": "DEP",
+            "direita": [{"id": "Fi2"}]
+        },
+        {
+            "esquerda": [{"id": "Re6"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ev0"}]
+        },
+        {
+            "esquerda": [{"id": "Vi4"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re7"}]
+        },
+        {
+            "esquerda": [{"id": "Vi4"}],
+            "operador": "DEP",
+            "direita": [{"id": "Re8"}]
+        },
+        {
+            "esquerda": [{"id": "Re6"}],
+            "operador": "DEP",
+            "direita": [{"id": "Fi2"}]
+        },
+        {
+            "esquerda": [{"id": "Is3"}],
+            "operador": "XOR",
+            "direita": [{"id": "Re6"}]
+        }
+    ]
+}

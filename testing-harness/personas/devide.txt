@@ -1,0 +1,29 @@
+file to name:
+- caseHandling_1 -> process1
+- complaint_1 -> process2
+- ComputerRepair_1 -> process3
+- ComputerRepair_2 -> process4
+- E2_proc -> process5
+- ITIL -> process6
+- permition_2 -> process7
+- steelmaking_1 -> process8
+
+Processes per persona:
+A:
+- process1.json
+- process2.json
+- process6.json
+
+B:
+- process3.json
+- process4.json
+
+C:
+- process5.json
+- process6.json
+- process7.json
+- process8.json
+
+D:
+- process1.json
+- process4.json

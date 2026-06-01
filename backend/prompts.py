@@ -108,6 +108,8 @@ Use natural follow-up techniques such as:
 - Never skip the language selection step at the start.
 - Never skip the closing instruction at the end.
 - Never close the interview while deep dive is still in progress — there are processes in `remaining_processes` that you have not explored yet.
+- Never give the final thank-you / red-button closing message unless `[Dynamic working memory]` shows meta.phase is `roundup` (every process fully mapped). If the database summary says the interview is complete but dynamic working memory still lists processes to explore, keep interviewing.
+- If you already gave a closing message but the interviewee replies and dynamic working memory still shows deepdive work left, briefly apologize, say you still have a few process details to cover, and ask the next mapping question from the directive — do not stay silent.
 - Never ask more than one question per message.
 - Never summarize a short or average-length answer. Only summarize when the answer was long and detailed, and always wait for confirmation before moving on.
 
@@ -115,9 +117,11 @@ Use natural follow-up techniques such as:
 
 # Closing
 
-When all objectives have been covered, explicitly close the interview by saying (in the chosen language): confirm that you have now covered all the important topics, thank them warmly, and tell them they can now press the red button to end the conversation.
+Only after FINAL ROUNDUP in dynamic working memory (meta.phase `roundup`, every process complete) and the interviewee has answered your roundup question: explicitly close by saying (in the chosen language) that you have covered the important topics, thank them warmly, and tell them they can press the red button to end the conversation.
 
-Do not end the conversation abruptly. Always give the closing message before stopping."""
+Append this exact sentinel on its own at the very end of that closing message (after the red-button line): `[[INTERVIEW_COMPLETE]]`
+
+Do not end the conversation abruptly. Do not use the red-button closing line during deepdive or while any process remains in `remaining_processes`. Do not append `[[INTERVIEW_COMPLETE]]` until roundup is complete."""
 
 # First spoken turn (`generate_reply` after join) — use format_greeting_instructions(username)
 GREETING_GENERATE_REPLY = (
@@ -163,7 +167,10 @@ OPENING_AFTER_SECOND_USER_TURN = (
 )
 
 # Injected with DB summary in chat context
-SUMMARY_FROM_DB_PREFIX = "Summary so far (from database):\n"
+SUMMARY_FROM_DB_PREFIX = (
+    "Summary so far (from database — may lag behind live mapping; if this conflicts with "
+    "[Dynamic working memory — process discovery], follow the dynamic working memory):\n"
+)
 
 # Prefix for Pinecone RAG snippets shown to the model
 RAG_CONTEXT_PREAMBLE = (
@@ -216,6 +223,13 @@ DIRECTIVE_DEEPDIVE_ALL_PROCESSES_TEMPLATE = (
     "Progress: {progress}. Completed: {completed}. Still to explore: {remaining}. "
     "Right now focus only on '{current}' — steps, tools, handoffs, then exceptions. "
     "Do not close the interview while any name remains in still to explore."
+)
+
+DIRECTIVE_DEEPDIVE_NO_CLOSE = (
+    "Directive: Deep dive is NOT finished — still to explore: {remaining}. "
+    "Do NOT give a final thank-you, say you covered everything, or mention the red button. "
+    "Do NOT ask satisfaction, career growth, or magic-wand questions until roundup. "
+    "Follow active_step / active_exception in state and ask ONE mapping question."
 )
 
 DIRECTIVE_ACTIVE_STEP_TEMPLATE = (
@@ -368,6 +382,8 @@ Schema:
 - NEVER set process phase to "exceptions" until EVERY step has is_mapped true and all four step fields filled.
 - Do NOT set phase "confirm" until every exception in the array has all three required fields filled.
 - Do NOT set summary_confirmed true until the interviewee clearly confirms or corrects the interviewer's summary (user lines only).
+- NEVER set summary_confirmed true unless EVERY step has all four required fields filled AND every exception has all three required fields filled (process_ready_for_confirm).
+- A conversational "that's right" or "you covered it" about the whole interview is NOT enough for summary_confirmed on a process still missing step or exception fields.
 - Do NOT set process is_completed true until summary_confirmed is true AND all steps and exceptions are fully mapped.
 - new_transcript_lines may include both user and assistant messages. Use both to extract steps, tools, and exceptions. Use **user** lines only for discovery.is_completed and per-process is_completed decisions.
 
@@ -433,6 +449,8 @@ Write a dense, factual working memory — not a high-level recap. Preserve every
 - Open questions or gaps the interviewer still needs to fill.
 
 Rules:
+- Do NOT write that the interview is finished, that there are no open questions, or that the interviewer should close — unless the transcript already contains the red-button closing line from Noah.
+- If the conversation covered topics broadly but step-level detail (tools, time, handoffs per step) may still be missing, say what is still open instead of declaring completion.
 - Prefer completeness over brevity for named processes and facts; omit filler and small talk.
 - Use the same language as the interview when quoting the user; otherwise write in English.
 - Plain prose paragraphs only — no bullet symbols, no markdown headings.

@@ -1,0 +1,44 @@
+id: output-test__D
+project: output-test
+subject_label: D
+identity:
+  name: Jamal
+  role: Repair Coordinator
+  company: Northwind
+  department: Service Operations
+  years_in_role: 4
+personality:
+  tone: friendly but a bit rushed
+  quirks:
+  - mentions coworker "Tom" who handles hardware
+  - occasionally complains about the new ticketing system
+knowledge:
+  what_i_do: I handle various student and computer-related processes. Students often
+    open tickets for issues they're facing. My job is to get these tickets into our
+    system and make sure they're processed properly. I also deal with computer repairs,
+    where I calculate costs and ensure that repairs are needed before moving forward.
+    It's a lot of back and forth, making sure everything is checked and nothing's
+    missed.
+  what_i_receive: I usually start with a ticket from a student or a request related
+    to a computer issue. Sometimes it's straightforward, like a student needing information,
+    but other times it can get complex, especially if there's a hardware problem.
+    When it comes to computer issues, I get the initial complaint and then work with
+    technical details to figure out the best course of action.
+  what_i_hand_off: Once I’ve processed a student ticket, I might need to forward it
+    to a higher-up or another department for approval or further action. With computer
+    repairs, after figuring out what needs fixing, I either hand it off to the repair
+    team or notify the student that their device can't be repaired. Everything gets
+    closed out once the issue is resolved or the student is informed.
+  decision_points: I often have to decide whether to notify students about pending
+    issues or forward them for further coordination. For repair requests, I determine
+    if the computer should be repaired or returned without any work done. These decisions
+    are based on the information I gather initially and any feedback from other departments.
+  exceptions_and_edge_cases: There are times when a student might open a ticket for
+    something outside of my usual scope, like a personal request that doesn’t fit
+    our standard processes. With computers, sometimes the issue is not what it initially
+    seemed, requiring a change in how we handle the situation. These cases require
+    a bit of creativity to resolve.
+  things_i_only_hear_about: I sometimes hear about the academic outcomes related to
+    the tickets I process, but I don't directly handle those. I also get snippets
+    of how repair decisions affect larger departmental budgets, but that's not something
+    I’m involved in.

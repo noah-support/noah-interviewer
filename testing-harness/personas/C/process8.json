@@ -1,0 +1,340 @@
+{
+  "Atividades": [
+    {
+      "id": "Ne0",
+      "nome": "New_Order",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "Pr7",
+      "nome": "Project",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "Pr0",
+      "nome": "Project_Evaluation",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "Fo2",
+      "nome": "Forward_Project_to_Production",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "Se3",
+      "nome": "Send_Canceled_Project_to_Sales",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "In4",
+      "nome": "Inform_Customer_of_Cancellation",
+      "tipo": "Evento"
+    },
+    {
+      "id": "Ca7",
+      "nome": "Casting",
+      "tipo": "Evento"
+    },
+    {
+      "id": "Cu7",
+      "nome": "Cutting",
+      "tipo": "Evento"
+    },
+    {
+      "id": "Fi0",
+      "nome": "Finishing",
+      "tipo": "Evento"
+    }
+  ],
+  "Situacoes": [
+    {
+      "esquerda": [
+        {"id": "Pr7"}
+      ],
+      "direita": [
+        {"id": "Ne0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Pr0"}
+      ],
+      "direita": [
+        {"id": "Ne0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fo2"}
+      ],
+      "direita": [
+        {"id": "Ne0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Se3"}
+      ],
+      "direita": [
+        {"id": "Ne0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Pr0"}
+      ],
+      "direita": [
+        {"id": "Pr7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fo2"}
+      ],
+      "direita": [
+        {"id": "Pr7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Se3"}
+      ],
+      "direita": [
+        {"id": "Pr7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fo2"}
+      ],
+      "direita": [
+        {"id": "Pr0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Se3"}
+      ],
+      "direita": [
+        {"id": "Pr0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fo2"}
+      ],
+      "direita": [
+        {"id": "Se3"}
+      ],
+      "operador": "XOR"
+    },
+    {
+      "esquerda": [
+        {"id": "In4"}
+      ],
+      "direita": [
+        {"id": "Ne0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "In4"}
+      ],
+      "direita": [
+        {"id": "Pr7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "In4"}
+      ],
+      "direita": [
+        {"id": "Pr0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "In4"}
+      ],
+      "direita": [
+        {"id": "Fo2"}
+      ],
+      "operador": "XOR"
+    },
+    {
+      "esquerda": [
+        {"id": "Fo2"}
+      ],
+      "direita": [
+        {"id": "In4"}
+      ],
+      "operador": "XOR"
+    },
+    {
+      "esquerda": [
+        {"id": "Ca7"}
+      ],
+      "direita": [
+        {"id": "Ne0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Ca7"}
+      ],
+      "direita": [
+        {"id": "Pr7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Ca7"}
+      ],
+      "direita": [
+        {"id": "Pr0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Ca7"}
+      ],
+      "direita": [
+        {"id": "Fo2"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Se3"}
+      ],
+      "direita": [
+        {"id": "Ca7"}
+      ],
+      "operador": "XOR"
+    },
+    {
+      "esquerda": [
+        {"id": "Cu7"}
+      ],
+      "direita": [
+        {"id": "Ne0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Cu7"}
+      ],
+      "direita": [
+        {"id": "Pr7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Cu7"}
+      ],
+      "direita": [
+        {"id": "Pr0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Cu7"}
+      ],
+      "direita": [
+        {"id": "Fo2"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Se3"}
+      ],
+      "direita": [
+        {"id": "Cu7"}
+      ],
+      "operador": "XOR"
+    },
+    {
+      "esquerda": [
+        {"id": "Fi0"}
+      ],
+      "direita": [
+        {"id": "Ne0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fi0"}
+      ],
+      "direita": [
+        {"id": "Pr7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fi0"}
+      ],
+      "direita": [
+        {"id": "Pr0"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fi0"}
+      ],
+      "direita": [
+        {"id": "Fo2"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fi0"}
+      ],
+      "direita": [
+        {"id": "Ca7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Fi0"}
+      ],
+      "direita": [
+        {"id": "Cu7"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Se3"}
+      ],
+      "direita": [
+        {"id": "Fi0"}
+      ],
+      "operador": "XOR"
+    }
+
+  ]
+}

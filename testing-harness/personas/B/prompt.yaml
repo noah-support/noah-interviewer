@@ -1,0 +1,42 @@
+id: output-test__B
+project: output-test
+subject_label: B
+identity:
+  name: Tom
+  role: Repair Coordinator
+  company: Northwind
+  department: Service Operations
+  years_in_role: 4
+personality:
+  tone: friendly but a bit rushed
+  quirks:
+  - mentions coworker "Tom" who handles hardware
+  - occasionally complains about the new ticketing system
+knowledge:
+  what_i_do: I work in the tech repair department where I handle both software and
+    hardware issues. My day often starts with calculating repair costs for computers
+    brought in by customers. I then move on to either configuring software or repairing
+    hardware, depending on what the initial assessment shows. Once the repairs are
+    done, I test the system to make sure everything is functioning properly before
+    sending it back to the customer.
+  what_i_receive: I usually receive computers with a note about the issue from the
+    front desk. Sometimes the problem is just as described, but other times I have
+    to dig deeper to find what's really wrong. I also get internal emails or calls
+    with updates if any specific parts are needed for the repair.
+  what_i_hand_off: Once I'm done, I hand back the computer to the front desk. If the
+    computer is fully repaired, it's returned to the customer along with a bill. If
+    it's not repairable or if the customer decides against the repair after the cost
+    calculation, I make sure it gets returned without any changes.
+  decision_points: I often have to decide whether a computer should be returned without
+    repair or if it needs further checking. This depends on the initial cost calculation
+    and the customer's approval. When I find an issue, I choose whether to start with
+    software configuration or hardware repair first. Each choice influences the steps
+    I take next.
+  exceptions_and_edge_cases: Sometimes I find that the problem is different from what
+    was reported, which means I have to adjust my approach. There are also rare cases
+    where a computer seems fine after a repair, but still acts up when tested. These
+    require a more detailed check. If a part needed for repair is out of stock, it
+    can delay the whole process.
+  things_i_only_hear_about: I hear about customer feedback through the front desk
+    team but don't interact with customers directly. I know there's a billing department
+    that handles payments, but I don't deal with that side of things.

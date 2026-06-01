@@ -1,0 +1,76 @@
+{
+    "Atividades": [
+        {
+            "tipo": "Tarefa",
+            "nome": "Inform_Reseravation_Data",
+            "id": "In6"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Choose_Accomodations",
+            "id": "Ch2"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Schedule_Schuba_Diving",
+            "id": "Sc4"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Billing",
+            "id": "Bi7"
+        },
+        {
+            "tipo": "Tarefa",
+            "nome": "Book_Diving_Equipment",
+            "id": "Bo3"
+        },
+        {
+            "tipo": "tarefa",
+            "nome": "Dummy Dummy_0",
+            "id": "Dummy_0"
+        }
+    ],
+    "Situacoes": [
+        {
+            "esquerda": [{"id": "Ch2"}],
+            "operador": "DEP",
+            "direita": [{"id": "In6"}]
+        },
+        {
+            "esquerda": [{"id": "Sc4"}],
+            "operador": "DEP",
+            "direita": [{"id": "In6"}]
+        },
+        {
+            "esquerda": [{"id": "Bi7"}],
+            "operador": "DEP",
+            "direita": [{"id": "In6"}]
+        },
+        {
+            "esquerda": [{"id": "Bo3"}],
+            "operador": "DEP",
+            "direita": [{"id": "In6"}]
+        },
+        {
+            "esquerda": [{"id": "Bi7"}],
+            "operador": "DEP",
+            "direita": [{"id": "Ch2"}]
+        },
+        {
+            "esquerda": [{"id": "Bo3"}],
+            "operador": "DEPC",
+            "direita": [{"id": "Sc4"}]
+        },
+        {
+            "esquerda": [{"id": "Bo3"}],
+            "operador": "Dep",
+            "direita": [{"id": "Dummy_0"}]
+        },
+        {
+            "esquerda": [{"id": "Dummy_0"}],
+            "operador": "Xor",
+            "direita": [{"id": "Sc4"}]
+        }
+    ]
+}

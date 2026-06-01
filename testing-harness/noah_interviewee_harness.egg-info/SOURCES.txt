@@ -17,5 +17,6 @@ noah_interviewee_harness.egg-info/SOURCES.txt
 noah_interviewee_harness.egg-info/dependency_links.txt
 noah_interviewee_harness.egg-info/requires.txt
 noah_interviewee_harness.egg-info/top_level.txt
+tests/test_discover_personas.py
 tests/test_end_signal.py
 tests/test_persona.py

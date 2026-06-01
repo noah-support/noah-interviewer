@@ -1,13 +1,19 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import os
+import time
 from dataclasses import dataclass
 
 from elevenlabs.client import ElevenLabs
-from elevenlabs.conversational_ai.conversation import AsyncConversation
+from elevenlabs.conversational_ai.conversation import (
+    AgentChatResponsePartType,
+    AsyncConversation,
+    ConversationInitiationData,
+)
 
-from interviewees.core.end_signal import contains_sentinel, strip_sentinel
+from interviewees.core.end_signal import contains_sentinel
 from interviewees.core.persona import Persona
 from interviewees.core.session import InterviewSession
 from interviewees.core.transcript import (
@@ -16,6 +22,12 @@ from interviewees.core.transcript import (
     transcript_filename,
     write_transcript,
 )
+from interviewees.env import load_harness_env, require_env
+
+# ElevenLabs closes the session if no user message arrives within ~60s.
+_KICK_USER_MESSAGE = "Hello, I'm ready for the interview."
+_WS_CONNECT_TIMEOUT_S = 30.0
+_FIRST_AGENT_REPLY_TIMEOUT_S = 8.0
 
 
 @dataclass
@@ -25,13 +37,60 @@ class ElevenLabsConfig:
 
 
 def _load_config() -> ElevenLabsConfig:
-    api_key = (os.environ.get("ELEVENLABS_API_KEY") or "").strip()
-    agent_id = (os.environ.get("ELEVENLABS_AGENT_ID") or "").strip()
-    if not api_key:
-        raise RuntimeError("ELEVENLABS_API_KEY is not set")
-    if not agent_id:
-        raise RuntimeError("ELEVENLABS_AGENT_ID is not set")
-    return ElevenLabsConfig(api_key=api_key, agent_id=agent_id)
+    return ElevenLabsConfig(
+        api_key=require_env("ELEVENLABS_API_KEY"),
+        agent_id=require_env("ELEVENLABS_AGENT_ID"),
+    )
+
+
+def _dynamic_variables_for_persona(persona: Persona) -> dict[str, str]:
+    """
+    ElevenLabs agents often require {{name}} (and other vars) at session start.
+
+    Defaults from persona YAML; merge ``ELEVENLABS_DYNAMIC_VARIABLES_JSON`` from .env
+    for extra keys your hosted agent expects.
+    """
+    load_harness_env()
+    variables: dict[str, str] = {
+        "name": persona.identity.name,
+        "role": persona.identity.role,
+        "company": persona.identity.company,
+        "department": persona.identity.department,
+    }
+    raw = (os.environ.get("ELEVENLABS_DYNAMIC_VARIABLES_JSON") or "").strip()
+    if raw:
+        extra = json.loads(raw)
+        if not isinstance(extra, dict):
+            raise ValueError(
+                "ELEVENLABS_DYNAMIC_VARIABLES_JSON must be a JSON object, e.g. "
+                '{"name": "Alex"}'
+            )
+        for key, value in extra.items():
+            if value is not None:
+                variables[str(key)] = str(value)
+    return variables
+
+
+async def _wait_for_websocket(conv: AsyncConversation, *, timeout_s: float) -> None:
+    deadline = time.monotonic() + timeout_s
+    while conv._ws is None:
+        if conv._should_stop.is_set():
+            raise RuntimeError("ElevenLabs session ended before websocket connected")
+        if time.monotonic() >= deadline:
+            raise RuntimeError(
+                f"ElevenLabs websocket did not connect within {timeout_s:.0f}s"
+            )
+        await asyncio.sleep(0.05)
+
+
+async def _recv_agent_message(
+    incoming: asyncio.Queue[str],
+    *,
+    timeout_s: float | None,
+) -> str:
+    if timeout_s is None:
+        return await incoming.get()
+    return await asyncio.wait_for(incoming.get(), timeout=timeout_s)
 
 
 async def run_interview(
@@ -60,32 +119,60 @@ async def run_interview(
 
     incoming: asyncio.Queue[str] = asyncio.Queue()
     ended_by: str = "manual"
+    stream_parts: list[str] = []
 
-    def on_agent_response(text: str) -> None:
+    def _enqueue_agent_text(text: str) -> None:
+        cleaned = (text or "").strip()
+        if cleaned:
+            incoming.put_nowait(cleaned)
+
+    async def on_agent_response(text: str) -> None:
         if text is None:
             return
-        incoming.put_nowait(str(text))
+        _enqueue_agent_text(str(text))
+
+    async def on_agent_chat_response_part(
+        text: str, part_type: AgentChatResponsePartType
+    ) -> None:
+        if part_type == AgentChatResponsePartType.START:
+            stream_parts.clear()
+            return
+        if part_type == AgentChatResponsePartType.DELTA:
+            if text:
+                stream_parts.append(text)
+            return
+        if part_type == AgentChatResponsePartType.STOP:
+            _enqueue_agent_text("".join(stream_parts))
+
+    el_config = ConversationInitiationData(
+        conversation_config_override={"text_only": True},
+        dynamic_variables=_dynamic_variables_for_persona(persona),
+    )
 
     conv = AsyncConversation(
         client=client,
         agent_id=cfg.agent_id,
         requires_auth=True,
         audio_interface=None,
+        config=el_config,
         callback_agent_response=on_agent_response,
+        callback_agent_chat_response_part=on_agent_chat_response_part,
     )
 
     await conv.start_session()
+    await _wait_for_websocket(conv, timeout_s=_WS_CONNECT_TIMEOUT_S)
 
     try:
-        while True:
-            interviewer_text = await incoming.get()
-            # Sentinel check happens before LLM.
-            raw = interviewer_text
-            cleaned = strip_sentinel(raw)
-            if cleaned:
-                # record as interviewer
-                pass
+        try:
+            interviewer_text = await _recv_agent_message(
+                incoming, timeout_s=_FIRST_AGENT_REPLY_TIMEOUT_S
+            )
+        except asyncio.TimeoutError:
+            await conv.send_user_message(_KICK_USER_MESSAGE)
+            interviewer_text = await _recv_agent_message(incoming, timeout_s=None)
 
+        while True:
+            raw = interviewer_text
             reply, should_disconnect = session.handle_interviewer_message(raw)
             if reply:
                 await conv.send_user_message(reply)
@@ -93,6 +180,8 @@ async def run_interview(
             if should_disconnect:
                 ended_by = "sentinel" if contains_sentinel(raw) else "turn_cap"
                 break
+
+            interviewer_text = await _recv_agent_message(incoming, timeout_s=None)
     finally:
         try:
             await conv.end_session()
@@ -106,4 +195,3 @@ async def run_interview(
     out_path = out_dir / transcript_filename(transcript.subject_label, "elevenlabs")
     write_transcript(out_path, transcript)
     return transcript, str(out_path)
-

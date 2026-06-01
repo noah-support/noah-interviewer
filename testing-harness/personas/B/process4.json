@@ -1,0 +1,132 @@
+{
+  "Atividades": [
+    {
+      "id": "Pr5",
+      "nome": "Provide_Repair_Cost_Calculation ",
+      "tipo": "Tarefa"
+    },
+    {
+       "id": "Re1", 
+       "nome": "Return_Computer_Without_Repair ",
+       "tipo": "Tarefa"
+    },
+    {
+      "id": "Ch8",
+      "nome": "Check_and_Repair_Hardware ",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "Ch2",
+      "nome": "Check_and_Configure_Software ",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "Te8",
+      "nome": "Test_System_Functionality ",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "Bi7",
+      "nome": "Billing ",
+      "tipo": "Tarefa"
+    },
+    {
+      "id": "Re5",
+      "nome": "Return_Repaired_Computer ",
+      "tipo": "Tarefa"
+    }
+  ],
+  "Situacoes": [
+    {
+      "esquerda": [
+        {"id": "Re1"}
+      ],
+      "direita": [
+        {"id": "Pr5"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Re1"}
+      ],
+      "direita": [
+        {"id": "Ch8"} 
+      ],
+      "operador": "XOR"
+    },
+    {
+      "esquerda": [
+        {"id": "Ch8"}
+      ],
+      "direita": [
+        {"id": "Pr5"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Ch2"}
+      ],
+      "direita": [
+        {"id": "Pr5"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Re1"}
+      ],
+      "direita": [
+        {"id": "Ch2"}
+      ],
+      "operador": "XOR"
+    },
+    {
+      "esquerda": [
+        {"id": "Te8"}
+      ],
+      "direita": [
+        {"id": "Pr5"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Te8"}
+      ],
+      "direita": [
+        {"id": "Ch8"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Te8"}
+      ],
+      "direita": [
+        {"id": "Ch2"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Bi7"}
+      ],
+      "direita": [
+        {"id": "Te8"}
+      ],
+      "operador": "DEP"
+    },
+    {
+      "esquerda": [
+        {"id": "Re5"}
+      ],
+      "direita": [
+        {"id": "Te8"}
+      ],
+      "operador": "DEP"
+    }
+  
+  ]
+}

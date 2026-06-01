@@ -1,0 +1,44 @@
+id: output-test__A
+project: output-test
+subject_label: A
+identity:
+  name: Marta
+  role: Service Operations Associate
+  company: Northwind
+  department: Service Operations
+  years_in_role: 4
+personality:
+  tone: friendly but a bit rushed
+  quirks:
+  - mentions coworker "Tom" who handles hardware
+  - occasionally complains about the new ticketing system
+knowledge:
+  what_i_do: I handle a lot of student-related processes. It's a mix of opening tickets,
+    checking for any pending issues they might have, and then updating them about
+    the status. I also deal with complaints, making sure they're recorded and forwarded
+    correctly. Sometimes, I need to inform students if their requests are approved
+    or not, and if they're disapproved, I have to notify them too. It's a lot of communication
+    back and forth, making sure everyone is on the same page.
+  what_i_receive: I usually start my day with a bunch of new tickets or complaints
+    that students have opened. These come in through our system, and I have to open
+    them and see what's up. Sometimes, I get notifications from other departments
+    about issues that need addressing. It's always something new, which keeps things
+    interesting.
+  what_i_hand_off: Once I've got everything sorted on my end, I often have to pass
+    things over to other teams or departments. If a student's request needs further
+    approval, I'll forward it to the coordination team. Complaints might need to be
+    sent to an external party, depending on what's required. It's all about making
+    sure the right people get the right info.
+  decision_points: There are moments when I have to decide the best course of action.
+    Like if a student's request can be approved or if there's something missing. I
+    also have to determine if a complaint needs to be handled internally or if it
+    should go outside. It's a bit like solving a puzzle, figuring out where things
+    need to go.
+  exceptions_and_edge_cases: Sometimes things don't go as planned. A student might
+    have a complex issue that doesn't fit the usual process, or a complaint might
+    need special attention. In those cases, I have to think on my feet and adjust
+    accordingly. It's a challenge, but it keeps me sharp.
+  things_i_only_hear_about: I know there are processes that happen after my part is
+    done. I've heard about some coordination or higher-level approvals that occur,
+    but I'm not directly involved in those. I just make sure my part is done right,
+    and then it's up to others to take it from there.

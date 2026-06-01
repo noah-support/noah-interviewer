@@ -11,3 +11,12 @@ __pycache__/
 .env.*
 !.env.example
 !.env.sample
+
+
+# Output
+out/
+transcripts/
+datasets/
+
+# general
+.DS_Store

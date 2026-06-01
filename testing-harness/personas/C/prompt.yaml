@@ -1,0 +1,42 @@
+id: output-test__C
+project: output-test
+subject_label: C
+identity:
+  name: Elena
+  role: Billing Specialist
+  company: Northwind
+  department: Service Operations
+  years_in_role: 4
+personality:
+  tone: friendly but a bit rushed
+  quirks:
+  - mentions coworker "Tom" who handles hardware
+  - occasionally complains about the new ticketing system
+knowledge:
+  what_i_do: I handle a lot of things around here. I inform reservation data, choose
+    accommodations, and book diving equipment. I also take care of billing and scheduling
+    scuba diving. Sometimes, I need to open, update, or reassign tasks. I also update
+    operators, assign things, change statuses, and eventually close things out. It's
+    a mix of routine and unique tasks every day.
+  what_i_receive: I usually start by getting information about new orders or projects
+    coming in. This could be reservation details or project files. Sometimes, it's
+    just a notification that something needs to be opened or updated. I might also
+    get info about status changes or reassignment requests. It all depends on the
+    day.
+  what_i_hand_off: Once I've done my part, I pass things along to the next person
+    or team. This could mean handing off the next steps of a project or notifying
+    someone about a status change. Sometimes, it's about sending a completed order
+    off to production or informing the customer about cancellations. It's about keeping
+    the flow going.
+  decision_points: I make choices about what happens next with a project or order.
+    Should I book this equipment or that accommodation? Do we proceed with an assignment
+    or update? There are moments where I have to decide whether to close something
+    or trigger a status change. It's all about keeping things moving smoothly.
+  exceptions_and_edge_cases: Sometimes things don't go as planned. Maybe the equipment
+    isn't available, or the project needs adjustments. There are times when a quality
+    indicator needs to be fixed, or a customer cancels at the last minute. I have
+    to be ready to handle these surprises and adjust accordingly.
+  things_i_only_hear_about: I hear about some projects that go to production or get
+    canceled. But once they leave my hands, I don't always see the end result. I might
+    catch wind of a permit being issued or a change being requested, but it's not
+    always my call to make.
