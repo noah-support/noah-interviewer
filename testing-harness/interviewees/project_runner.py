@@ -16,10 +16,10 @@ from interviewees.elevenlabs_client import run_interview as run_elevenlabs_inter
 from interviewees.livekit_client import run_interview as run_livekit_interview
 from interviewees.noah_api import InterviewRecord, NoahApiClient
 from interviewees.persona_layout import (
-    PERSONA_PROMPT_FILENAME,
+    PERSONA_JSON_FILENAME,
     default_personas_root,
     iter_persona_folders,
-    prompt_file_in_folder,
+    persona_json_in_folder,
 )
 
 OUTPUT_TEST_PROJECT_NOAH = "output-test-noah"
@@ -29,7 +29,7 @@ InterviewerKind = Literal["noah", "elevenlabs"]
 @dataclass(frozen=True)
 class PersonaSpec:
     folder_name: str
-    yaml_path: Path
+    json_path: Path
 
 
 @dataclass(frozen=True)
@@ -40,24 +40,20 @@ class BatchRunResult:
 
 
 def discover_persona_folders(personas_root: Path | None = None) -> list[PersonaSpec]:
-    """Discover persona folders; each must contain prompt.yaml from persona prep batch."""
+    """Discover persona folders; each must contain persona.json from persona prep batch."""
     root = personas_root or default_personas_root()
     if not root.is_dir():
         raise typer.BadParameter(f"Personas root not found: {root}")
 
     specs: list[PersonaSpec] = []
     for folder in iter_persona_folders(root):
-        yaml_path = prompt_file_in_folder(folder)
-        if not yaml_path.is_file():
-            legacy = root / f"{folder.name}.yaml"
-            if legacy.is_file():
-                yaml_path = legacy
-            else:
-                raise typer.BadParameter(
-                    f"Missing {PERSONA_PROMPT_FILENAME} in {folder.name}/ "
-                    f"(run: python tools/prepare_personas.py batch)"
-                )
-        specs.append(PersonaSpec(folder_name=folder.name, yaml_path=yaml_path))
+        json_path = persona_json_in_folder(folder)
+        if not json_path.is_file():
+            raise typer.BadParameter(
+                f"Missing {PERSONA_JSON_FILENAME} in {folder.name}/ "
+                f"(run: python tools/prepare_personas.py batch)"
+            )
+        specs.append(PersonaSpec(folder_name=folder.name, json_path=json_path))
 
     if not specs:
         raise typer.BadParameter(f"No persona folders under {root}")
@@ -163,7 +159,7 @@ async def _run_batch_elevenlabs(
         task_id = progress.add_task("Interviews", total=total)
         for spec in specs:
             progress.update(task_id, description=f"Running {spec.folder_name}")
-            persona = load_persona(spec.yaml_path)
+            persona = load_persona(spec.json_path)
             await run_elevenlabs_interview(
                 persona,
                 mode=mode,
@@ -209,7 +205,7 @@ async def _run_batch_noah(
         task_id = progress.add_task("Interviews", total=total)
         for spec in specs:
             progress.update(task_id, description=f"Running {spec.folder_name}")
-            persona = load_persona(spec.yaml_path)
+            persona = load_persona(spec.json_path)
             username = persona.subject_label[:20]
 
             with NoahApiClient(api_base_url) as api:

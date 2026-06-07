@@ -4,25 +4,28 @@ import pytest
 
 from interviewees.core.persona import assemble_system_prompt, load_persona
 
-FIXTURE = Path(__file__).parent / "fixtures" / "sample_persona.yaml"
+FIXTURE = Path(__file__).parent / "fixtures" / "sample_persona.json"
 
 
 def test_load_and_assemble_contains_all_sections():
-    persona = load_persona(FIXTURE)
+    persona = load_persona(FIXTURE, subject_label="S0", project="ComputerRepair_1")
     prompt = assemble_system_prompt(persona)
 
     assert "You are being interviewed by a colleague" in prompt
     assert "You are Marta, a Repair Coordinator" in prompt
-    assert "Tone: friendly but a bit rushed" in prompt
+    assert "Northwind" in prompt or "workshop" in prompt
     assert "Tom" in prompt
-    assert "What you do day to day:" in prompt
-    assert "Where work comes to you from:" in prompt
-    assert "Where work goes after you:" in prompt
-    assert "Decisions you make:" in prompt
-    assert "Things that go wrong and how you handle them:" in prompt
-    assert "Things you only hear about secondhand" in prompt
+    assert "Process you work on: Computer repair intake" in prompt
+    assert "Review intake from front desk" in prompt
+    assert "Parts are back-ordered" in prompt
+    assert persona.id == "ComputerRepair_1__S0"
 
 
-def test_load_invalid_yaml_raises():
+def test_load_invalid_json_raises():
     with pytest.raises(Exception):
-        load_persona(Path(__file__).parent / "fixtures" / "nonexistent.yaml")
+        load_persona(Path(__file__).parent / "fixtures" / "nonexistent.json")
+
+
+def test_load_rejects_yaml():
+    with pytest.raises(ValueError, match="JSON"):
+        load_persona(Path(__file__).parent / "fixtures" / "sample_persona.yaml")

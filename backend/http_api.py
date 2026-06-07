@@ -11,7 +11,7 @@ from contextlib import contextmanager
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, Response, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, Request, Response, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
 
@@ -656,7 +656,15 @@ def delete_project_document(document_id: int):
 
 
 @app.post("/api/interviews/{interview_id}/livekit-token")
-def livekit_token(interview_id: int, response: Response, authed: Interview = Depends(require_auth)):
+def livekit_token(
+    interview_id: int,
+    response: Response,
+    authed: Interview = Depends(require_auth),
+    simulator: bool = Query(
+        False,
+        description="Mark participant as lk.simulator (text harness: disables agent mic I/O)",
+    ),
+):
     if authed.id != interview_id:
         raise HTTPException(status_code=403, detail="Cannot access other interview")
 
@@ -677,6 +685,8 @@ def livekit_token(interview_id: int, response: Response, authed: Interview = Dep
             .with_grants(VideoGrants(room=room_name, room_join=True))
             .with_ttl(token_ttl)
         )
+        if simulator:
+            token = token.with_attributes({"lk.simulator": "true"})
         jwt = token.to_jwt()
 
         # Best-effort: if the interview is not ready yet, still allow join in prototype.

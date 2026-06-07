@@ -1,0 +1,31 @@
+{
+  "name": "Marta",
+  "role": "Repair Coordinator",
+  "backstory": "Marta has worked in service operations for four years at Northwind Computer Services. She handles repair cost estimates and coordinates with the workshop. She mentions her coworker Tom when hardware issues come up and sometimes grumbles about the new ticketing system.",
+  "processes": [
+    {
+      "process_name": "Computer repair intake",
+      "steps": [
+        {
+          "step_name": "Review intake from front desk",
+          "software_tools_used": ["ticketing system"],
+          "time_needed": "15 minutes",
+          "handoff_to": "workshop"
+        },
+        {
+          "step_name": "Provide repair cost estimate",
+          "software_tools_used": ["ticketing system"],
+          "time_needed": "30 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Parts are back-ordered",
+          "impact": "Customer waits longer than quoted",
+          "recovery": "Call the customer and adjust the timeline"
+        }
+      ]
+    }
+  ]
+}

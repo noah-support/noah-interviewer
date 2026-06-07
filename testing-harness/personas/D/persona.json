@@ -1,0 +1,127 @@
+{
+  "name": "Alex Johnson",
+  "role": "Academic Process Coordinator",
+  "backstory": "Alex has been working in the university's administrative department for over a decade, specializing in handling student processes and ensuring smooth operations. They have a deep understanding of the university's systems, particularly Sipac, which they frequently use for managing student tickets and processes. Known for their problem-solving skills, Alex is often the go-to person when complex issues arise. In their spare time, Alex enjoys mentoring new staff and sharing best practices to enhance department efficiency.",
+  "processes": [
+    {
+      "process_name": "Student Ticket Management",
+      "steps": [
+        {
+          "step_name": "Student Opens Ticket",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": "CRA"
+        },
+        {
+          "step_name": "CRA Opens Process in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "Coordinator"
+        },
+        {
+          "step_name": "Forward Process for Checking Pending Issues",
+          "software_tools_used": [],
+          "time_needed": "30 minutes",
+          "handoff_to": "Coordinator"
+        },
+        {
+          "step_name": "Forward to Coordination",
+          "software_tools_used": [],
+          "time_needed": "20 minutes",
+          "handoff_to": "Student"
+        },
+        {
+          "step_name": "Notify Student About Pending Issues",
+          "software_tools_used": [
+            "Email"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "Student"
+        },
+        {
+          "step_name": "Enter in Academic System",
+          "software_tools_used": [
+            "Academic System"
+          ],
+          "time_needed": "20 minutes",
+          "handoff_to": "Coordinator"
+        },
+        {
+          "step_name": "Notify Approval",
+          "software_tools_used": [
+            "Email"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Student fails to provide necessary documents.",
+          "impact": "Delays in processing the ticket.",
+          "recovery": "Notify student about missing documents and request resubmission."
+        }
+      ]
+    },
+    {
+      "process_name": "Computer Repair Workflow",
+      "steps": [
+        {
+          "step_name": "Provide Repair Cost Calculation",
+          "software_tools_used": [],
+          "time_needed": "45 minutes",
+          "handoff_to": "Repair Technician"
+        },
+        {
+          "step_name": "Check and Repair Hardware",
+          "software_tools_used": [
+            "Diagnostic Tools"
+          ],
+          "time_needed": "2 hours",
+          "handoff_to": "Software Technician"
+        },
+        {
+          "step_name": "Check and Configure Software",
+          "software_tools_used": [
+            "Configuration Software"
+          ],
+          "time_needed": "1.5 hours",
+          "handoff_to": "Quality Assurance"
+        },
+        {
+          "step_name": "Test System Functionality",
+          "software_tools_used": [
+            "Testing Software"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Billing Department"
+        },
+        {
+          "step_name": "Billing",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "Customer Service"
+        },
+        {
+          "step_name": "Return Repaired Computer",
+          "software_tools_used": [],
+          "time_needed": "20 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Unexpected hardware failure during testing.",
+          "impact": "Increased repair time and potential cost adjustments.",
+          "recovery": "Reassess hardware and provide updated repair timeline to customer."
+        }
+      ]
+    }
+  ]
+}

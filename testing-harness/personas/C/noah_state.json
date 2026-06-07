@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "phase": "roundup",
+    "current_focus_process": null,
+    "tangent_to_acknowledge": null
+  },
+  "discovery": {
+    "interviewee_role": "Process Improvement Specialist",
+    "identified_main_processes": [
+      "collaborating with different departments",
+      "conducting meetings for process improvements",
+      "testing new tools or methods",
+      "handling issues in processes",
+      "training staff on new processes or tools"
+    ],
+    "is_completed": true
+  },
+  "process_details": {
+    "collaborating with different departments": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Set up a meeting with the relevant department",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Miscommunication or lack of clarity about process requirements",
+          "impact": "Delays progress due to conflicting priorities between departments",
+          "recovery": "unknown to interviewee",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "conducting meetings for process improvements": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Prepare an agenda outlining key topics",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Send out invitations to relevant stakeholders",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Facilitate the discussion to ensure everyone's input is heard",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Take notes and summarize key action items at the end",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Follow up with a summary email and any next steps",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Discussions can go off-topic or participants might have differing opinions that lead to lengthy debates.",
+          "impact": "Hinders decision-making due to lack of consensus and can prolong the meeting.",
+          "recovery": "unknown to interviewee",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "what_goes_wrong": "Not all stakeholders are present.",
+          "impact": "Hinders decision-making.",
+          "recovery": "unknown to interviewee",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "testing new tools or methods": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Review the tool or method's documentation to understand its capabilities and how it integrates with our existing systems.",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Identify integration issues and assess if the tool meets requirements.",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "The tool or method does not address our specific needs.",
+          "impact": "Wastes time and resources on ineffective solutions.",
+          "recovery": "Reassess the tool or method and consider alternatives.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "what_goes_wrong": "Unforeseen technical issues or a steeper learning curve for the team than anticipated.",
+          "impact": "Delays implementation and affects team productivity.",
+          "recovery": "Provide additional training or support to the team.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "handling issues in processes": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Identify the root cause of the issue",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "The issue might be more complex than initially thought, requiring more time and resources to fix.",
+          "impact": "Delays in getting the necessary information or coordination with other departments.",
+          "recovery": "unknown to interviewee",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "training staff on new processes or tools": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Create training materials that explain the new process or tool",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Hold training sessions where I walk the staff through the material, answer questions, and provide hands-on demonstrations if needed",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Offer follow-up support for any additional questions or issues they might encounter",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Training may not cover all scenarios, leading to confusion later on.",
+          "impact": "Staff may struggle with the new process or tool due to gaps in understanding.",
+          "recovery": "unknown to interviewee",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "what_goes_wrong": "Varying levels of familiarity with technology among staff.",
+          "impact": "Slows down the learning process and may frustrate some staff members.",
+          "recovery": "unknown to interviewee",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    }
+  }
+}

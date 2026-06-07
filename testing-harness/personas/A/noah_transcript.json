@@ -1,0 +1,424 @@
+{
+  "items": [
+    {
+      "role": "assistant",
+      "content": [
+        "Hi A, I’m Noah — your AI interviewer. Which language would you prefer to continue in: Dutch (NL), French (FR), or English (EN)?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "English is fine."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Great — what’s your job title, and what are the main responsibilities and kinds of work you own?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I'm a Process Coordinator. I mainly focus on optimizing and coordinating processes like student ticket handling, complaint management, and incident resolution."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "You mentioned student ticket handling, complaint management, and incident resolution — is that the full list of main areas you handle, or did I miss anything important?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's the full list of main areas I handle."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — can you walk me through how student ticket handling usually starts in practice?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, it starts when a student opens a ticket in our system, Sipac. It usually takes about 15 minutes for them to get it submitted. After that, the CRA team opens the process in Sipac for further action."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually happens next in Sipac after the CRA team opens the process?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Once the CRA team opens the process in Sipac, it gets forwarded for checking any pending issues. This part typically takes around 2 hours and is handled by the coordination team."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens after the coordination team checks for pending issues?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After checking for pending issues, we notify the student about any pending matters via email. This step takes about 10 minutes."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And after the email goes out, what happens next?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After notifying the student, we enter the details into the Academic System, which takes about 20 minutes. Then it's forwarded to the Approval Team."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What does the Approval Team do next with the ticket?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I don't handle the approval part directly, so I'm not sure about their exact steps. You might want to check with someone from the Approval Team for that part."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What tends to go wrong or get stuck in this student ticket handling process?"
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "That’s fine — I’ll note that as outside your scope; which tools or software do you use when entering the details into the Academic System?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Incorrect ticket information can delay processing. When that happens, we request the student to resubmit the correct information."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What impact does that delay usually have on the student ticket handling?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I use the Academic System software to enter the details."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And when the student has to resubmit the correct information, how do you recover the ticket?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The delay can slow down the entire process since we need the correct information to proceed. It can affect the student's timelines, especially if they're waiting for approval or further action."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "How do you recover the ticket after the student resubmits the correct information?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "We ask the student to resubmit the correct information through the ticketing system. Once we have the right details, we continue with the process from where it left off."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "So for student ticket handling, I understood that the student opens a ticket in Sipac, the CRA team opens it for action, the coordination team checks for pending issues, you notify the student by email if anything is missing, then you enter the details in the Academic System and send it on to the Approval Team; the main issue is incorrect ticket information, which makes you ask the student to resubmit correct details and slows the whole process and the student’s timeline. Did I get that right, or is anything missing or off?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After the student resubmits the correct information, we update the ticket in Sipac and proceed with the next steps in the process."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Got it — when the student resubmits, you update the ticket in Sipac and then continue from there; can we move on to complaint management?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You got most of it right, but you missed that after notifying the student about pending issues, there's a step where we notify the Approval Team via email after entering the details in the Academic System."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — after updating the ticket in Sipac and proceeding, do you also notify the Approval Team by email once the details are entered in the Academic System?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, we can move on to complaint management."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "How do you handle complaint management in practice, starting from what happens first?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Yes, after entering the details in the Academic System, we notify the Approval Team via email."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What tends to go wrong in complaint management?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "It starts when a new complaint is received in our Complaint System, which takes about 15 minutes. Then, a new case is opened in our case management software for further handling."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually causes delays or gets stuck after the case is opened in the case management software?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Missing reference documents can cause verification delays. When this happens, we contact external sources to get the missing documents."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What do you usually do if the missing reference documents still aren’t available?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Delays often occur if there are missing reference documents needed for verification. This can slow down the entire process until we can obtain the necessary documents from external sources."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens after you obtain the missing documents and the verification can continue?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "If the documents are still unavailable, we keep reaching out to the external sources and communicate with the relevant teams to find alternative ways to verify the information if possible."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you quickly confirm my understanding of complaint management: a complaint comes into the Complaint System, a case is opened, missing reference documents can slow verification, and if they’re not available you keep chasing external sources and coordinate with the relevant teams to find another way to verify it?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Once we have the missing documents, we forward the complaint internally using our internal communication tool. Then, the external team takes over for further handling."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you confirm whether that’s the full complaint management flow, or is there anything I missed?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Yes, that's correct, but after opening a case, the complaint is forwarded internally before going to the external team. Once the documents are obtained, the process continues from there."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Got it — so for complaint management: a complaint is received in the Complaint System, a case is opened in the case tool, the complaint is forwarded internally, missing documents can delay verification, you chase external sources and coordinate with relevant teams if needed, and once the documents are in, it continues and is handed over to the external team."
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After confirming the external reference, the record keeper updates the records, and then we inform the complainant via email. That's the full flow."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you tell me what the record keeper uses to update the records?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Almost, but after forwarding the complaint internally, we receive references for verification. Once confirmed, the record keeper updates the records, and we inform the complainant."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you tell me what tool or system the record keeper uses to update the records?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The record keeper uses the verification system to update the records."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Which system does the record keeper use to update the records?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The record keeper uses the verification system to update the records."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you confirm the complaint management flow in one short summary so I can make sure I understood it correctly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "They use the verification system."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — so complaint management goes from receiving the complaint, opening the case, forwarding it internally for verification references, updating the records in the verification system, and then informing the complainant by email; did I get that right?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, a complaint is received in the Complaint System, a case is opened, and it's forwarded internally. We receive references, confirm them, and the record keeper updates records in the verification system. Finally, we inform the complainant."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks, that matches my understanding of complaint management; is there anything I missed or got slightly wrong?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Yes, that's correct."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you walk me through student ticket handling as a short summary so I can confirm I’ve understood it correctly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Nope, you've got it right for complaint management."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Understood — then could you briefly confirm how student ticket handling usually works from start to finish?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, a student opens a ticket in Sipac, then the CRA team opens the process. It gets forwarded to check for pending issues, and we notify the student if there are any. We enter details into the Academic System and notify the Approval Team by email."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — so student ticket handling starts in Sipac, moves to CRA and the coordination check for pending issues, then any issues are emailed to the student, details are entered in the Academic System, and the Approval Team is notified; did I capture that correctly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "A student opens a ticket in Sipac, the CRA team opens the process, and it's forwarded to check pending issues. We notify the student about any issues, enter details in the Academic System, and then notify the Approval Team via email."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks, that confirms student ticket handling for me; one last thing for that process: what usually goes wrong or causes delays there?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Yes, you captured that correctly."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong or causes delays in incident resolution?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Incorrect ticket information usually causes delays, as we need to request the student to resubmit the correct details."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And when that happens, how do you get it back on track?"
+      ]
+    }
+  ]
+}

@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
+import time
 from typing import Any
+
+logger = logging.getLogger("noah.state_tracker")
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -24,13 +28,22 @@ from bpmn_schema import (
     parse_state_json,
     preserve_completed_processes,
 )
+from declined_answers import apply_declined_fields_from_transcript
 from prompts import STATE_TRACKER_SYSTEM
 
 load_dotenv(".env.local", override=True)
 
 
 def _tracker_model() -> str:
-    return os.getenv("STATE_TRACKER_MODEL", "gpt-5.4")
+    return os.getenv("STATE_TRACKER_MODEL", "gpt-4o-mini")
+
+
+def _tracker_openai_timeout_s() -> float:
+    raw = (os.getenv("STATE_TRACKER_OPENAI_TIMEOUT_S") or "60").strip()
+    try:
+        return max(10.0, float(raw))
+    except ValueError:
+        return 60.0
 
 
 def run_state_tracker(*, room_name: str, allow_empty_buffer: bool = False) -> bool:
@@ -53,15 +66,24 @@ def run_state_tracker(*, room_name: str, allow_empty_buffer: bool = False) -> bo
 
     raw_state = get_state_raw(room_name)
     current = parse_state_json(raw_state)
-    client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key, timeout=_tracker_openai_timeout_s())
     user_payload = {
         "current_json": current,
         "new_transcript_lines": buf,
     }
 
+    model = _tracker_model()
+    t0 = time.monotonic()
+    logger.info(
+        "OpenAI merge start room=%s model=%s buffer_lines=%s user_lines=%s",
+        room_name,
+        model,
+        len(buf),
+        len(user_lines),
+    )
     try:
         completion = client.chat.completions.create(
-            model=_tracker_model(),
+            model=model,
             response_format={"type": "json_object"},
             temperature=0.2,
             messages=[
@@ -73,26 +95,37 @@ def run_state_tracker(*, room_name: str, allow_empty_buffer: bool = False) -> bo
             ],
         )
     except Exception as e:
-        print(f"[SYSTEM] state_tracker OpenAI error: {e}")
+        logger.exception(
+            "OpenAI merge failed room=%s after %.2fs: %s",
+            room_name,
+            time.monotonic() - t0,
+            e,
+        )
         return False
 
     text = (completion.choices[0].message.content or "").strip()
     try:
         merged = json.loads(text)
     except json.JSONDecodeError:
-        print("[SYSTEM] state_tracker: model returned non-JSON")
+        logger.error(
+            "model returned non-JSON room=%s after %.2fs",
+            room_name,
+            time.monotonic() - t0,
+        )
         return False
 
     if not isinstance(merged, dict):
         return False
 
     normalized = normalize_state(merged)
+    normalized = apply_declined_fields_from_transcript(buf, normalized)
     normalized = preserve_completed_processes(current, normalized)
     normalized = enforce_steps_on_state(normalized)
     normalized = enforce_phase_transitions(normalized)
     normalized = enforce_focus_integrity(normalized)
     set_state_dict(room_name, normalized)
     clear_buffer(room_name)
+    logger.info("OpenAI merge done room=%s elapsed=%.2fs", room_name, time.monotonic() - t0)
     return True
 
 

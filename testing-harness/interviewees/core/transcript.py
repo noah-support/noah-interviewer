@@ -9,7 +9,9 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-EndedBy = Literal["sentinel", "turn_cap", "error", "manual", "idle_timeout"]
+EndedBy = Literal[
+    "sentinel", "closing", "turn_cap", "error", "manual", "idle_timeout"
+]
 TurnRole = Literal["interviewer", "interviewee"]
 
 

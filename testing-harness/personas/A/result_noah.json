@@ -1,0 +1,178 @@
+{
+  "name": "",
+  "role": "Process Coordinator",
+  "processes": [
+    {
+      "process_name": "student ticket handling",
+      "steps": [
+        {
+          "step_name": "Open a ticket",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "CRA team"
+        },
+        {
+          "step_name": "Forward for checking pending issues",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "2 hours",
+          "handoff_to": "coordination team"
+        },
+        {
+          "step_name": "Notify the student about any pending matters",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Enter details into the Academic System",
+          "software_tools_used": [
+            "Academic System"
+          ],
+          "time_needed": "20 minutes",
+          "handoff_to": "Approval Team"
+        },
+        {
+          "step_name": "Notify the Approval Team via email",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Recover the ticket after resubmission",
+          "software_tools_used": [
+            "ticketing system"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Update the ticket in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incorrect ticket information",
+          "impact": "Delays processing",
+          "recovery": "Request the student to resubmit the correct information"
+        },
+        {
+          "what_goes_wrong": "Delay in receiving correct information",
+          "impact": "Slows down the entire process and affects student timelines",
+          "recovery": "Ensure timely communication with the student regarding the required information"
+        }
+      ]
+    },
+    {
+      "process_name": "complaint management",
+      "steps": [
+        {
+          "step_name": "Receive a new complaint in the Complaint System",
+          "software_tools_used": [
+            "Complaint System"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Open a case in the case management software",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Forward the complaint internally",
+          "software_tools_used": [
+            "internal communication tool"
+          ],
+          "time_needed": "",
+          "handoff_to": "external team"
+        },
+        {
+          "step_name": "Obtain missing documents",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": "external team"
+        },
+        {
+          "step_name": "Update the records after confirming the external reference",
+          "software_tools_used": [
+            "verification system"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Inform the complainant via email",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing reference documents",
+          "impact": "Causes verification delays",
+          "recovery": "Contact external sources to get the missing documents"
+        },
+        {
+          "what_goes_wrong": "Delays due to missing reference documents",
+          "impact": "Slows down the entire process until necessary documents are obtained from external sources",
+          "recovery": "Ensure timely follow-up with external sources for the documents"
+        }
+      ]
+    },
+    {
+      "process_name": "incident resolution",
+      "steps": [
+        {
+          "step_name": "Open an incident in the Incident Management System",
+          "software_tools_used": [
+            "Incident Management System"
+          ],
+          "time_needed": "",
+          "handoff_to": "resolution team"
+        },
+        {
+          "step_name": "Assign it to the resolution team",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": "resolution team"
+        },
+        {
+          "step_name": "Update the status",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": "quality assurance"
+        },
+        {
+          "step_name": "Close the incident",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Status might not be updated correctly",
+          "impact": "Leads to miscommunication about the incident's progress",
+          "recovery": "Review the logs and manually update the status if needed"
+        }
+      ]
+    }
+  ]
+}

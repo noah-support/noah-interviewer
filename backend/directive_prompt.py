@@ -25,9 +25,11 @@ from bpmn_schema import (
     first_active_step,
     first_incomplete_process_name,
     meta_phase,
+    unmapped_work_summary,
     resolve_focus_process_name,
     process_fully_complete,
     process_ready_for_confirm,
+    process_needs_more_steps,
     process_ready_for_exceptions,
     process_summary_for_interviewer,
     step_gap_comment,
@@ -39,6 +41,7 @@ from prompts import (
     DIRECTIVES_USER_FACING_RULES,
     DIRECTIVE_ACTIVE_EXCEPTION_TEMPLATE,
     DIRECTIVE_ACTIVE_STEP_TEMPLATE,
+    DIRECTIVE_ASK_NEXT_STEP_AFTER_HANDOFF,
     DIRECTIVE_DEEPDIVE_ALL_PROCESSES_TEMPLATE,
     DIRECTIVE_DEEPDIVE_MISSING_DETAIL_HEAD,
     DIRECTIVE_DEEPDIVE_MISSING_DETAIL_TAIL,
@@ -61,9 +64,12 @@ from prompts import (
     DIRECTIVE_START_EXCEPTIONS_SUBPHASE,
     DIRECTIVE_STEP_COMPLETE_TEMPLATE,
     DIRECTIVE_TRANSITION_TO_NEXT_PROCESS_TEMPLATE,
+    DIRECTIVE_UNMAPPED_WORK_BLOCKER,
+    DIRECTIVE_DO_NOT_REASK_DECLINED,
     DYNAMIC_WORKING_MEMORY_HEADER,
     format_directive_tangent,
 )
+from declined_answers import user_declined_to_answer
 
 
 def _json_block(label: str, payload: Any) -> str:
@@ -289,8 +295,12 @@ def _append_deepdive_process_directives(
         lines.append("")
         lines.append(_json_block("active_step", active_view))
 
+        if last_user_text and user_declined_to_answer(last_user_text) and missing:
+            lines.append("")
+            lines.append(DIRECTIVE_DO_NOT_REASK_DECLINED)
+
         gap = step_gap_comment(active_step) or (active_step.get("comments_to_explore") or "").strip()
-        if gap:
+        if gap and not (last_user_text and user_declined_to_answer(last_user_text)):
             step_name = (active_step.get("step_name") or "").strip()
             anchor = f" when they described {step_name}" if step_name else ""
             lines.append("")
@@ -308,6 +318,17 @@ def _append_deepdive_process_directives(
                     lines.append(
                         DIRECTIVE_STEP_COMPLETE_TEMPLATE.format(
                             next_step=all_steps[idx + 1],
+                        )
+                    )
+                elif process_needs_more_steps(proc):
+                    steps_list = proc.get("steps") if isinstance(proc.get("steps"), list) else []
+                    last_mapped = steps_list[-1] if steps_list else active_step or {}
+                    handoff = (last_mapped.get("handoff_to_next_actor") or "").strip()
+                    lines.append("")
+                    lines.append(
+                        DIRECTIVE_ASK_NEXT_STEP_AFTER_HANDOFF.format(
+                            process=active_name,
+                            handoff=handoff or "the next person",
                         )
                     )
                 elif process_ready_for_exceptions(proc):
@@ -353,7 +374,11 @@ def build_deepdive_entry_block(state: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def build_dynamic_directive_block(state: dict[str, Any]) -> str:
+def build_dynamic_directive_block(
+    state: dict[str, Any],
+    *,
+    last_user_text: str | None = None,
+) -> str:
     """
     Expose only the slice of Redis state the interviewer needs for the current meta.phase.
     Always includes meta; discovery / one process / roundup rules apply per phase.
@@ -455,6 +480,11 @@ def build_dynamic_directive_block(state: dict[str, Any]) -> str:
                     remaining=", ".join(remaining),
                 )
             )
+
+        gaps = unmapped_work_summary(state)
+        if gaps:
+            lines.append("")
+            lines.append(DIRECTIVE_UNMAPPED_WORK_BLOCKER.format(gaps=gaps))
 
         _append_deepdive_process_directives(
             lines, active_name=active_name, proc=proc, progress=progress

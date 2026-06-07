@@ -13,9 +13,10 @@ from elevenlabs.conversational_ai.conversation import (
     ConversationInitiationData,
 )
 
-from interviewees.core.end_signal import contains_sentinel
+from interviewees.core.end_signal import ended_by_for_disconnect
 from interviewees.core.persona import Persona
 from interviewees.core.session import InterviewSession
+from interviewees.core.timeouts import interviewee_reply_delay_s, interviewer_idle_timeout_s
 from interviewees.core.transcript import (
     Transcript,
     default_transcript_dir,
@@ -47,15 +48,13 @@ def _dynamic_variables_for_persona(persona: Persona) -> dict[str, str]:
     """
     ElevenLabs agents often require {{name}} (and other vars) at session start.
 
-    Defaults from persona YAML; merge ``ELEVENLABS_DYNAMIC_VARIABLES_JSON`` from .env
+    Defaults from persona.json; merge ``ELEVENLABS_DYNAMIC_VARIABLES_JSON`` from .env
     for extra keys your hosted agent expects.
     """
     load_harness_env()
     variables: dict[str, str] = {
-        "name": persona.identity.name,
-        "role": persona.identity.role,
-        "company": persona.identity.company,
-        "department": persona.identity.department,
+        "name": persona.name,
+        "role": persona.role,
     }
     raw = (os.environ.get("ELEVENLABS_DYNAMIC_VARIABLES_JSON") or "").strip()
     if raw:
@@ -126,11 +125,8 @@ async def run_interview(
         if cleaned:
             incoming.put_nowait(cleaned)
 
-    async def on_agent_response(text: str) -> None:
-        if text is None:
-            return
-        _enqueue_agent_text(str(text))
-
+    # Text-only ConvAI delivers each reply via chat parts; the full-response callback
+    # would enqueue the same text again (doubling turns in the transcript).
     async def on_agent_chat_response_part(
         text: str, part_type: AgentChatResponsePartType
     ) -> None:
@@ -155,12 +151,14 @@ async def run_interview(
         requires_auth=True,
         audio_interface=None,
         config=el_config,
-        callback_agent_response=on_agent_response,
         callback_agent_chat_response_part=on_agent_chat_response_part,
     )
 
     await conv.start_session()
     await _wait_for_websocket(conv, timeout_s=_WS_CONNECT_TIMEOUT_S)
+
+    idle_timeout_s = interviewer_idle_timeout_s()
+    reply_delay_s = interviewee_reply_delay_s()
 
     try:
         try:
@@ -169,19 +167,33 @@ async def run_interview(
             )
         except asyncio.TimeoutError:
             await conv.send_user_message(_KICK_USER_MESSAGE)
-            interviewer_text = await _recv_agent_message(incoming, timeout_s=None)
+            interviewer_text = await _recv_agent_message(
+                incoming, timeout_s=idle_timeout_s
+            )
 
         while True:
             raw = interviewer_text
-            reply, should_disconnect = session.handle_interviewer_message(raw)
+            if reply_delay_s > 0:
+                await asyncio.sleep(reply_delay_s)
+            # OpenAI is sync; run off the event loop so ElevenLabs WS can answer pings
+            # and the ~60s idle timeout is not hit while generating a reply.
+            reply, should_disconnect = await asyncio.to_thread(
+                session.handle_interviewer_message, raw
+            )
             if reply:
                 await conv.send_user_message(reply)
 
             if should_disconnect:
-                ended_by = "sentinel" if contains_sentinel(raw) else "turn_cap"
+                ended_by = ended_by_for_disconnect(raw)
                 break
 
-            interviewer_text = await _recv_agent_message(incoming, timeout_s=None)
+            try:
+                interviewer_text = await _recv_agent_message(
+                    incoming, timeout_s=idle_timeout_s
+                )
+            except asyncio.TimeoutError:
+                ended_by = "idle_timeout"
+                break
     finally:
         try:
             await conv.end_session()

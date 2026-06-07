@@ -1,0 +1,109 @@
+{
+  "name": "Alex Johnson",
+  "role": "Academic Process Coordinator",
+  "processes": [
+    {
+      "process_name": "student ticket management",
+      "steps": [
+        {
+          "step_name": "Open student ticket",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": "CRA"
+        },
+        {
+          "step_name": "Forward for checking pending issues",
+          "software_tools_used": [],
+          "time_needed": "30 minutes",
+          "handoff_to": "Coordination"
+        },
+        {
+          "step_name": "Notify student about pending issues",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Enter information into the academic system",
+          "software_tools_used": [],
+          "time_needed": "20 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Notify approval",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Students fail to provide the necessary documents",
+          "impact": "Causes delays due to the need to notify the student about the missing documents and request a resubmission.",
+          "recovery": "Notify the student about the missing documents and request a resubmission."
+        },
+        {
+          "what_goes_wrong": "The ticket remains stalled if the student doesn't send the necessary documents",
+          "impact": "Delays the process as it cannot continue without the required information.",
+          "recovery": "Follow up with the student to remind them to provide the required information."
+        }
+      ]
+    },
+    {
+      "process_name": "computer repair workflow",
+      "steps": [
+        {
+          "step_name": "Provide repair cost calculation",
+          "software_tools_used": [],
+          "time_needed": "45 minutes",
+          "handoff_to": "repair technician"
+        },
+        {
+          "step_name": "Check and repair the hardware",
+          "software_tools_used": [
+            "diagnostic tools"
+          ],
+          "time_needed": "2 hours",
+          "handoff_to": "software technician"
+        },
+        {
+          "step_name": "Check and configure the software",
+          "software_tools_used": [
+            "configuration software"
+          ],
+          "time_needed": "1.5 hours",
+          "handoff_to": "quality assurance"
+        },
+        {
+          "step_name": "Test the system functionality",
+          "software_tools_used": [
+            "testing software"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "billing department"
+        },
+        {
+          "step_name": "Handle the billing process",
+          "software_tools_used": [
+            "billing software"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "customer service"
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Unexpected hardware failure during testing",
+          "impact": "Increases repair time and might require cost adjustments.",
+          "recovery": "Reassess the hardware and provide an updated repair timeline to the customer."
+        }
+      ]
+    }
+  ]
+}

@@ -7,7 +7,7 @@ cd testing-harness
 source .venv/bin/activate   # after creating the venv once
 ```
 
-The harness drives an AI **interviewee** against a real **interviewer** (Noah over LiveKit, or a hosted ElevenLabs ConvAI agent). Personas live under `personas/A/`, `personas/B/`, etc., with one prepared prompt file per folder.
+The harness drives an AI **interviewee** against a real **interviewer** (Noah over LiveKit, or a hosted ElevenLabs ConvAI agent). Personas live under `personas/A/`, `personas/B/`, etc., with one `persona.json` per folder (from `prepare_personas.py batch`).
 
 ---
 
@@ -33,18 +33,19 @@ personas/
 ├── A/
 │   ├── process1.json
 │   ├── process2.json
-│   └── prompt.yaml          ← created by prep (required before batch runs)
+│   ├── persona.json         ← ground truth (created by prep batch)
+│   └── persona.json         ← interviewee profile (required for harness runs)
 ├── B/
 │   ├── process3.json
-│   └── prompt.yaml
+│   └── ...
 ├── C/
 │   └── ...
 ├── D/
 │   └── ...
-└── devide.txt               ← maps processN → dataset folder names
+└── devide.txt               ← maps processN → dataset folder names (reference)
 ```
 
-Each `process*.json` is either Prosaview **fragments** JSON or a stub that prep resolves from `datasets/ProsaviewDataSets-main/`.
+Each `process*.json` holds process source data (`Atividades` / `Situacoes` or Prosaview `fragments`). Batch prep reads these files literally (no dataset substitution).
 
 ### Interviewer: end-of-interview sentinel
 
@@ -58,8 +59,8 @@ The harness strips it from stored turns, sends one closing reply, then disconnec
 
 | Interviewer | CLI value | What must be running |
 |-------------|-----------|----------------------|
-| **Noah** (local LiveKit + Noah agent) | `noah` | Full Noah stack (below) + prepared `personas/*/prompt.yaml` |
-| **ElevenLabs** (hosted ConvAI) | `elevenlabs` | ElevenLabs agent in **text/chat** mode + prepared `prompt.yaml` files only |
+| **Noah** (local LiveKit + Noah agent) | `noah` | Full Noah stack (below) + prepared `personas/*/persona.json` |
+| **ElevenLabs** (hosted ConvAI) | `elevenlabs` | ElevenLabs agent in **text/chat** mode + prepared `persona.json` files only |
 
 #### Noah stack (for `--interviewer noah`)
 
@@ -83,9 +84,10 @@ For harness-only runs (no microphone), set in `backend/.env.local`:
 
 ```env
 NOAH_INTERVIEWER_TEXT_ONLY=1
+NOAH_KEEP_SESSION_ON_DISCONNECT=1
 ```
 
-This disables STT/TTS and uses `lk.chat` / `lk.transcription` only. The state manager runs on every harness text turn (see below).
+`NOAH_INTERVIEWER_TEXT_ONLY` disables STT/TTS and uses `lk.chat` / `lk.transcription` only. The harness also requests a LiveKit token with `simulator=true`, which sets `lk.simulator` on the participant so the agent does not wait for a microphone track. `NOAH_KEEP_SESSION_ON_DISCONNECT` avoids tearing down the agent if the room hiccups. The state manager runs after each reply (off the text-input lock) so long tracker calls do not block the next turn.
 
 Checklist:
 
@@ -96,6 +98,9 @@ Checklist:
 - [ ] Celery worker running (otherwise DB `content` / `summary` stay empty after `/end`)
 - [ ] Interviewer agent restarted after code changes (state manager hooks `lk.chat` text input)
 - [ ] For harness: `NOAH_INTERVIEWER_TEXT_ONLY=1` in `backend/.env.local` (recommended) or voice agent with custom text callback
+- [ ] Optional backend tuning for long harness runs: `STATE_TRACKER_MODEL=gpt-4o-mini` (default), `STATE_TRACKER_TIMEOUT_S=90`, `STATE_TRACKER_OPENAI_TIMEOUT_S=60`, `NOAH_REPLY_PLAYOUT_TIMEOUT_S=120`, `NOAH_LOG_LEVEL=INFO`, `NOAH_KEEP_SESSION_ON_DISCONNECT=1`, `NOAH_EMPTY_REPLY_MAX_RETRIES=1`, `NOAH_EMPTY_REPLY_FALLBACK=Could you repeat that?`
+- [ ] AI-to-AI pacing: `INTERVIEWEE_REPLY_DELAY_S=2.5` in harness `.env` (default 2.5s pause before each interviewee `lk.chat` message)
+- [ ] Harness logs: `HARNESS_LOG_LEVEL=DEBUG` or `runner.py interview --verbose` (stderr: `harness.livekit`, `harness.runner`)
 - [ ] RAG is **off** automatically for project `output-test-noah` (and any `output-test*` title); optional `NOAH_DISABLE_RAG=1` in `backend/.env.local` for other rooms
 - [ ] Interviewer emits `[[INTERVIEW_COMPLETE]]` when closing
 
@@ -105,7 +110,7 @@ You do **not** need the Next.js frontend for harness runs. Batch Noah mode provi
 
 - [ ] Agent configured for **text/chat** (not voice-only). Harness forces `text_only` and sends an opening user message if the agent is silent for 8s (avoids the 60s timeout).
 - [ ] `ELEVENLABS_API_KEY` and `ELEVENLABS_AGENT_ID` in `.env`
-- [ ] Hosted agent dynamic vars: harness sends `name` (and `role`, `company`, `department`) from each persona’s `identity` block; add more via `ELEVENLABS_DYNAMIC_VARIABLES_JSON` if your agent requires other keys
+- [ ] Hosted agent dynamic vars: harness sends `name` and `role` from each `persona.json`; add more via `ELEVENLABS_DYNAMIC_VARIABLES_JSON` if your agent requires other keys
 - [ ] `OPENAI_API_KEY` for the **interviewee** LLM (separate from ElevenLabs’ model)
 - [ ] Sentinel on the hosted agent’s closing message
 
@@ -140,7 +145,7 @@ Align `LIVEKIT_*` with `backend/.env.local`.
 
 ## How to run the persona prep script
 
-Prep merges every `process*.json` in each folder under `personas/` and writes **one** `prompt.yaml` per folder. The batch test runner loads that file automatically.
+Prep reads every `process*.json` in each folder under `personas/` (folders `A` → `D`, one at a time) and writes **one** validated `persona.json` per folder. The harness batch runner loads those same files for interviewee roleplay.
 
 ```bash
 python tools/prepare_personas.py batch
@@ -149,25 +154,23 @@ python tools/prepare_personas.py batch
 Defaults:
 
 - `--personas-root` → `testing-harness/personas/`
-- `--datasets-root` → `datasets/ProsaviewDataSets-main/` (used when a `process*.json` is not already fragments JSON)
 
 Options:
 
 | Flag | Purpose |
 |------|---------|
-| `--force` | Overwrite existing `prompt.yaml` files |
-| `--openai-model` | Model for knowledge generation (default `gpt-4o`) |
+| `--force` | Overwrite existing `persona.json` files |
+| `--openai-model` | Model for persona generation (default `gpt-4o`) |
 | `--personas-root PATH` | Alternate personas root |
-| `--datasets-root PATH` | Alternate Prosaview datasets tree |
 
 After a successful run you should have:
 
-- `personas/A/prompt.yaml`
-- `personas/B/prompt.yaml`
-- `personas/C/prompt.yaml`
-- `personas/D/prompt.yaml`
+- `personas/A/persona.json`
+- `personas/B/persona.json`
+- `personas/C/persona.json`
+- `personas/D/persona.json`
 
-The tool rejects persona text containing modeling jargon (`BPMN`, `gateway`, `node`, etc.) and retries once. Process-to-dataset names follow `personas/devide.txt` (e.g. `process1` → `caseHandling_1`).
+The tool validates each response with Pydantic and retries up to three times on malformed JSON. Source files are not modified.
 
 **Legacy mode** (single Prosaview subject file, not used for output-test batch):
 
@@ -179,9 +182,57 @@ python tools/prepare_personas.py \
 
 ---
 
+## Interview reconstruction and validation
+
+After interviews, evaluate how well each system’s outputs reconstruct the ground-truth process profile in `persona.json`.
+
+### Artifact layout (per folder `A`–`D`)
+
+Place interview outputs in the persona folder using these **canonical names** (edit `interviewees/evaluation/interview_artifacts.py` to change conventions):
+
+| System | Transcript | Summary | State |
+|--------|------------|---------|-------|
+| Noah | `noah_transcript.json` or `.txt` | `noah_summary.txt` | `noah_state.json` |
+| ElevenLabs | `elevenlabs_transcript.json` or `.txt` | `elevenlabs_summary.txt` | — |
+
+Fallback globs if canonical files are missing: `*__livekit__*.json` (Noah), `*__elevenlabs__*.json` (ElevenLabs).
+
+**Stage harness outputs** into canonical names:
+
+```bash
+python tools/evaluate_interviews.py stage \
+  --noah-export ./out/output-test-noah_20260531T120000Z.json \
+  --transcripts-root ./transcripts/output-test
+```
+
+### Run evaluation
+
+```bash
+python tools/evaluate_interviews.py batch
+```
+
+For each folder (`A` → `D`), for Noah then ElevenLabs:
+
+1. **Reconstruction** — LLM extracts a strict profile from interview artifacts only (`persona.json` and `process*.json` are never read).
+2. **Validation** — embedding similarity (greedy alignment) + LLM judge (five dimensions, 1–5).
+
+**Outputs per folder:**
+
+- `result_noah.json`, `result_elevenlabs.json` — reconstructed profile (no `backstory`)
+- `validation_noah.json`, `validation_elevenlabs.json` — machine-readable reports
+- `validation.md` — human-readable summary for both systems
+
+**Top-level:** `personas/validation_summary.json` — one row per `(folder, system)` for cross-run comparison.
+
+Flags: `--force`, `--openai-model`, `--skip-reconstruct`, `--skip-validate`, `--min-alignment-similarity`.
+
+Requires `OPENAI_API_KEY` in `.env` (chat + embeddings).
+
+---
+
 ## How to run testing scripts
 
-Unit tests validate persona loading, sentinel handling, folder discovery, and fragment resolution **without** external services.
+Unit tests validate persona loading, sentinel handling, folder discovery, fragment resolution, and evaluation helpers **without** external services (API calls mocked).
 
 ```bash
 pytest -q
@@ -200,13 +251,13 @@ Expected: all tests pass with only the venv and package installed (no API keys r
 
 ## How to run the testing harness for one persona
 
-Use the `interview` subcommand with a prepared `prompt.yaml` and either interviewer.
+Use the `interview` subcommand with a prepared `persona.json` and either interviewer.
 
-**Noah (full turn cap 80):**
+**Noah (full):**
 
 ```bash
 python3 runner.py interview \
-  --persona personas/A/prompt.yaml \
+  --persona personas/A/persona.json \
   --interviewer noah \
   --mode full
 ```
@@ -215,7 +266,7 @@ python3 runner.py interview \
 
 ```bash
 python3 runner.py interview \
-  --persona personas/A/prompt.yaml \
+  --persona personas/A/persona.json \
   --interviewer elevenlabs \
   --mode full
 ```
@@ -224,7 +275,7 @@ python3 runner.py interview \
 
 ```bash
 python3 runner.py interview \
-  --persona personas/A/prompt.yaml \
+  --persona personas/A/persona.json \
   --interviewer noah \
   --mode smoke
 ```
@@ -245,7 +296,7 @@ For **Noah** single runs, if `LIVEKIT_ROOM` is **not** set in `.env`, the harnes
 
 ## How to run the testing harness for a complete batch (by interviewer)
 
-Batch mode runs **every persona folder** under `personas/` in order (`A` → `B` → `C` → `D`), loading each folder’s `prompt.yaml`. A progress bar shows the current persona.
+Batch mode runs **every persona folder** under `personas/` in order (`A` → `B` → `C` → `D`), loading each folder’s `persona.json`. A progress bar shows the current persona.
 
 Both commands require `--interviewer` and `--output-dir`.
 
@@ -281,7 +332,7 @@ Extra options:
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--mode` | `full` | `smoke` = 10 turns per interview |
+| `--mode` | `full` | `smoke` = 10-turn cap + transcripts under `transcripts/_smoke/` |
 | `--api-url` | `NOAH_API_URL` from `.env` | Noah API base URL |
 | `--persist-wait-timeout` | `60` | Seconds to wait for DB after `/end` |
 | `--personas-root` | `personas/` | Alternate personas tree |
@@ -324,7 +375,7 @@ python3 runner.py --interviewer elevenlabs --output-dir ./results/el
 
 | Symptom | Likely cause |
 |---------|----------------|
-| `Missing prompt.yaml in A/` | Run `python tools/prepare_personas.py batch` |
+| `Missing persona.json in A/` | Run `python tools/prepare_personas.py batch` |
 | `No persona folders under personas/` | Add subfolders `A/`, `B/`, … with `process*.json` |
 | Noah: empty `content` / `summary` in export | Celery worker not running or `/end` not reached |
 | Noah: no interviewer messages | Agent not in text mode or wrong LiveKit topics |
@@ -332,17 +383,23 @@ python3 runner.py --interviewer elevenlabs --output-dir ./results/el
 | ElevenLabs: no replies | Agent not in chat mode; check `ELEVENLABS_*` |
 | ElevenLabs: 60s “No user message” | Agent waits for user first; harness now sends a kick message after 8s — update harness if you still see this |
 | Interview never ends | Interviewer missing `[[INTERVIEW_COMPLETE]]` |
-| Turn cap exit (`ended_by: turn_cap`) | Interview ran past 80 turns (`full`) or 10 (`smoke`) without sentinel |
+| Turn cap exit (`ended_by: turn_cap`) | **Smoke mode only** — 10 interviewer turns without sentinel |
+| Interview never ends (`idle_timeout`, full mode) | Interviewer stopped replying for 600s (default); check backend logs for `state tracker timed out`; restart `python interviewer.py dev` |
+| Duplicate interviewer/interviewee lines in transcript | Fixed in harness: only streaming chat parts are used (not both full + streamed callbacks) |
+| Interviewer never closes | Harness also ends on Noah-style closing phrases (red button, covered important ground). Best: append `[[INTERVIEW_COMPLETE]]` on close (`backend/prompts.py`) |
+| Goodbye loop after closing | Fixed: harness disconnects after one reply to a closing message (sentinel or phrase match) |
+| Noah harness stops mid-interview (`idle_timeout` at 600s) | Usually the agent never sent `lk.transcription` — restart interviewer after pulling latest code; check for `state tracker timed out` in backend logs |
+| Noah stops replying ~10–15 turns in; log `input stream detached` + `SOURCE_UNKNOWN` | Voice agent waiting for a mic while harness uses text — set `NOAH_INTERVIEWER_TEXT_ONLY=1`, restart agent; harness now uses `simulator=true` on token; state tracker runs off the text lock |
 
 ---
 
 ## Transport reference
 
-**ElevenLabs:** harness uses `text_only` ConvAI, sends interviewee text as `user_message`, and collects interviewer text from `agent_response` and streaming `agent_chat_response_part` events.
+**ElevenLabs:** harness uses `text_only` ConvAI, sends interviewee text as `user_message`, and collects interviewer text from streaming `agent_chat_response_part` (STOP) only. Interviews end when the interviewer sends `[[INTERVIEW_COMPLETE]]`, or after `INTERVIEWER_IDLE_TIMEOUT_S` (default 600) with no reply.
 
 **Noah / LiveKit:**
 
 - Interviewee → interviewer: topic `lk.chat`
 - Interviewer → interviewee: topic `lk.transcription` (attributes `lk.segment_id`, `lk.transcription_final`)
 
-Harness transcript JSON (per run): `schema_version`, `persona_id`, `project`, `subject_label`, `interviewer`, `turns[]`, `ended_by` (`sentinel` | `turn_cap` | `error` | `manual`).
+Harness transcript JSON (per run): `schema_version`, `persona_id`, `project`, `subject_label`, `interviewer`, `turns[]`, `ended_by` (`sentinel` | `closing` | `turn_cap` | `idle_timeout` | `error` | `manual`).

@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "phase": "roundup",
+    "current_focus_process": null,
+    "tangent_to_acknowledge": null
+  },
+  "discovery": {
+    "interviewee_role": "Academic Process Coordinator",
+    "identified_main_processes": [
+      "student ticket management",
+      "computer repair workflow"
+    ],
+    "is_completed": true
+  },
+  "process_details": {
+    "student ticket management": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Open student ticket",
+          "tools_software_used": "Sipac",
+          "time_taken": "10 minutes",
+          "handoff_to_next_actor": "CRA",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Forward for checking pending issues",
+          "tools_software_used": "none",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "Coordination",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Notify student about pending issues",
+          "tools_software_used": "email",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Enter information into the academic system",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "20 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Notify approval",
+          "tools_software_used": "email",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Continue processing the ticket",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Students fail to provide the necessary documents",
+          "impact": "Causes delays due to the need to notify the student about the missing documents and request a resubmission.",
+          "recovery": "Notify the student about the missing documents and request a resubmission.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "what_goes_wrong": "The ticket remains stalled if the student doesn't send the necessary documents",
+          "impact": "Delays the process as it cannot continue without the required information.",
+          "recovery": "Follow up with the student to remind them to provide the required information.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "computer repair workflow": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Provide repair cost calculation",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "45 minutes",
+          "handoff_to_next_actor": "repair technician",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Check and repair the hardware",
+          "tools_software_used": "diagnostic tools",
+          "time_taken": "2 hours",
+          "handoff_to_next_actor": "software technician",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Check and configure the software",
+          "tools_software_used": "configuration software",
+          "time_taken": "1.5 hours",
+          "handoff_to_next_actor": "quality assurance",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Test the system functionality",
+          "tools_software_used": "testing software",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "billing department",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Handle the billing process",
+          "tools_software_used": "billing software",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "customer service",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Unexpected hardware failure during testing",
+          "impact": "Increases repair time and might require cost adjustments.",
+          "recovery": "Reassess the hardware and provide an updated repair timeline to the customer.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    }
+  }
+}

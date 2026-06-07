@@ -1,23 +1,25 @@
 from __future__ import annotations
 
 import json
-import os
 import re
 from collections import Counter, defaultdict, deque
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
 import typer
 import yaml
 from openai import OpenAI
+from pydantic import ValidationError
 
 from interviewees.env import load_harness_env, require_env
 from interviewees.persona_layout import (
     default_personas_root,
     iter_persona_folders,
+    persona_json_in_folder,
     prompt_file_in_folder,
 )
+from interviewees.core.persona_schema import GeneratedPersona
 
 app = typer.Typer(add_completion=False)
 
@@ -381,6 +383,166 @@ def _contains_forbidden(text: str) -> list[str]:
 OUTPUT_TEST_PROJECT = "output-test"
 
 
+def _load_local_process_sources(folder: Path) -> list[dict[str, Any]]:
+    """Load each process*.json in folder as literal JSON (no dataset substitution)."""
+    process_files = sorted(folder.glob("process*.json"))
+    if not process_files:
+        raise ValueError(f"No process*.json files in {folder}")
+
+    sources: list[dict[str, Any]] = []
+    for path in process_files:
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            raise ValueError(f"Invalid JSON in {path.name}: {e}") from e
+        if not isinstance(data, dict):
+            raise ValueError(f"{path.name} must be a JSON object")
+        sources.append({"file": path.name, "data": data})
+    return sources
+
+
+_PERSONA_MAX_ATTEMPTS = 3
+
+
+def _openai_persona(
+    sources: list[dict[str, Any]],
+    *,
+    folder: str,
+    model: str,
+) -> GeneratedPersona:
+    client = OpenAI(api_key=require_env("OPENAI_API_KEY"))
+
+    system = (
+        "You create structured interviewee persona ground truth for a process-mining "
+        "evaluation. The persona will be used as reference data: another AI roleplays "
+        "this person in an interview, and the interview output is later scored against "
+        "your JSON. Be concrete, internally consistent, and grounded in the source "
+        "process files. Write all string values in English. Never use placeholders "
+        "(TODO, TBD, lorem ipsum, etc.)."
+    )
+
+    process_count = len(sources)
+    user_base = (
+        f"Persona folder: {folder}\n"
+        f"Number of source process files: {process_count}\n\n"
+        "Source process files (use ONLY these; one output Process per file, in this order):\n\n"
+    )
+    for src in sources:
+        user_base += (
+            f"--- source_file: {src['file']} ---\n"
+            f"{json.dumps(src['data'], indent=2, ensure_ascii=False)}\n\n"
+        )
+
+    user_base += (
+        "Input format notes:\n"
+        "- Atividades / Situacoes: activities in Atividades (nome, tipo); ordering from "
+        "Situacoes edges (DEP = dependency/predecessor, XOR = branch). Derive a coherent "
+        "ordered step flow.\n"
+        "- fragments (Prosaview): use TASK names and graph flow for steps if present.\n\n"
+        "Grounding rules:\n"
+        "- Any field present in or directly implied by a source file MUST match that data; "
+        "do not contradict it.\n"
+        "- Fields not in the source (name, role, backstory, tools, times, handoffs, "
+        "exceptions) may be invented plausibly but must fit the grounded facts.\n"
+        "- Exactly one Process per source file; processes.length must equal "
+        f"{process_count}.\n\n"
+        "Output a single JSON object with these exact top-level keys:\n"
+        "{\n"
+        '  "name": string,\n'
+        '  "role": string,\n'
+        '  "backstory": string (3-5 sentences),\n'
+        '  "processes": [\n'
+        "    {\n"
+        '      "process_name": string,\n'
+        '      "steps": [\n'
+        "        {\n"
+        '          "step_name": string,\n'
+        '          "software_tools_used": string[],\n'
+        '          "time_needed": string (e.g. "15 minutes", "2 hours"),\n'
+        '          "handoff_to": string or null\n'
+        "        }\n"
+        "      ],\n"
+        '      "exceptions": [\n'
+        "        {\n"
+        '          "what_goes_wrong": string,\n'
+        '          "impact": string,\n'
+        '          "recovery": string\n'
+        "        }\n"
+        "      ]\n"
+        "    }\n"
+        "  ]\n"
+        "}\n\n"
+        "Generation rules:\n"
+        "- steps: coherent ordered flow; final step usually has handoff_to null.\n"
+        "- software_tools_used: tools named in source, or [] if none and none can be inferred.\n"
+        "- Each exception must plausibly relate to a failure mode of a step in that process.\n"
+        "- name, role, backstory, and all processes must describe the same person and job.\n"
+    )
+
+    last_error: str | None = None
+    for attempt in range(1, _PERSONA_MAX_ATTEMPTS + 1):
+        user_msg = user_base
+        if last_error:
+            user_msg += (
+                f"\n\nYour previous response failed validation (attempt {attempt - 1}):\n"
+                f"{last_error}\n\n"
+                "Fix all issues and return only valid JSON matching the schema."
+            )
+
+        res = client.chat.completions.create(
+            model=model,
+            response_format={"type": "json_object"},
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user_msg},
+            ],
+            temperature=0.7,
+        )
+        content = (res.choices[0].message.content or "").strip()
+        try:
+            parsed = json.loads(content)
+        except json.JSONDecodeError as e:
+            last_error = f"Invalid JSON: {e}"
+            continue
+
+        try:
+            persona = GeneratedPersona.model_validate(parsed)
+        except ValidationError as e:
+            last_error = str(e)
+            continue
+
+        if len(persona.processes) != process_count:
+            last_error = (
+                f"Expected {process_count} processes (one per source file), "
+                f"got {len(persona.processes)}"
+            )
+            continue
+
+        return persona
+
+    raise RuntimeError(
+        f"Failed to generate valid persona for folder {folder} after "
+        f"{_PERSONA_MAX_ATTEMPTS} attempts. Last error: {last_error}"
+    )
+
+
+def _write_persona_json(
+    output_path: Path,
+    persona: GeneratedPersona,
+    *,
+    force: bool,
+) -> None:
+    if output_path.exists() and not force:
+        raise RuntimeError(f"Refusing to overwrite existing persona: {output_path}")
+
+    payload = persona.model_dump(mode="json")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+
+
 def _openai_knowledge(
     summary: dict,
     *,
@@ -542,7 +704,6 @@ def _prepare_prosaview_file(
 def _prepare_personas_root(
     personas_root: Path,
     *,
-    datasets_root: Path | None,
     openai_model: str,
     force: bool,
 ) -> None:
@@ -554,45 +715,20 @@ def _prepare_personas_root(
         raise typer.BadParameter(f"No persona folders under {personas_root}")
 
     for folder in folders:
-        subject_label = folder.name
-        persona_id = f"{OUTPUT_TEST_PROJECT}__{subject_label}"
-        process_files = sorted(folder.glob("process*.json"))
-
         try:
-            fragments, sources = _load_merged_fragments_from_folder(
-                folder,
-                datasets_root=datasets_root,
-            )
-        except (ValueError, FileNotFoundError) as e:
+            sources = _load_local_process_sources(folder)
+        except ValueError as e:
             raise typer.BadParameter(f"{folder.name}: {e}") from e
 
-        nodes, edges = _build_graph(fragments)
-        summary = _summarize_for_llm(nodes, edges)
-        summary["persona_process_files"] = [p.name for p in process_files]
-        summary["fragment_sources"] = sources
-        defaults = _infer_defaults(
-            nodes,
-            project=OUTPUT_TEST_PROJECT,
-            subject_label=subject_label,
-        )
-        knowledge = _openai_knowledge(
-            summary,
+        persona = _openai_persona(
+            sources,
+            folder=folder.name,
             model=openai_model,
-            persona_id=persona_id,
-            multi_process=len(process_files) > 1,
         )
 
-        out_path = prompt_file_in_folder(folder)
-        _write_persona_yaml(
-            out_path,
-            persona_id=persona_id,
-            project=OUTPUT_TEST_PROJECT,
-            subject_label=subject_label,
-            defaults=defaults,
-            knowledge=knowledge,
-            force=force,
-        )
-        typer.echo(f"Wrote {out_path} ({len(process_files)} process files)")
+        out_path = persona_json_in_folder(folder)
+        _write_persona_json(out_path, persona, force=force)
+        typer.echo(f"Wrote {out_path} ({len(sources)} process files)")
 
 
 @app.command("batch")
@@ -605,32 +741,16 @@ def batch(
         dir_okay=True,
         help="Root containing persona folders A, B, C, D (default: testing-harness/personas/)",
     ),
-    datasets_root: Path = typer.Option(
-        _default_datasets_root(),
-        "--datasets-root",
-        exists=False,
-        file_okay=False,
-        dir_okay=True,
-        help="Prosaview datasets used when process*.json lacks fragments",
-    ),
     openai_model: str = typer.Option("gpt-4o", "--openai-model"),
     force: bool = typer.Option(False, "--force"),
 ) -> None:
     """
-    Prepare one prompt.yaml per folder under personas/ from all process*.json files.
+    Prepare one persona.json per folder under personas/ from local process*.json files.
 
     Example: python tools/prepare_personas.py batch
     """
-    ds_root = datasets_root if datasets_root.is_dir() else None
-    if ds_root is None:
-        typer.echo(
-            f"Datasets root not found ({datasets_root}); "
-            "each process*.json must already be fragments JSON.",
-            err=True,
-        )
     _prepare_personas_root(
         personas_root.resolve(),
-        datasets_root=ds_root,
         openai_model=openai_model,
         force=force,
     )
@@ -672,10 +792,8 @@ def main(
             "Prefer: python tools/prepare_personas.py batch",
             err=True,
         )
-        ds = _default_datasets_root()
         _prepare_personas_root(
             personas_root.resolve(),
-            datasets_root=ds if ds.is_dir() else None,
             openai_model=openai_model,
             force=force,
         )

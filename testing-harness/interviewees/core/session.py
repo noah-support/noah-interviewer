@@ -4,20 +4,27 @@ from __future__ import annotations
 
 import logging
 
-from interviewees.core.end_signal import contains_sentinel, strip_sentinel
+from interviewees.core.end_signal import (
+    contains_sentinel,
+    is_interviewer_closing_message,
+    strip_sentinel,
+)
 from interviewees.core.llm import IntervieweeLLM
 from interviewees.core.persona import Persona, assemble_system_prompt
 from interviewees.core.transcript import TranscriptRecorder
 
 logger = logging.getLogger(__name__)
 
+SMOKE_TURN_CAP = 10
+
 CLOSING_ON_CAP = (
     "Thanks for your time today. I think we've covered everything on my end."
 )
 
 
-def turn_cap_for_mode(mode: str) -> int:
-    return 10 if mode == "smoke" else 80
+def turn_cap_for_mode(mode: str) -> int | None:
+    """Smoke runs cap exchanges for quick checks; full runs until sentinel or idle timeout."""
+    return SMOKE_TURN_CAP if mode == "smoke" else None
 
 
 class InterviewSession:
@@ -59,31 +66,33 @@ class InterviewSession:
         Process an interviewer turn.
 
         Returns (interviewee_reply_or_none, should_disconnect).
-        ``None`` reply means disconnect without sending (only on turn cap before reply).
+        Full mode disconnects on sentinel, Noah-style closing phrases, or transport idle timeout.
+        Smoke mode also ends after ``SMOKE_TURN_CAP`` interviewer turns without sentinel.
         """
         cleaned = strip_sentinel(raw_text)
-        had_sentinel = contains_sentinel(raw_text)
+        should_end = is_interviewer_closing_message(raw_text)
 
         if cleaned:
             self.recorder.add_interviewer(cleaned)
             self._log_turn("interviewer", cleaned)
 
-        if had_sentinel:
+        if should_end:
             reply = self._generate_reply(cleaned or "Thanks, goodbye.")
             self.recorder.add_interviewee(reply)
             self._log_turn("interviewee", reply)
             return reply, True
 
-        self._exchange_count += 1
-        if self._exchange_count > self.turn_cap:
-            logger.warning(
-                "Turn count exceeded %s without sentinel; closing interview.",
-                self.turn_cap,
-            )
-            reply = CLOSING_ON_CAP
-            self.recorder.add_interviewee(reply)
-            self._log_turn("interviewee", reply)
-            return reply, True
+        if self.turn_cap is not None:
+            self._exchange_count += 1
+            if self._exchange_count > self.turn_cap:
+                logger.warning(
+                    "Smoke turn count exceeded %s without sentinel; closing interview.",
+                    self.turn_cap,
+                )
+                reply = CLOSING_ON_CAP
+                self.recorder.add_interviewee(reply)
+                self._log_turn("interviewee", reply)
+                return reply, True
 
         reply = self._generate_reply(cleaned)
         self.recorder.add_interviewee(reply)

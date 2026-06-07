@@ -1,0 +1,63 @@
+{
+  "name": "Alex Johnson",
+  "role": "Computer Repair Technician",
+  "processes": [
+    {
+      "process_name": "Computer Repair Process",
+      "steps": [
+        {
+          "step_name": "Diagnosing Issues",
+          "software_tools_used": [
+            "Hardware Diagnostic Tool"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Repairing Hardware or Software",
+          "software_tools_used": [
+            "Software Configuration Utility"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Testing System Functionality",
+          "software_tools_used": [
+            "System Testing Suite"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Calculating Repair Costs",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Handling Billing",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "20 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Billing software errors",
+          "impact": "Disrupts workflow and requires manual cost calculation",
+          "recovery": "Manually calculate repair costs using a calculator and update the system once the software is back up"
+        },
+        {
+          "what_goes_wrong": "Parts availability delays",
+          "impact": "Delays repair timelines and keeps customers waiting",
+          "recovery": "Wait for parts to arrive"
+        }
+      ]
+    }
+  ]
+}

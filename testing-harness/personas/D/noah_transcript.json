@@ -1,0 +1,298 @@
+{
+  "items": [
+    {
+      "role": "assistant",
+      "content": [
+        "Hi D, I’m Noah, the AI interviewer. Which language would you prefer to continue in: Dutch (NL), French (FR), or English (EN)?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "English is fine, thanks."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — what’s your job title, and what are you accountable for or what kinds of work do you own?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I'm Alex Johnson, an Academic Process Coordinator. I handle student processes, managing student tickets, and ensuring smooth operations within the university's administrative department."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "That helps — what are the main recurring tasks or processes you own in a typical week?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I mainly handle student ticket management and the computer repair workflow. Both involve coordinating various steps to ensure everything runs smoothly and issues are resolved efficiently."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "You mentioned student ticket management and the computer repair workflow — did I miss anything important, or is that the full list?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's the full list of the main processes I handle regularly."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks, Alex — let’s start with student ticket management: what usually happens first when a student ticket comes in?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "When a student ticket comes in, the student opens it using Sipac. This usually takes about 10 minutes, and then the CRA opens the process in Sipac."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And after the CRA opens it in Sipac, what happens next in that ticket flow?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After the CRA opens the process in Sipac, it's forwarded for checking any pending issues. This step takes about 30 minutes, and then it moves on to coordination."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What tool or system do you use during that pending-issues check?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "There's no specific tool for checking pending issues; it's more of a manual process."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And once that check is done, who does the coordination with the next person or team?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After checking for pending issues, the process is forwarded to coordination, and I handle notifying the student about any pending issues via email."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong in this student ticket flow, and where does it tend to get stuck?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "A common issue is when students fail to provide the necessary documents. This causes delays because we have to notify the student about the missing documents and request a resubmission."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens when the student doesn’t respond to that email?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "If the student doesn't respond to the email, the process remains stalled until they provide the necessary documents. We might need to follow up with them to remind them about the pending issues."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "So for student ticket management, I understood that the student starts the ticket in Sipac, CRA opens it there, you manually check for any pending issues, then you coordinate by emailing the student if anything is missing, and the main delay is when required documents aren’t provided so the ticket stalls until the student resubmits or you follow up — is that right, or did I miss anything?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You mostly got it, but after notifying the student about pending issues, we also enter the information into the academic system and notify approval. Those steps come after the coordination part."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "When you enter that information into the academic system, what does that involve?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Entering information into the academic system involves inputting the necessary details related to the ticket, ensuring everything is accurate and complete. This step takes about 20 minutes."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And do you hand that off to anyone after updating the academic system?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "No, once I finish entering the information into the academic system, I notify approval via email, and that's where my part of the process ends."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you briefly confirm whether I understood the student ticket process correctly: student opens the ticket in Sipac, CRA opens it and checks for pending issues, you email the student if anything is missing, then enter the details into the academic system and email approval, with the main issue being missing documents that can stall the ticket until the student responds?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's mostly correct, but just to clarify, after the CRA opens the process in Sipac, I handle the forwarding for checking pending issues. Then, after notifying the student, I enter the information into the academic system and notify approval."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thank you — and after you notify the student about missing documents, what usually happens if they still don’t send everything back?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "If the student still doesn't send the necessary documents, the ticket remains stalled. We might follow up again, but ultimately it's up to the student to provide the required information for the process to continue."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "If they do send it back, do you then continue the ticket in the academic system right away?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Yes, once the student sends back the missing documents, I can continue processing the ticket by entering the details into the academic system."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — I’ve got the student ticket flow and the main issue of missing documents causing delays. Could you tell me about the computer repair workflow next?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, in the computer repair workflow, I start by providing a repair cost calculation. This takes about 45 minutes, and then it goes to the repair technician."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens after the repair technician receives it?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After the repair technician receives it, they check and repair the hardware using diagnostic tools. This step takes about 2 hours, and then it moves on to the software technician."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What does the software technician do next?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The software technician checks and configures the software using configuration software. This typically takes about 1.5 hours, and then it goes to quality assurance."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens in quality assurance?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "In quality assurance, they test the system functionality using testing software. This step takes about an hour, and then it moves on to the billing department."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What does the billing department do next?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The billing department handles the billing process using billing software, which takes about 30 minutes. After that, it goes to customer service for returning the repaired computer."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong in the computer repair process?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "A common issue is unexpected hardware failure during testing, which can increase repair time and might require cost adjustments. In such cases, we reassess the hardware and provide an updated repair timeline to the customer."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Got it — the repair starts with your cost calculation, then the repair technician fixes the hardware, the software technician configures the software, quality assurance tests the system, billing is handled, and customer service returns the computer; the main issue is unexpected hardware failure during testing, which can add time and force a revised cost and timeline. Did I get that right, or is there anything I missed?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You got it right. That's the computer repair workflow and the main issue we encounter."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you briefly confirm the student ticket management process for me as well, including what usually goes wrong there?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "In student ticket management, the student opens a ticket in Sipac, the CRA opens it there, and I check for pending issues. I notify the student if anything is missing via email, enter the information into the academic system, and notify approval. The main issue is when students don't provide necessary documents, causing delays until they resubmit."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — is there anything important missing, wrong, or that should be added or changed?"
+      ]
+    }
+  ]
+}

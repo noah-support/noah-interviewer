@@ -1,0 +1,178 @@
+{
+  "items": [
+    {
+      "role": "assistant",
+      "content": [
+        "Hi B, I’m Noah, the AI interviewer. Which language would you prefer to continue in: Dutch (NL), French (FR), or English (EN)?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "English is fine."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — what’s your job title and scope, and what are the main responsibilities and tasks you own at work?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I'm a Computer Repair Technician at TechFix Solutions. I handle diagnosing and repairing both hardware and software issues in computers. I also calculate repair costs and inform customers, ensuring everything runs smoothly from start to finish."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Got it — besides diagnosing, repairing, and talking customers through costs, what else fills your time in a typical week?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I spend some time ordering parts if they're not available, and I also do some testing to make sure systems are working properly after repairs. Occasionally, I assist with billing issues, especially if there's an error in the software."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "You mentioned ordering parts, testing systems, and assisting with billing issues — did I miss anything important, or is that the full list?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's pretty much it. Those are the main tasks outside of the core repair work."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks, B — let’s start with ordering parts: what usually happens first when you need to order a part in practice?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "First, I diagnose the issue and identify the specific part that's needed. If it's not in stock, I'll order it from our supplier and inform the customer about the expected delay."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And once the part is identified, what tool or system do you use to place the order?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I typically use our inventory management system to place the order with our supplier."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Roughly how long does it take you to place the order when everything goes smoothly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "It usually takes about 10 to 15 minutes to place the order when everything's straightforward."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "After you place the order, who, if anyone, do you hand it off to next?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After placing the order, I don't really hand it off to anyone. I just wait for the part to arrive and keep the customer updated on the status."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong or gets stuck when you’re ordering a part?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sometimes the part might be out of stock with the supplier, which can delay the process. In those cases, I have to find an alternative supplier or inform the customer about a longer wait time."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "So for ordering parts, you diagnose the issue, identify the needed part, place the order in the inventory system if it’s not in stock, and then keep the customer updated while you wait for delivery; the main snag is supplier stock shortages, which can force you to look for another supplier or extend the customer’s wait — did I get that right, or is there anything I missed?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You got it right. That's the process and the main issue I encounter."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What do you usually do when you need to test a system after a repair?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I use our System Testing Suite to run a series of tests and ensure everything's functioning properly. It helps verify that the repairs were successful and there are no lingering issues."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Roughly how long does that testing usually take?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "It usually takes about 30 minutes to complete the testing."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "After the testing, do you hand anything off to someone else, or is that usually the end of your part?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's usually the end of my part. Once testing confirms everything is working, I proceed to calculate the repair costs if that's required, or I prepare to return the computer to the customer."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong when you’re testing a system?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Occasionally, the tests might reveal an issue that wasn't fixed, requiring me to revisit the repair process. It's not too common, but it can happen."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you briefly confirm that I understood the testing process correctly: you run the System Testing Suite for about 30 minutes after a repair, there’s usually no handoff because that’s your part, and the main exception is that a test can uncover an unresolved issue that sends you back to the repair work?"
+      ]
+    }
+  ]
+}

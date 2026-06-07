@@ -6,8 +6,13 @@ from pathlib import Path
 
 import typer
 
+from interviewees.core.logging_config import configure_harness_logging
 from interviewees.core.persona import Persona, load_persona
 from interviewees.env import load_harness_env
+
+import logging
+
+log = logging.getLogger("harness.runner")
 
 app = typer.Typer(add_completion=False)
 
@@ -112,15 +117,22 @@ def run_single_interview(
 ) -> None:
     """Run one interview end-to-end and write a transcript JSON (local debugging)."""
     _load_env()
+    configure_harness_logging(verbose=verbose)
 
     transport = _normalize_interviewer(interviewer)
     if mode not in ("smoke", "full"):
         raise typer.BadParameter("--mode must be one of: smoke, full")
 
     if mode == "smoke":
-        typer.echo("Smoke mode active (turn cap 10).", err=True)
+        typer.echo("Smoke mode active (10-turn cap, transcripts under transcripts/_smoke/).", err=True)
 
     p = load_persona(persona)
+    log.info(
+        "starting interview persona=%s interviewer=%s mode=%s",
+        persona,
+        interviewer,
+        mode,
+    )
 
     try:
         if transport == "elevenlabs":
@@ -155,8 +167,10 @@ def run_single_interview(
                     err=True,
                 )
 
+        log.info("interview finished transcript=%s", out_path)
         typer.echo(out_path)
     except Exception as e:
+        log.exception("interview failed: %s", e)
         typer.echo(f"Error: {e}", err=True)
         raise typer.Exit(code=1)
 
@@ -180,7 +194,7 @@ def _run_output_test(
     if mode not in ("smoke", "full"):
         raise typer.BadParameter("--mode must be one of: smoke, full")
     if mode == "smoke":
-        typer.echo("Smoke mode active (turn cap 10 per interviewee).", err=True)
+        typer.echo("Smoke mode active (10-turn cap, transcripts under transcripts/_smoke/).", err=True)
 
     try:
         result = asyncio.run(
@@ -258,7 +272,7 @@ def main(
         "--persona",
         exists=True,
         readable=True,
-        help="Single persona YAML (debug); use with interview subcommand instead",
+        help="Single persona JSON (debug); use with interview subcommand instead",
     ),
 ) -> None:
     """
@@ -270,6 +284,7 @@ def main(
         return
 
     _load_env()
+    configure_harness_logging(verbose=verbose)
 
     if persona is not None:
         raise typer.BadParameter(

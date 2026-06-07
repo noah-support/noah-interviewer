@@ -2,8 +2,8 @@
 
 This folder contains the **interviewee side** of a BPMN reconstruction testing harness. It provides:
 
-- **Personas** — one folder per interviewee (`personas/A/`, `B/`, …) with `process*.json` BPMN fragments; prepared YAML at `personas/{name}.yaml`.
-- A **persona prep tool** that merges process files per folder into one persona YAML.
+- **Personas** — one folder per interviewee (`personas/A/`, `B/`, …) with `process*.json` source data; batch prep writes `persona.json` ground truth per folder.
+- A **persona prep tool** that generates structured `persona.json` from local process files (legacy mode can still emit YAML from Prosaview subjects).
 - A **batch runner** that runs all personas against Noah (LiveKit) or ElevenLabs.
 
 ### Sentinel (end-of-interview)
@@ -25,22 +25,22 @@ pip install -e ".[dev]"
 cp config.example.env .env
 ```
 
-### Prepare personas (output-test layout)
+### Prepare personas (ground-truth JSON)
 
-Each subfolder under `personas/` (`A/`, `B/`, …) holds `process*.json` files. The batch command merges them and writes **`personas/{folder}/prompt.yaml`** (one per folder):
+Each subfolder under `personas/` (`A/`, `B/`, …) holds `process*.json` files. The batch command writes **`personas/{folder}/persona.json`** (one per folder, one `Process` per process file):
 
 ```bash
 python tools/prepare_personas.py batch
 ```
 
-If a `process*.json` is not already Prosaview **fragments** JSON, the tool loads `S0_*.json` from `datasets/ProsaviewDataSets-main/` using the mapping in `personas/devide.txt`.
+Batch prep uses the literal contents of each folder’s `process*.json` files (no cross-folder merge, no dataset substitution).
 
-Legacy Prosaview single-subject mode still works with `--input` / `--input-dir` and `--output-dir`.
+Legacy Prosaview single-subject mode still works with `--input` / `--input-dir` and `--output-dir` (writes YAML).
 
 Notes:
 
-- The generator rejects outputs containing process-modeling terms (`BPMN`, `gateway`, `node`, `flowchart`, `branch`, `task`) and retries once.
-- It will not overwrite existing persona YAMLs unless `--force` is passed.
+- Output is validated with Pydantic; invalid generations are retried (up to three attempts).
+- It will not overwrite existing `persona.json` files unless `--force` is passed.
 
 ### Batch output test (all personas)
 
@@ -68,11 +68,22 @@ Shows a progress bar per persona folder (`A`, `B`, `C`, `D`). See [TESTING.md](T
 
 Fields match the Postgres `Interview` row: `content`, `discovery_state_json`, `summary`.
 
+### Evaluate interview reconstructions
+
+Stage artifacts into each persona folder, then run reconstruction + validation against `persona.json`:
+
+```bash
+python tools/evaluate_interviews.py stage --noah-export ./out/output-test-noah_*.json --transcripts-root ./transcripts/output-test
+python tools/evaluate_interviews.py batch
+```
+
+See [TESTING.md](TESTING.md) for canonical filenames and outputs (`result_*.json`, `validation_*.json`, `validation.md`).
+
 ### Run a single interview (debugging)
 
 ```bash
 python3 runner.py interview \
-  --persona personas/A/prompt.yaml \
+  --persona personas/A/persona.json \
   --interviewer noah \
   --mode full
 ```

@@ -68,6 +68,7 @@ def default_process_detail() -> dict[str, Any]:
         "phase": PROCESS_PHASE_STEPS,
         "steps": [],
         "exceptions": [],
+        "steps_flow_complete": False,
         "summary_confirmed": False,
         "is_completed": False,
     }
@@ -224,6 +225,8 @@ def _normalize_process_detail(proc: dict[str, Any]) -> dict[str, Any]:
         out["phase"] = PROCESS_PHASE_CONFIRM
     else:
         out["phase"] = PROCESS_PHASE_STEPS
+    if not isinstance(out.get("steps_flow_complete"), bool):
+        out["steps_flow_complete"] = False
     if not isinstance(out.get("summary_confirmed"), bool):
         if out.get("is_completed"):
             out["summary_confirmed"] = True
@@ -307,6 +310,76 @@ def all_steps_fully_mapped(proc: dict[str, Any]) -> bool:
     return True
 
 
+def is_terminal_handoff(handoff: str | None) -> bool:
+    """True when the workflow likely ends at this step (no further handoff)."""
+    h = (handoff or "").strip().lower()
+    if not h:
+        return True
+    terminal = {
+        "none",
+        "n/a",
+        "na",
+        "null",
+        "—",
+        "-",
+        "no handoff",
+        "no one",
+        "nobody",
+        "end",
+        "done",
+        "finished",
+        "complete",
+        "closes",
+        "closed",
+    }
+    return h in terminal
+
+
+def process_needs_more_steps(proc: dict[str, Any]) -> bool:
+    """
+    True when mapped steps imply more of the workflow remains.
+
+    If the last mapped step hands off to someone else, keep mapping until the
+    user describes the next step or explicitly confirms the flow ends there.
+    """
+    if bool(proc.get("steps_flow_complete")):
+        return False
+    steps_in = proc.get("steps")
+    if not isinstance(steps_in, list) or not steps_in:
+        return True
+    fully_mapped = [
+        _normalize_step(s)
+        for s in steps_in
+        if isinstance(s, dict) and step_is_fully_mapped(_normalize_step(s))
+    ]
+    if not fully_mapped:
+        return True
+    last_mapped = fully_mapped[-1]
+    if not is_terminal_handoff(last_mapped.get("handoff_to_next_actor")):
+        return True
+    return len(fully_mapped) < len([s for s in steps_in if isinstance(s, dict)])
+
+
+def next_step_after_handoff_comment(handoff: str) -> str:
+    who = (handoff or "").strip() or "the next person or team"
+    return (
+        f"Ask what happens next in the workflow after handing off to {who} — "
+        "capture the next step only. Do not ask about problems or exceptions yet."
+    )
+
+
+def _has_pending_next_step_slot(steps: list[dict[str, Any]]) -> bool:
+    if not steps:
+        return False
+    last = _normalize_step(steps[-1])
+    if step_is_fully_mapped(last):
+        return False
+    if (last.get("step_name") or "").strip():
+        return False
+    explore = (last.get("comments_to_explore") or "").lower()
+    return "what happens next" in explore
+
+
 def exception_missing_fields(exc: dict[str, Any]) -> list[str]:
     return [f for f in EXCEPTION_REQUIRED_FIELDS if not (exc.get(f) or "").strip()]
 
@@ -335,7 +408,7 @@ def all_exceptions_fully_mapped(proc: dict[str, Any]) -> bool:
 
 
 def process_ready_for_exceptions(proc: dict[str, Any]) -> bool:
-    return all_steps_fully_mapped(proc)
+    return all_steps_fully_mapped(proc) and not process_needs_more_steps(proc)
 
 
 def process_ready_for_confirm(proc: dict[str, Any]) -> bool:
@@ -375,6 +448,20 @@ def enforce_process_steps(proc: dict[str, Any]) -> dict[str, Any]:
             step["comments_to_explore"] = ""
         normalized_steps.append(step)
     out["steps"] = normalized_steps
+
+    if process_needs_more_steps(out):
+        out["phase"] = PROCESS_PHASE_STEPS
+        out["summary_confirmed"] = False
+        out["is_completed"] = False
+        if all_steps_fully_mapped(out) and not _has_pending_next_step_slot(out["steps"]):
+            last = _normalize_step(out["steps"][-1])
+            handoff = (last.get("handoff_to_next_actor") or "").strip()
+            out["steps"].append(
+                {
+                    **default_step(),
+                    "comments_to_explore": next_step_after_handoff_comment(handoff),
+                }
+            )
 
     if process_ready_for_exceptions(out) and out.get("phase") == PROCESS_PHASE_STEPS:
         out["phase"] = PROCESS_PHASE_EXCEPTIONS
@@ -569,6 +656,46 @@ def incomplete_process_names(state: dict[str, Any]) -> list[str]:
         if not isinstance(proc, dict) or not process_fully_complete(proc):
             out.append(name)
     return out
+
+
+def unmapped_work_summary(state: dict[str, Any]) -> str | None:
+    """Human-readable gaps for directives and premature-close recovery."""
+    incomplete = incomplete_process_names(state)
+    if not incomplete:
+        return None
+
+    pd = state.get("process_details") if isinstance(state.get("process_details"), dict) else {}
+    parts: list[str] = []
+    for name in incomplete:
+        proc = pd.get(name)
+        if not isinstance(proc, dict):
+            parts.append(f"{name}: not started")
+            continue
+        steps = proc.get("steps") if isinstance(proc.get("steps"), list) else []
+        if not steps:
+            parts.append(f"{name}: not started")
+            continue
+        unmapped_steps = sum(
+            1
+            for s in steps
+            if isinstance(s, dict) and not step_is_fully_mapped(_normalize_step(s))
+        )
+        if unmapped_steps:
+            parts.append(f"{name}: {unmapped_steps} step(s) still need mapping")
+            continue
+        if process_needs_more_steps(proc):
+            parts.append(f"{name}: more workflow steps after last handoff")
+            continue
+        excs = proc.get("exceptions") if isinstance(proc.get("exceptions"), list) else []
+        if not excs or not all_exceptions_fully_mapped(proc):
+            parts.append(f"{name}: exceptions not fully mapped")
+            continue
+        if not proc.get("summary_confirmed"):
+            parts.append(f"{name}: needs summary confirmation")
+            continue
+        parts.append(f"{name}: not marked complete")
+
+    return "; ".join(parts) if parts else None
 
 
 def completed_process_names(state: dict[str, Any]) -> list[str]:

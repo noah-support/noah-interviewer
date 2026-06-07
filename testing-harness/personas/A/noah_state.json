@@ -1,0 +1,243 @@
+{
+  "meta": {
+    "phase": "roundup",
+    "current_focus_process": null,
+    "tangent_to_acknowledge": null
+  },
+  "discovery": {
+    "interviewee_role": "Process Coordinator",
+    "identified_main_processes": [
+      "student ticket handling",
+      "complaint management",
+      "incident resolution"
+    ],
+    "is_completed": true
+  },
+  "process_details": {
+    "student ticket handling": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Open a ticket",
+          "tools_software_used": "Sipac",
+          "time_taken": "15 minutes",
+          "handoff_to_next_actor": "CRA team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Forward for checking pending issues",
+          "tools_software_used": "Sipac",
+          "time_taken": "2 hours",
+          "handoff_to_next_actor": "coordination team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Notify the student about any pending matters",
+          "tools_software_used": "email",
+          "time_taken": "10 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Enter details into the Academic System",
+          "tools_software_used": "Academic System",
+          "time_taken": "20 minutes",
+          "handoff_to_next_actor": "Approval Team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Notify the Approval Team via email",
+          "tools_software_used": "email",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Recover the ticket after resubmission",
+          "tools_software_used": "ticketing system",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Update the ticket in Sipac",
+          "tools_software_used": "Sipac",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incorrect ticket information",
+          "impact": "Delays processing",
+          "recovery": "Request the student to resubmit the correct information",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "what_goes_wrong": "Delay in receiving correct information",
+          "impact": "Slows down the entire process and affects student timelines",
+          "recovery": "Ensure timely communication with the student regarding the required information",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "complaint management": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Notify the Approval Team via email",
+          "tools_software_used": "email",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Receive a new complaint in the Complaint System",
+          "tools_software_used": "Complaint System",
+          "time_taken": "15 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Reach out to external sources for missing documents",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "relevant teams",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Forward the complaint internally",
+          "tools_software_used": "internal communication tool",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "external team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Obtain missing documents",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "external team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Update the records after confirming the external reference",
+          "tools_software_used": "verification system",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Inform the complainant via email",
+          "tools_software_used": "email",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing reference documents",
+          "impact": "Causes verification delays",
+          "recovery": "Contact external sources to get the missing documents",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "what_goes_wrong": "Delays due to missing reference documents",
+          "impact": "Slows down the entire process until necessary documents are obtained from external sources",
+          "recovery": "Ensure timely follow-up with external sources for the documents",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "incident resolution": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Request the student to resubmit the correct details",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Review the logs to see what went wrong",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Open an incident in the Incident Management System",
+          "tools_software_used": "Incident Management System",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "resolution team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Assign it to the resolution team",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "resolution team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Update the status",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "quality assurance",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Close the incident",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Status might not be updated correctly",
+          "impact": "Leads to miscommunication about the incident's progress",
+          "recovery": "Review the logs and manually update the status if needed",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    }
+  }
+}

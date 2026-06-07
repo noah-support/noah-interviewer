@@ -1,0 +1,241 @@
+{
+  "schema_version": "1.0",
+  "persona_id": "output-test__B",
+  "project": "output-test",
+  "subject_label": "B",
+  "interviewer": "elevenlabs",
+  "started_at": "2026-06-05T11:28:46Z",
+  "ended_at": "2026-06-05T11:31:13Z",
+  "ended_by": "closing",
+  "turn_count": 38,
+  "turns": [
+    {
+      "index": 0,
+      "role": "interviewer",
+      "text": "Hello Alex Johnson, I am Noah, an AI interviewer.\n\nThis conversation will take about 20 minutes. The goal is to get a deep understanding of your work, your role, expertise, daily tasks, the tools you use, any challenges you face, and your ambitions for the future.\nBefore we begin, could you let me know in which language you would like to do this interview? You can choose Dutch, French, German, or English.",
+      "timestamp": "2026-06-05T11:28:52Z"
+    },
+    {
+      "index": 1,
+      "role": "interviewee",
+      "text": "English works for me.",
+      "timestamp": "2026-06-05T11:28:53Z"
+    },
+    {
+      "index": 2,
+      "role": "interviewer",
+      "text": "Perfect, we'll continue in English then.\n\nLet's start with the basics — could you tell me what your job title is and what your role involves?",
+      "timestamp": "2026-06-05T11:28:59Z"
+    },
+    {
+      "index": 3,
+      "role": "interviewee",
+      "text": "I'm a Computer Repair Technician. My role involves diagnosing and repairing hardware and software issues in computers. I work on getting systems back up and running smoothly for our customers.",
+      "timestamp": "2026-06-05T11:29:00Z"
+    },
+    {
+      "index": 4,
+      "role": "interviewer",
+      "text": "That's clear, thanks. What does a typical day look like for you — what are the main tasks you're doing from morning to evening?",
+      "timestamp": "2026-06-05T11:29:06Z"
+    },
+    {
+      "index": 5,
+      "role": "interviewee",
+      "text": "A typical day involves starting with diagnosing the issues on computers we receive. I'll then work on hardware repairs or software configuration based on what's needed. After repairs, I test the system functionality and calculate repair costs for the customers. Sometimes, I handle delays if parts aren't available or manually calculate costs if there's a billing software error.",
+      "timestamp": "2026-06-05T11:29:07Z"
+    },
+    {
+      "index": 6,
+      "role": "interviewer",
+      "text": "Got it — so you're moving between diagnosis, repairs, testing, and billing tasks throughout the day. Roughly how much time would you say you spend on each of those main activities?",
+      "timestamp": "2026-06-05T11:29:13Z"
+    },
+    {
+      "index": 7,
+      "role": "interviewee",
+      "text": "Diagnosing and repairing hardware or software each can take about an hour. Testing the system functionality is around 30 minutes. Providing the repair cost calculation takes about 15 minutes, and if I'm handling billing, that can take around 20 minutes.",
+      "timestamp": "2026-06-05T11:29:15Z"
+    },
+    {
+      "index": 8,
+      "role": "interviewer",
+      "text": "That's helpful — so roughly 3.5 hours of actual repair work, plus billing tasks. On average, how many computers do you work on in a typical day?",
+      "timestamp": "2026-06-05T11:29:21Z"
+    },
+    {
+      "index": 9,
+      "role": "interviewee",
+      "text": "On average, I work on about three to four computers a day, depending on the complexity of the issues.",
+      "timestamp": "2026-06-05T11:29:23Z"
+    },
+    {
+      "index": 10,
+      "role": "interviewer",
+      "text": "Makes sense — so you're handling multiple machines daily with varying complexity. When you mentioned billing software errors earlier, how often does that happen and what does that manual workaround look like?",
+      "timestamp": "2026-06-05T11:29:29Z"
+    },
+    {
+      "index": 11,
+      "role": "interviewee",
+      "text": "It's not too frequent, but it does happen occasionally. When it does, I manually calculate the repair costs using a calculator and any available records. Then I update the system with the correct information once the software is back up.",
+      "timestamp": "2026-06-05T11:29:31Z"
+    },
+    {
+      "index": 12,
+      "role": "interviewer",
+      "text": "How much time would you estimate you lose per week dealing with those billing software issues?",
+      "timestamp": "2026-06-05T11:29:37Z"
+    },
+    {
+      "index": 13,
+      "role": "interviewee",
+      "text": "I'd say it might add up to about an hour or so per week, depending on how many errors pop up.",
+      "timestamp": "2026-06-05T11:29:44Z"
+    },
+    {
+      "index": 14,
+      "role": "interviewer",
+      "text": "Okay, and you mentioned parts availability sometimes causes delays — how often does that impact your workflow, and how long do those delays typically set you back?",
+      "timestamp": "2026-06-05T11:29:50Z"
+    },
+    {
+      "index": 15,
+      "role": "interviewee",
+      "text": "It happens from time to time, maybe once or twice a month. Delays can vary, but they usually set us back by a few days since we have to wait for the parts to arrive.",
+      "timestamp": "2026-06-05T11:29:51Z"
+    },
+    {
+      "index": 16,
+      "role": "interviewer",
+      "text": "Understood. Let me shift gears a bit — what would you say you're particularly good at in your role, or what parts of the work do you find most energising?",
+      "timestamp": "2026-06-05T11:29:57Z"
+    },
+    {
+      "index": 17,
+      "role": "interviewee",
+      "text": "I'm pretty good at diagnosing complex technical issues and enjoy the challenge they bring. I also find it energizing to learn about new technologies and apply that knowledge to solve different problems.",
+      "timestamp": "2026-06-05T11:29:58Z"
+    },
+    {
+      "index": 18,
+      "role": "interviewer",
+      "text": "That's great — so the problem-solving side really drives you. When it comes to working with colleagues or other teams, how smoothly does that collaboration work, and are there any bottlenecks there?",
+      "timestamp": "2026-06-05T11:30:05Z"
+    },
+    {
+      "index": 19,
+      "role": "interviewee",
+      "text": "Collaboration usually goes smoothly, but occasionally there can be minor bottlenecks if we're waiting on information from another team. Overall, though, communication is pretty effective.",
+      "timestamp": "2026-06-05T11:30:06Z"
+    },
+    {
+      "index": 20,
+      "role": "interviewer",
+      "text": "Can you give me an example of when you've had to wait on information from another team, and how that affected your work?",
+      "timestamp": "2026-06-05T11:30:12Z"
+    },
+    {
+      "index": 21,
+      "role": "interviewee",
+      "text": "Sometimes I need to wait for updates from the parts procurement team about the availability or delivery of components. If there's a delay in getting that info, it can push back repair timelines and keep customers waiting longer for their repairs.",
+      "timestamp": "2026-06-05T11:30:13Z"
+    },
+    {
+      "index": 22,
+      "role": "interviewer",
+      "text": "How often would you say that happens, and roughly how much time does it cost you per week?",
+      "timestamp": "2026-06-05T11:30:19Z"
+    },
+    {
+      "index": 23,
+      "role": "interviewee",
+      "text": "It doesn't happen very often, maybe once a month. When it does, it might cost me an hour or two per week as I wait for the necessary updates.",
+      "timestamp": "2026-06-05T11:30:20Z"
+    },
+    {
+      "index": 24,
+      "role": "interviewer",
+      "text": "Fair enough. Now, thinking about your frustrations — what parts of your job are most annoying or feel inefficient to you?",
+      "timestamp": "2026-06-05T11:30:26Z"
+    },
+    {
+      "index": 25,
+      "role": "interviewee",
+      "text": "Dealing with unexpected software glitches, like billing errors, can be frustrating since they disrupt the workflow. Waiting on parts can also be a bit annoying because it delays getting repairs completed for customers.",
+      "timestamp": "2026-06-05T11:30:28Z"
+    },
+    {
+      "index": 26,
+      "role": "interviewer",
+      "text": "Beyond those, what would you say takes up the most time in your day and feels like it shouldn't?",
+      "timestamp": "2026-06-05T11:30:33Z"
+    },
+    {
+      "index": 27,
+      "role": "interviewee",
+      "text": "Sometimes, the manual calculations for billing when there's a software error take more time than they should. It would be great if the system was more reliable to avoid those interruptions.",
+      "timestamp": "2026-06-05T11:30:35Z"
+    },
+    {
+      "index": 28,
+      "role": "interviewer",
+      "text": "Understood. If you could wave a magic wand and fix one thing about your workflow, what would it be?",
+      "timestamp": "2026-06-05T11:30:41Z"
+    },
+    {
+      "index": 29,
+      "role": "interviewee",
+      "text": "I'd improve the reliability of our billing software to minimize errors and make that part of the process smoother and quicker.",
+      "timestamp": "2026-06-05T11:30:44Z"
+    },
+    {
+      "index": 30,
+      "role": "interviewer",
+      "text": "Makes sense. Looking forward, how do you see your role evolving, and what would you like to spend more time on in the future?",
+      "timestamp": "2026-06-05T11:30:50Z"
+    },
+    {
+      "index": 31,
+      "role": "interviewee",
+      "text": "I'd like to spend more time learning and working with emerging technologies. I see my role evolving to include more advanced diagnostics and repairs as technology continues to advance.",
+      "timestamp": "2026-06-05T11:30:51Z"
+    },
+    {
+      "index": 32,
+      "role": "interviewer",
+      "text": "That's interesting — do you have any ambitions beyond just staying current with tech, like moving into a different position or taking on more responsibility?",
+      "timestamp": "2026-06-05T11:30:57Z"
+    },
+    {
+      "index": 33,
+      "role": "interviewee",
+      "text": "I could see myself moving into a supervisory role or a specialized tech position in the future, where I can mentor others and work on more complex projects.",
+      "timestamp": "2026-06-05T11:30:58Z"
+    },
+    {
+      "index": 34,
+      "role": "interviewer",
+      "text": "Great — that gives me a clear picture of where you're heading. Just to round things out, what tools or software do you use most in your day-to-day work, and how do you feel about them overall?",
+      "timestamp": "2026-06-05T11:31:04Z"
+    },
+    {
+      "index": 35,
+      "role": "interviewee",
+      "text": "I use the Hardware Diagnostic Tool, Software Configuration Utility, System Testing Suite, and our Billing Software regularly. They're generally effective, but as I mentioned, the billing software could be more reliable. Overall, they help me get the job done efficiently.",
+      "timestamp": "2026-06-05T11:31:05Z"
+    },
+    {
+      "index": 36,
+      "role": "interviewer",
+      "text": "Perfect — I think we've now covered all the important topics we needed to explore: your role and responsibilities, your expertise and strengths, how you spend your time, the tools you use, your main frustrations, and your future ambitions.\n\nThank you so much for taking the time to share all of this with me, Alex — it's been really helpful. You can now press the red button to end the conversation.",
+      "timestamp": "2026-06-05T11:31:12Z"
+    },
+    {
+      "index": 37,
+      "role": "interviewee",
+      "text": "Sure, glad I could help.",
+      "timestamp": "2026-06-05T11:31:13Z"
+    }
+  ]
+}

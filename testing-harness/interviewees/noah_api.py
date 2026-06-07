@@ -94,8 +94,12 @@ class NoahApiClient:
         r = self._client.post("/api/login", json={"username": username, "code": code})
         r.raise_for_status()
 
-    def start_livekit(self, interview_id: int) -> LiveKitSession:
-        r = self._client.post(f"/api/interviews/{interview_id}/livekit-token")
+    def start_livekit(self, interview_id: int, *, simulator: bool = True) -> LiveKitSession:
+        params = {"simulator": "true"} if simulator else {}
+        r = self._client.post(
+            f"/api/interviews/{interview_id}/livekit-token",
+            params=params,
+        )
         r.raise_for_status()
         data = r.json()
         # Username/code from prior create; caller should track them.
