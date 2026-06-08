@@ -1,0 +1,207 @@
+{
+  "folder": "B",
+  "system": "elevenlabs",
+  "reconstruction_file": "result_elevenlabs.json",
+  "ground_truth_file": "persona.json",
+  "embeddings": {
+    "scalar_fields": [
+      {
+        "path": "name",
+        "truth_text": "Alex Johnson",
+        "recon_text": "Alex Johnson",
+        "similarity": 1.0
+      },
+      {
+        "path": "role",
+        "truth_text": "Computer Repair Technician",
+        "recon_text": "Computer Repair Technician",
+        "similarity": 1.0
+      }
+    ],
+    "process_reports": [
+      {
+        "truth_index": 1,
+        "recon_index": 0,
+        "process_name_similarity": 0.118839,
+        "aggregate_similarity": 0.42515,
+        "step_alignments": [
+          {
+            "truth_index": 5,
+            "recon_index": 0,
+            "similarity": 0.734135,
+            "truth_text": "Return_Repaired_Computer | tools:  | time: 10 minutes | handoff: ",
+            "recon_text": "Check new repair requests | tools:  | time:  | handoff: "
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 3,
+            "similarity": 0.711726,
+            "truth_text": "Billing | tools: Billing Software | time: 20 minutes | handoff: Test_System_Functionality",
+            "recon_text": "Calculate repair costs | tools: billing software | time: 15–20 minutes per job | handoff: "
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 2,
+            "similarity": 0.661089,
+            "truth_text": "Test_System_Functionality | tools: System Testing Suite | time: 30 minutes | handoff: Return_Repaired_Computer",
+            "recon_text": "Repair and testing phase | tools:  | time: 1.5–2 hours per job | handoff: "
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.602136,
+            "truth_text": "Check_and_Repair_Hardware | tools: Hardware Diagnostic Tool | time: 1 hour | handoff: Provide_Repair_Cost_Calculation",
+            "recon_text": "Diagnose issues | tools:  | time: 2–3 hours per day | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 1,
+            "similarity": 0.8272,
+            "truth_text": "Billing software error | Inaccurate cost estimation | Manually calculate the cost and update the system",
+            "recon_text": "Billing software glitches affecting cost estimation | Adds about 20–30 minutes to the day and requires manual work | Manually calculate the costs and update the system"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[5]↔[0].step_name",
+            "similarity": 0.564927
+          },
+          {
+            "path": "steps[5]↔[0].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[5]↔[0].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[0].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].step_name",
+            "similarity": 0.360087
+          },
+          {
+            "path": "steps[3]↔[3].software_tools_used",
+            "similarity": 0.937154
+          },
+          {
+            "path": "steps[3]↔[3].time_needed",
+            "similarity": 0.66675
+          },
+          {
+            "path": "steps[3]↔[3].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[2].step_name",
+            "similarity": 0.375824
+          },
+          {
+            "path": "steps[4]↔[2].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[2].time_needed",
+            "similarity": 0.498687
+          },
+          {
+            "path": "steps[4]↔[2].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.438957
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 0.518106
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 0.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[1].what_goes_wrong",
+            "similarity": 0.752807
+          },
+          {
+            "path": "exceptions[0]↔[1].impact",
+            "similarity": 0.296209
+          },
+          {
+            "path": "exceptions[0]↔[1].recovery",
+            "similarity": 0.974644
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 0,
+            "text": "Return_Computer_Without_Repair | tools:  | time: 10 minutes | handoff: Provide_Repair_Cost_Calculation"
+          },
+          {
+            "index": 2,
+            "text": "Check_and_Configure_Software | tools: Software Configuration Utility | time: 1 hour | handoff: Provide_Repair_Cost_Calculation"
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": [
+          {
+            "index": 0,
+            "text": "Waiting for hardware components to arrive | Delays repairs and the completion of the affected job | Keep the customer informed and manage expectations together; shift focus to other repairs"
+          },
+          {
+            "index": 2,
+            "text": "Component failure after installation or miscommunication about a repair leading to rework | Leads to rework | Double-check everything to prevent those situations"
+          }
+        ]
+      }
+    ],
+    "missed_processes": [
+      {
+        "index": 0,
+        "text": "Computer Repair Process"
+      }
+    ],
+    "extra_processes": [],
+    "overall_similarity": 0.491332,
+    "counts": {
+      "missed_processes": 1,
+      "extra_processes": 0,
+      "missed_steps": 2,
+      "extra_steps": 0,
+      "missed_exceptions": 0,
+      "extra_exceptions": 2
+    }
+  },
+  "judge": {
+    "scores": {
+      "activity_coverage": 2,
+      "control_flow_and_handoff_fidelity": 1,
+      "attribute_accuracy": 2,
+      "exception_and_edge_case_capture": 4,
+      "faithfulness_no_hallucination": 2
+    },
+    "justifications": {
+      "activity_coverage": "Most expected steps are missing (e.g., Return_Computer_Without_Repair, Check_and_Repair_Hardware, Check_and_Configure_Software, Test_System_Functionality, Return_Repaired_Computer). Only cost calculation/billing is roughly represented, while extra generic steps were added.",
+      "control_flow_and_handoff_fidelity": "The ground truth defines explicit handoffs and alternative paths, but the reconstruction provides no handoff targets and collapses phases, losing the defined sequencing in both processes.",
+      "attribute_accuracy": "For the one overlapping step, billing software and a 15–20 minute timeframe roughly match the 15 or 20 minutes in the ground truth, but other steps lack tools/times and no handoffs are specified, leading to weak detail fidelity.",
+      "exception_and_edge_case_capture": "It captures both key exceptions semantically (parts unavailability causing delay; billing software errors with manual calculation and system update), though the hardware recovery omits the explicit 'order component' action.",
+      "faithfulness_no_hallucination": "The reconstruction introduces non-ground-truth steps (checking new requests, diagnosis, combined repair/testing) and an extra exception about rework with its own recovery, indicating notable hallucination."
+    },
+    "raw_response": "{\n  \"justifications\": {\n    \"activity_coverage\": \"Most expected steps are missing (e.g., Return_Computer_Without_Repair, Check_and_Repair_Hardware, Check_and_Configure_Software, Test_System_Functionality, Return_Repaired_Computer). Only cost calculation/billing is roughly represented, while extra generic steps were added.\",\n    \"control_flow_and_handoff_fidelity\": \"The ground truth defines explicit handoffs and alternative paths, but the reconstruction provides no handoff targets and collapses phases, losing the defined sequencing in both processes.\",\n    \"attribute_accuracy\": \"For the one overlapping step, billing software and a 15–20 minute timeframe roughly match the 15 or 20 minutes in the ground truth, but other steps lack tools/times and no handoffs are specified, leading to weak detail fidelity.\",\n    \"exception_and_edge_case_capture\": \"It captures both key exceptions semantically (parts unavailability causing delay; billing software errors with manual calculation and system update), though the hardware recovery omits the explicit 'order component' action.\",\n    \"faithfulness_no_hallucination\": \"The reconstruction introduces non-ground-truth steps (checking new requests, diagnosis, combined repair/testing) and an extra exception about rework with its own recovery, indicating notable hallucination.\"\n  },\n  \"scores\": {\n    \"activity_coverage\": 2,\n    \"control_flow_and_handoff_fidelity\": 1,\n    \"attribute_accuracy\": 2,\n    \"exception_and_edge_case_capture\": 4,\n    \"faithfulness_no_hallucination\": 2\n  }\n}"
+  },
+  "run_id": "run_2",
+  "input_dir": "results/run_2",
+  "output_dir": "results/validation/run_2"
+}

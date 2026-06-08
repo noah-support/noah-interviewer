@@ -1,4 +1,52 @@
-# UX survey statistics
+# Analysis scripts
+
+## Interview validation comparison
+
+Compare **Noah** vs **ElevenLabs** interview extraction quality from automated validation runs. The pipeline is implemented in [`compare_interview_validation.py`](compare_interview_validation.py).
+
+### Quick start
+
+From the repository root:
+
+```bash
+pip install -r scripts/compare_validation_requirements.txt
+python scripts/compare_interview_validation.py
+```
+
+Optional arguments:
+
+```bash
+python scripts/compare_interview_validation.py \
+  --search-root /path/to/repo \
+  --output testing-harness/results/validation/analysis_report.md \
+  --two-sided   # optional sensitivity analysis (default is one-sided, pre-specified)
+```
+
+Defaults:
+
+- **Search root:** repository root (recursively finds all `validation_summary.json` files)
+- **Output:** `testing-harness/results/validation/analysis_report.md`
+- **Tests:** paired exact sign-flip permutation (one-sided H₁: Noah > ElevenLabs, pre-specified)
+
+The script ingests `rows` from each `validation_summary.json`, pairs Noah and ElevenLabs scores by `(run_id, persona)`, reports median/IQR for ordinal judge scores and mean/std for embedding similarity, runs paired exact permutation tests (with Wilcoxon cross-check) on eight metrics (six core + missed/extra error counts), applies Benjamini-Hochberg FDR, reports matched-pairs rank-biserial effect sizes, and writes `analysis_report.md` with a discussion of transcript task alignment.
+
+### Input data
+
+Validation summaries are produced by the testing harness evaluation pipeline (`evaluate_interviews.py run`). Expected layout:
+
+```
+testing-harness/results/validation/
+├── run_1/
+│   └── validation_summary.json
+└── run_2/
+    └── validation_summary.json
+```
+
+Each summary file contains a `rows` array with per-persona, per-system metrics (`overall_embedding_similarity`, judge scores 1–5, missed/extra counts).
+
+---
+
+## UX survey statistics
 
 Between-subjects analysis comparing two AI interview systems (Type A vs Type B) on Likert survey items. The pipeline is implemented in [`ux_survey_analysis.py`](ux_survey_analysis.py).
 

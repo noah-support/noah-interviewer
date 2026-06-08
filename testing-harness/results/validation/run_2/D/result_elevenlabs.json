@@ -1,0 +1,114 @@
+{
+  "name": "Alex Johnson",
+  "role": "Academic Process Coordinator",
+  "processes": [
+    {
+      "process_name": "Managing student tickets using Sipac",
+      "steps": [
+        {
+          "step_name": "Student opens a ticket in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "about 10 minutes",
+          "handoff_to": "CRA"
+        },
+        {
+          "step_name": "CRA opens the process in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "around 15 minutes",
+          "handoff_to": "Coordinator"
+        },
+        {
+          "step_name": "Check for pending issues",
+          "software_tools_used": [],
+          "time_needed": "about 30 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Forward to coordination",
+          "software_tools_used": [],
+          "time_needed": "about 20 minutes",
+          "handoff_to": "coordination"
+        },
+        {
+          "step_name": "Notify student about any pending issues via email",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Enter the process in the academic system",
+          "software_tools_used": [
+            "academic system"
+          ],
+          "time_needed": "about 20 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Send notification of approval by email",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing documents, incomplete information, or discrepancies in the student's submission",
+          "impact": "Occurs in about 25% of cases; requires follow-up and can delay the process by anywhere from a day or two to a week or more depending on student response time",
+          "recovery": "Notify the student via email to request the necessary documents; proceed once resubmissions are received"
+        },
+        {
+          "what_goes_wrong": "Bottlenecks when coordinating across departments",
+          "impact": "Happens about once every couple of weeks; slows ticket resolution by a day or two",
+          "recovery": "Maintain open lines of communication and set clear expectations with other departments"
+        },
+        {
+          "what_goes_wrong": "Manual duplicate data entry between Sipac and the academic system can introduce errors",
+          "impact": "Feels like wasted time and carries a risk of manual data-entry errors",
+          "recovery": "Double-check entries as part of the process"
+        }
+      ]
+    },
+    {
+      "process_name": "Computer repair workflow",
+      "steps": [
+        {
+          "step_name": "Calculate repair costs",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Check and repair hardware",
+          "software_tools_used": [
+            "diagnostic tools"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Configure software",
+          "software_tools_used": [
+            "configuration software"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Test system functionality",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": []
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "name": "Alex Johnson",
+  "role": "Process Improvement Specialist",
+  "processes": [
+    {
+      "process_name": "Analyzing workflows",
+      "steps": [
+        {
+          "step_name": "Gather data from Reservation System or Project Management Software",
+          "software_tools_used": [
+            "Reservation System",
+            "Project Management Software"
+          ],
+          "time_needed": "about an hour or so",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Review data for patterns or recurring issues",
+          "software_tools_used": [],
+          "time_needed": "another couple of hours",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Use Evaluation Tools or Reporting Software to dig deeper",
+          "software_tools_used": [
+            "Evaluation Tools",
+            "Reporting Software"
+          ],
+          "time_needed": "another hour or two",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "process_name": "Implementing strategies to fix bottlenecks",
+      "steps": [
+        {
+          "step_name": "Collaborate with relevant departments to develop a plan for addressing the issues",
+          "software_tools_used": [],
+          "time_needed": "a few days to a couple of weeks",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Work with teams to adjust workflows or configure software tools",
+          "software_tools_used": [],
+          "time_needed": "varies widely",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Coordination issues due to differing priorities or communication styles; misalignment on goals or timelines",
+          "impact": "Adds some extra time and effort initially to projects",
+          "recovery": "Use clear communication and set up regular check-ins to ensure everyone is on the same page"
+        }
+      ]
+    },
+    {
+      "process_name": "Vacation Planning and Booking",
+      "steps": [],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Reservation data is incomplete",
+          "impact": "Delays in booking accommodations and several hours lost each week",
+          "recovery": "Contact customers to get the missing information"
+        }
+      ]
+    },
+    {
+      "process_name": "Customer Service Ticket Management",
+      "steps": [],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incorrect ticket assignments",
+          "impact": "Extends resolution times and adds to workload (around a couple of hours each week)",
+          "recovery": "Re-evaluate and update the assignments"
+        }
+      ]
+    },
+    {
+      "process_name": "Project Management in Construction",
+      "steps": [
+        {
+          "step_name": "Manual data entry and verification",
+          "software_tools_used": [],
+          "time_needed": "around 3-5 hours a week",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "The manual process is error-prone; incorrect information gets entered",
+          "impact": "Leads to an inaccurate evaluation outcome",
+          "recovery": "Re-enter the data and reassess the project"
+        }
+      ]
+    },
+    {
+      "process_name": "Reporting, documentation, and follow-up",
+      "steps": [
+        {
+          "step_name": "Reporting and documentation",
+          "software_tools_used": [],
+          "time_needed": "around 5 hours a week",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Follow-up activities checking progress of implemented changes",
+          "software_tools_used": [],
+          "time_needed": "another few hours a week",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Hard to track the long-term performance of process improvements without more integrated tracking tools",
+          "impact": "Challenging to get a full picture of sustained effectiveness",
+          "recovery": ""
+        }
+      ]
+    }
+  ]
+}

@@ -16,11 +16,6 @@ def configure_harness_logging(*, verbose: bool = False) -> None:
     else:
         level = logging.INFO
 
-    root = logging.getLogger("harness")
-    if root.handlers:
-        root.setLevel(level)
-        return
-
     handler = logging.StreamHandler(sys.stderr)
     handler.setFormatter(
         logging.Formatter(
@@ -28,6 +23,11 @@ def configure_harness_logging(*, verbose: bool = False) -> None:
             datefmt="%H:%M:%S",
         )
     )
-    root.addHandler(handler)
-    root.setLevel(level)
-    root.propagate = False
+
+    for name in ("harness", "harness.evaluation"):
+        log = logging.getLogger(name)
+        if log.handlers:
+            log.handlers.clear()
+        log.addHandler(handler)
+        log.setLevel(level)
+        log.propagate = False

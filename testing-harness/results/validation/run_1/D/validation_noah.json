@@ -1,0 +1,433 @@
+{
+  "folder": "D",
+  "system": "noah",
+  "reconstruction_file": "result_noah.json",
+  "ground_truth_file": "persona.json",
+  "embeddings": {
+    "scalar_fields": [
+      {
+        "path": "name",
+        "truth_text": "Alex Johnson",
+        "recon_text": "Alex Johnson",
+        "similarity": 1.0
+      },
+      {
+        "path": "role",
+        "truth_text": "Academic Process Coordinator",
+        "recon_text": "Academic Process Coordinator",
+        "similarity": 1.0
+      }
+    ],
+    "process_reports": [
+      {
+        "truth_index": 1,
+        "recon_index": 1,
+        "process_name_similarity": 0.962744,
+        "aggregate_similarity": 0.895168,
+        "step_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.974304,
+            "truth_text": "Provide Repair Cost Calculation | tools:  | time: 45 minutes | handoff: Repair Technician",
+            "recon_text": "Provide repair cost calculation | tools:  | time: 45 minutes | handoff: repair technician"
+          },
+          {
+            "truth_index": 2,
+            "recon_index": 2,
+            "similarity": 0.973476,
+            "truth_text": "Check and Configure Software | tools: Configuration Software | time: 1.5 hours | handoff: Quality Assurance",
+            "recon_text": "Check and configure the software | tools: configuration software | time: 1.5 hours | handoff: quality assurance"
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.970332,
+            "truth_text": "Check and Repair Hardware | tools: Diagnostic Tools | time: 2 hours | handoff: Software Technician",
+            "recon_text": "Check and repair the hardware | tools: diagnostic tools | time: 2 hours | handoff: software technician"
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 3,
+            "similarity": 0.948534,
+            "truth_text": "Test System Functionality | tools: Testing Software | time: 1 hour | handoff: Billing Department",
+            "recon_text": "Test the system functionality | tools: testing software | time: 1 hour | handoff: billing department"
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 4,
+            "similarity": 0.931758,
+            "truth_text": "Billing | tools: Billing Software | time: 30 minutes | handoff: Customer Service",
+            "recon_text": "Handle the billing process | tools: billing software | time: 30 minutes | handoff: customer service"
+          },
+          {
+            "truth_index": 5,
+            "recon_index": 5,
+            "similarity": 0.828412,
+            "truth_text": "Return Repaired Computer | tools:  | time: 20 minutes | handoff: ",
+            "recon_text": "Return repaired computer to customer | tools:  | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.969897,
+            "truth_text": "Unexpected hardware failure during testing. | Increased repair time and potential cost adjustments. | Reassess hardware and provide updated repair timeline to customer.",
+            "recon_text": "Unexpected hardware failure during testing | Increases repair time and might require cost adjustments. | Reassess the hardware and provide an updated repair timeline to the customer."
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.978798
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 0.919895
+          },
+          {
+            "path": "steps[2]↔[2].step_name",
+            "similarity": 0.954227
+          },
+          {
+            "path": "steps[2]↔[2].software_tools_used",
+            "similarity": 0.926121
+          },
+          {
+            "path": "steps[2]↔[2].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].handoff_to",
+            "similarity": 0.905817
+          },
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.955783
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 0.850268
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 0.922669
+          },
+          {
+            "path": "steps[3]↔[3].step_name",
+            "similarity": 0.830572
+          },
+          {
+            "path": "steps[3]↔[3].software_tools_used",
+            "similarity": 0.917604
+          },
+          {
+            "path": "steps[3]↔[3].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].handoff_to",
+            "similarity": 0.923096
+          },
+          {
+            "path": "steps[4]↔[4].step_name",
+            "similarity": 0.581766
+          },
+          {
+            "path": "steps[4]↔[4].software_tools_used",
+            "similarity": 0.937154
+          },
+          {
+            "path": "steps[4]↔[4].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].handoff_to",
+            "similarity": 0.871017
+          },
+          {
+            "path": "steps[5]↔[5].step_name",
+            "similarity": 0.768428
+          },
+          {
+            "path": "steps[5]↔[5].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[5]↔[5].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[5].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.960067
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.914181
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.984503
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      },
+      {
+        "truth_index": 0,
+        "recon_index": 0,
+        "process_name_similarity": 0.949472,
+        "aggregate_similarity": 0.629707,
+        "step_alignments": [
+          {
+            "truth_index": 6,
+            "recon_index": 5,
+            "similarity": 0.927833,
+            "truth_text": "Notify Approval | tools: Email | time: 10 minutes | handoff: ",
+            "recon_text": "Notify approval | tools: email | time:  | handoff: "
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 3,
+            "similarity": 0.919143,
+            "truth_text": "Notify Student About Pending Issues | tools: Email | time: 15 minutes | handoff: Student",
+            "recon_text": "Notify student about pending issues | tools: email | time:  | handoff: "
+          },
+          {
+            "truth_index": 2,
+            "recon_index": 2,
+            "similarity": 0.894302,
+            "truth_text": "Forward Process for Checking Pending Issues | tools:  | time: 30 minutes | handoff: Coordinator",
+            "recon_text": "Check for pending issues | tools:  | time: 30 minutes | handoff: Coordination"
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.88685,
+            "truth_text": "CRA Opens Process in Sipac | tools: Sipac | time: 15 minutes | handoff: Coordinator",
+            "recon_text": "CRA opens the process in Sipac | tools: Sipac | time:  | handoff: "
+          },
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.872711,
+            "truth_text": "Student Opens Ticket | tools: Sipac | time: 10 minutes | handoff: CRA",
+            "recon_text": "Open student ticket | tools: Sipac | time: 10 minutes | handoff: CRA"
+          },
+          {
+            "truth_index": 5,
+            "recon_index": 4,
+            "similarity": 0.844783,
+            "truth_text": "Enter in Academic System | tools: Academic System | time: 20 minutes | handoff: Coordinator",
+            "recon_text": "Enter information into the academic system | tools:  | time: 20 minutes | handoff: "
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 6,
+            "similarity": 0.479438,
+            "truth_text": "Forward to Coordination | tools:  | time: 20 minutes | handoff: Student",
+            "recon_text": "Continue processing the ticket | tools:  | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.882876,
+            "truth_text": "Student fails to provide necessary documents. | Delays in processing the ticket. | Notify student about missing documents and request resubmission.",
+            "recon_text": "Students fail to provide the necessary documents | Causes delays due to the need to notify the student about the missing documents and request a resubmission. | Notify the student about the missing documents and request a resubmission."
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[6]↔[5].step_name",
+            "similarity": 0.933412
+          },
+          {
+            "path": "steps[6]↔[5].software_tools_used",
+            "similarity": 0.879213
+          },
+          {
+            "path": "steps[6]↔[5].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[6]↔[5].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[3].step_name",
+            "similarity": 0.972792
+          },
+          {
+            "path": "steps[4]↔[3].software_tools_used",
+            "similarity": 0.879213
+          },
+          {
+            "path": "steps[4]↔[3].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[3].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[2].step_name",
+            "similarity": 0.803631
+          },
+          {
+            "path": "steps[2]↔[2].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].handoff_to",
+            "similarity": 0.557971
+          },
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.913668
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.765544
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[5]↔[4].step_name",
+            "similarity": 0.837028
+          },
+          {
+            "path": "steps[5]↔[4].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[4].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[5]↔[4].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[6].step_name",
+            "similarity": 0.326271
+          },
+          {
+            "path": "steps[3]↔[6].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[6].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[6].handoff_to",
+            "similarity": 0.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.901652
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.473944
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.956799
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": [
+          {
+            "index": 1,
+            "text": "The ticket remains stalled if the student doesn't send the necessary documents | Delays the process as it cannot continue without the required information. | Follow up with the student to remind them to provide the required information."
+          }
+        ]
+      }
+    ],
+    "missed_processes": [],
+    "extra_processes": [],
+    "overall_similarity": 0.75529,
+    "counts": {
+      "missed_processes": 0,
+      "extra_processes": 0,
+      "missed_steps": 0,
+      "extra_steps": 0,
+      "missed_exceptions": 0,
+      "extra_exceptions": 1
+    }
+  },
+  "judge": {
+    "scores": {
+      "activity_coverage": 4,
+      "control_flow_and_handoff_fidelity": 3,
+      "attribute_accuracy": 3,
+      "exception_and_edge_case_capture": 5,
+      "faithfulness_no_hallucination": 3
+    },
+    "justifications": {
+      "activity_coverage": "All repair workflow steps are present; in student ticket management, one ground-truth step (Forward to Coordination) is missing though most others appear.",
+      "control_flow_and_handoff_fidelity": "Overall order is plausible, but several student-ticket handoffs are missing or incorrect (e.g., CRA to Coordinator, Notify Student to Student, Enter to Coordinator), and one routing step is absent; the repair workflow’s handoffs are correct.",
+      "attribute_accuracy": "Multiple student-ticket attributes are omitted or wrong (missing times for several steps, missing Academic System tool, several handoffs set to null), while the repair workflow matches closely except the final 20-minute duration.",
+      "exception_and_edge_case_capture": "The key missing-documents exception is captured with proper impact and recovery, the repair exception matches, and an additional follow-up variant is included.",
+      "faithfulness_no_hallucination": "A non-existent step ('Continue processing the ticket') and an extra exception were added, though most other details stay within the ground truth."
+    },
+    "raw_response": "{\n  \"justifications\": {\n    \"activity_coverage\": \"All repair workflow steps are present; in student ticket management, one ground-truth step (Forward to Coordination) is missing though most others appear.\",\n    \"control_flow_and_handoff_fidelity\": \"Overall order is plausible, but several student-ticket handoffs are missing or incorrect (e.g., CRA to Coordinator, Notify Student to Student, Enter to Coordinator), and one routing step is absent; the repair workflow’s handoffs are correct.\",\n    \"attribute_accuracy\": \"Multiple student-ticket attributes are omitted or wrong (missing times for several steps, missing Academic System tool, several handoffs set to null), while the repair workflow matches closely except the final 20-minute duration.\",\n    \"exception_and_edge_case_capture\": \"The key missing-documents exception is captured with proper impact and recovery, the repair exception matches, and an additional follow-up variant is included.\",\n    \"faithfulness_no_hallucination\": \"A non-existent step ('Continue processing the ticket') and an extra exception were added, though most other details stay within the ground truth.\"\n  },\n  \"scores\": {\n    \"activity_coverage\": 4,\n    \"control_flow_and_handoff_fidelity\": 3,\n    \"attribute_accuracy\": 3,\n    \"exception_and_edge_case_capture\": 5,\n    \"faithfulness_no_hallucination\": 3\n  }\n}"
+  },
+  "run_id": "run_1",
+  "input_dir": "results/run_1",
+  "output_dir": "results/validation/run_1"
+}

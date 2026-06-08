@@ -1,0 +1,358 @@
+{
+  "items": [
+    {
+      "role": "assistant",
+      "content": [
+        "Hi A, I’m Noah, the AI interviewer. Which language would you prefer for this conversation: Dutch (NL), French (FR), or English (EN)?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "English is fine."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — what’s your job title, what’s the scope of your role, and what are the main responsibilities and kinds of work you own?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I'm a Process Coordinator. I focus on process optimization and coordination, mainly handling student ticket handling, complaint management, and incident resolution. My responsibilities include streamlining workflows and ensuring smooth operations in these areas."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "That helps — I heard student ticket handling, complaint management, and incident resolution, plus process optimization and coordination; is there anything else that takes up a meaningful part of your typical week?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's pretty much it. Most of my time is spent on those processes and making sure everything runs efficiently."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — when you’re handling student tickets in practice, what usually happens first?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "First, the student opens a ticket using Sipac, which takes about 15 minutes. Then, it goes to the CRA team."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What do you do in that handoff to the CRA team?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I don't handle the handoff to the CRA team directly. It's part of the process where the CRA team opens the process in Sipac after the student submits the ticket."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens next after the CRA team opens the process in Sipac?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Once the CRA team opens the process in Sipac, it gets forwarded to me for checking any pending issues. This step takes about 30 minutes."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And after you check for pending issues, where does the ticket go next?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After I check for pending issues, the coordination team takes over and works on notifying the student about any pending issues through email."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong in this student ticket flow?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "One common issue is incorrect ticket information, which can delay processing. When this happens, I ask the student to resubmit the correct information to keep things moving."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What’s another thing that can go wrong in this ticket flow?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Incorrect ticket information is the main issue I usually deal with. Anything else would likely be handled by another team."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Just to make sure I’ve got it right: the student submits the ticket in Sipac, the CRA team opens it there, it then comes to you to check for any pending issues, and after that the coordination team emails the student about those issues; the main problem you deal with is incorrect ticket information, which can slow things down until the student resubmits it — did I miss anything or get anything wrong?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You got most of it right, but after I check for pending issues, I forward the process for checking pending issues in Sipac. Then the coordination team notifies the student. Also, the CRA team takes about 30 minutes with their part."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — after the CRA team’s part in Sipac, you check pending issues for about 30 minutes, then you forward it for another pending-issues check in Sipac, and after that the coordination team emails the student; the main issue is incorrect ticket information, which can delay things until the student resubmits the correct details, right?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Yes, that's correct."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Understood — how do you handle complaint management in practice?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "In complaint management, the process starts when a new complaint is received in the Complaint System. It takes about 15 minutes and then goes to the case manager to open a new case."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens next after the case manager opens the new case?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After the case manager opens the new case, it gets forwarded internally using our internal communication tool, which takes about 20 minutes, and then it goes to the external team."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What do you use to forward it internally in that communication tool?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "We use an internal communication tool to forward the complaint, but I don't handle the specifics of that step myself. It's more on the internal team's side."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And roughly how long does that internal forwarding part take?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The internal forwarding usually takes about 20 minutes."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens next after it goes to the external team?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After it goes to the external team, we receive references from the reference database, which takes about an hour, then it's passed to the verification team."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "How is that reference database used at that point?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The reference database is used to gather any necessary references related to the complaint, which helps in verifying the details before passing it on to the verification team."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens after the verification team gets it?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Once the verification team has it, they confirm the external references using the verification system, which takes about 45 minutes. After that, it goes to the record keeper."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens when the record keeper receives it?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After the record keeper receives it, I inform the complainant about the outcome via email, which takes about 10 minutes. That's where the process finishes on my end."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong in complaint management, and what do you do when that happens?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "A common issue is missing reference documents, which can delay verification. When that happens, I contact external sources to obtain the missing documents."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "A complaint usually comes in through the complaint system, then the case manager opens a case and forwards it internally, after which references are gathered from the reference database, the verification team checks them, the record keeper receives the result, and you email the complainant; the main issue is missing reference documents, which can slow verification until you chase the external sources. Did I get that right, or is there anything I missed?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You've got it mostly right. Just to clarify, after the case manager opens a case, it's forwarded internally to the external team, and then references are obtained before going to the verification team. Other than that, you covered it well."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Got it — after the case manager opens the case, it goes internally to the external team first, then the references are gathered, then it moves to verification, and the rest is as you described."
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's correct."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you walk me through how you handle incident resolution in practice?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, in incident resolution, it starts with opening an incident in the Incident Management System, which takes about 10 minutes. Then it gets assigned to the resolution team, taking around 15 minutes. The resolution team updates the operator using a communication platform, which usually takes about 30 minutes. After that, the status of the incident is changed in the Incident Management System, taking about 10 minutes, and it finally goes to the closure team to be closed, which takes another 5 minutes."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong in incident resolution?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "A common issue is when the status isn't updated correctly, leading to miscommunication about the incident's progress. I usually review logs and manually update the status to fix it."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "In incident resolution, an incident is opened in the Incident Management System, assigned to the resolution team, the operator is updated through the communication platform, the status is changed in the system, and then the closure team closes it; the main issue is an incorrect status update, which can cause confusion, and you fix it by checking logs and updating the status manually. Did I understand that correctly, or is there anything I missed?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You got it right. That's how the process works, and you've covered the main issue and how I address it."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you tell me how you do coordination in practice?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I focus on coordinating the processes I'm involved in, like student ticket handling, complaint management, and incident resolution. I ensure everything runs smoothly and efficiently, but I don't handle coordination outside of these specific processes."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What tends to go wrong in that coordination work?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "In my coordination work, issues usually arise within the specific processes, like incorrect ticket information or missing documents. Addressing these promptly helps maintain overall coordination."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "In your coordination work, you’re mainly keeping the student ticket handling, complaint management, and incident resolution processes moving smoothly, and the issues you deal with are the ones that show up inside those processes, like wrong ticket details or missing documents, which you address quickly to keep things on track. Did I understand that correctly, or did I miss anything important?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Yes, you understood that correctly."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you walk me through how you do process optimization in practice?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "My role in process optimization involves analyzing the current workflows in student ticket handling, complaint management, and incident resolution to identify any inefficiencies. I look for patterns or recurring issues that could be improved, then work on implementing changes to streamline these processes and enhance overall efficiency."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong when you’re trying to optimize those processes?"
+      ]
+    }
+  ]
+}

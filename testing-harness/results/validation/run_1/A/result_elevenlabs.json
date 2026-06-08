@@ -1,0 +1,100 @@
+{
+  "name": "Emily Johnson",
+  "role": "Process Coordinator",
+  "processes": [
+    {
+      "process_name": "Student ticket handling",
+      "steps": [
+        {
+          "step_name": "Check new student tickets",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Coordinate with teams to ensure process steps are followed",
+          "software_tools_used": [
+            "Email",
+            "internal communication tools"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Request resubmission of correct information from students when details are missing or incorrect",
+          "software_tools_used": [
+            "Email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incorrect ticket information from students",
+          "impact": "Causes delays by a few hours or even a day and creates back-and-forth emails",
+          "recovery": "Request the student to resubmit the correct information via email"
+        },
+        {
+          "what_goes_wrong": "Missing reference documents",
+          "impact": "Delays the process",
+          "recovery": "Ask students to provide the needed details or documents"
+        }
+      ]
+    },
+    {
+      "process_name": "Complaint management",
+      "steps": [
+        {
+          "step_name": "Check new complaints",
+          "software_tools_used": [
+            "Complaint System"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Coordinate with teams to ensure process steps are followed",
+          "software_tools_used": [
+            "Email",
+            "internal communication tools"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": []
+    },
+    {
+      "process_name": "Incident resolution",
+      "steps": [
+        {
+          "step_name": "Coordinate with teams on incident progress",
+          "software_tools_used": [
+            "Email",
+            "internal communication tools"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Review logs and update incident statuses manually when needed",
+          "software_tools_used": [
+            "Incident Management System"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Miscommunication about incident progress and status updates not done correctly",
+          "impact": "Requires extra time to review logs and update them manually, around 30 minutes to an hour each time; occurs a couple of times a week",
+          "recovery": "Review logs and update incident statuses manually"
+        }
+      ]
+    }
+  ]
+}

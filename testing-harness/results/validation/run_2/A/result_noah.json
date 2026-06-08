@@ -1,0 +1,204 @@
+{
+  "name": "",
+  "role": "Process Coordinator",
+  "processes": [
+    {
+      "process_name": "student ticket handling",
+      "steps": [
+        {
+          "step_name": "Open a ticket",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "CRA team"
+        },
+        {
+          "step_name": "CRA team opens the process in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "Process Coordinator"
+        },
+        {
+          "step_name": "Check for pending issues",
+          "software_tools_used": [],
+          "time_needed": "30 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Forward the process for checking pending issues in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "",
+          "handoff_to": "coordination team"
+        },
+        {
+          "step_name": "Notify the student about pending issues",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incorrect ticket information",
+          "impact": "Delays processing",
+          "recovery": "Ask the student to resubmit the correct information"
+        }
+      ]
+    },
+    {
+      "process_name": "complaint management",
+      "steps": [
+        {
+          "step_name": "Receive a new complaint",
+          "software_tools_used": [
+            "Complaint System"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "case manager"
+        },
+        {
+          "step_name": "Open a new case",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Forward the case internally",
+          "software_tools_used": [
+            "internal communication tool"
+          ],
+          "time_needed": "20 minutes",
+          "handoff_to": "external team"
+        },
+        {
+          "step_name": "Receive references from the reference database",
+          "software_tools_used": [
+            "reference database"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "verification team"
+        },
+        {
+          "step_name": "Confirm external references",
+          "software_tools_used": [
+            "verification system"
+          ],
+          "time_needed": "45 minutes",
+          "handoff_to": "record keeper"
+        },
+        {
+          "step_name": "Inform the complainant about the outcome",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing reference documents",
+          "impact": "Delays verification",
+          "recovery": "Contact external sources to obtain the missing documents"
+        }
+      ]
+    },
+    {
+      "process_name": "incident resolution",
+      "steps": [
+        {
+          "step_name": "Open an incident in the Incident Management System",
+          "software_tools_used": [
+            "Incident Management System"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": "resolution team"
+        },
+        {
+          "step_name": "Assign to the resolution team",
+          "software_tools_used": [],
+          "time_needed": "15 minutes",
+          "handoff_to": "resolution team"
+        },
+        {
+          "step_name": "Update the operator using a communication platform",
+          "software_tools_used": [
+            "communication platform"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Change the status of the incident in the Incident Management System",
+          "software_tools_used": [
+            "Incident Management System"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": "closure team"
+        },
+        {
+          "step_name": "Close the incident",
+          "software_tools_used": [],
+          "time_needed": "5 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Status isn't updated correctly",
+          "impact": "Leads to miscommunication about the incident's progress",
+          "recovery": "Review logs and manually update the status"
+        }
+      ]
+    },
+    {
+      "process_name": "process optimization",
+      "steps": [
+        {
+          "step_name": "Analyze current workflows",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Implement changes to streamline processes",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Resistance to change",
+          "impact": "Delays implementation of new processes",
+          "recovery": "Allow time for adaptation and make necessary adjustments to fit the team's workflow better"
+        }
+      ]
+    },
+    {
+      "process_name": "coordination",
+      "steps": [
+        {
+          "step_name": "Coordinate the processes involved",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Issues usually arise within the specific processes, like incorrect ticket information or missing documents.",
+          "impact": "Affects overall coordination.",
+          "recovery": "Address these promptly to maintain overall coordination."
+        }
+      ]
+    }
+  ]
+}

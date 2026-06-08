@@ -29,3 +29,18 @@ def test_greedy_align_with_mock_embeddings() -> None:
     assert len(result.pairs) == 2
     assert result.pairs[0].truth_index == 0
     assert result.pairs[0].recon_index == 0
+
+
+def test_greedy_align_empty_strings_does_not_crash() -> None:
+    truth = [(0, "Repair")]
+    recon = [(0, "")]
+
+    def fake_embed(texts):
+        # embed_texts sanitizes blanks before the API; align passes raw strings through.
+        assert "" in list(texts)
+        return [[1.0, 0.0], [1.0, 0.0]]
+
+    with patch("interviewees.evaluation.align.embed_texts", side_effect=fake_embed):
+        result = greedy_align(truth, recon, min_similarity=0.0)
+
+    assert len(result.pairs) == 1

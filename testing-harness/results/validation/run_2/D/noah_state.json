@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "phase": "roundup",
+    "current_focus_process": null,
+    "tangent_to_acknowledge": null
+  },
+  "discovery": {
+    "interviewee_role": "Academic Process Coordinator",
+    "identified_main_processes": [
+      "computer repair workflow",
+      "mentoring new staff"
+    ],
+    "is_completed": true
+  },
+  "process_details": {
+    "computer repair workflow": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Provide repair cost calculation",
+          "tools_software_used": "none",
+          "time_taken": "45 minutes",
+          "handoff_to_next_actor": "Repair Technician",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Check and repair the hardware",
+          "tools_software_used": "diagnostic tools",
+          "time_taken": "2 hours",
+          "handoff_to_next_actor": "Software Technician",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Check and configure the software",
+          "tools_software_used": "configuration software",
+          "time_taken": "1.5 hours",
+          "handoff_to_next_actor": "Quality Assurance",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Test the system functionality",
+          "tools_software_used": "testing software",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "Billing Department",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Handle the billing process",
+          "tools_software_used": "billing software",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "Customer Service",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Return the repaired computer to the customer",
+          "tools_software_used": "none",
+          "time_taken": "20 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Unexpected hardware failure during testing",
+          "impact": "Increases repair time and leads to cost adjustments",
+          "recovery": "Reassess the hardware and provide the customer with an updated repair timeline and any cost changes",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "mentoring new staff": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Introduce new staff to key processes and tools",
+          "tools_software_used": "Sipac",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Guide them through specific steps of the processes",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Explain common issues and resolutions",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Encourage questions and offer support",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Share tips and best practices",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "New staff struggle with the learning curve of new systems like Sipac",
+          "impact": "They may feel overwhelmed by the volume of information",
+          "recovery": "Break down the training into manageable parts and provide hands-on practice",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    }
+  }
+}

@@ -134,7 +134,7 @@ def _transcript_to_dialogue(data: Any) -> str:
         for item in data:
             if isinstance(item, dict):
                 role = str(item.get("role") or item.get("speaker") or "unknown")
-                text = str(item.get("text") or item.get("content") or "")
+                text = str(item.get("text") or item.get("content") or item.get("message") or "")
                 if text.strip():
                     lines.append(f"{role}: {text}")
         if lines:

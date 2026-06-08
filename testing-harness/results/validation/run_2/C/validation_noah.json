@@ -1,0 +1,668 @@
+{
+  "folder": "C",
+  "system": "noah",
+  "reconstruction_file": "result_noah.json",
+  "ground_truth_file": "persona.json",
+  "embeddings": {
+    "scalar_fields": [
+      {
+        "path": "name",
+        "truth_text": "Alex Johnson",
+        "recon_text": "",
+        "similarity": 0.0
+      },
+      {
+        "path": "role",
+        "truth_text": "Process Improvement Specialist",
+        "recon_text": "Process Improvement Specialist",
+        "similarity": 1.0
+      }
+    ],
+    "process_reports": [
+      {
+        "truth_index": 1,
+        "recon_index": 1,
+        "process_name_similarity": 0.938397,
+        "aggregate_similarity": 0.897098,
+        "step_alignments": [
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.953475,
+            "truth_text": "Update Ticket | tools: Ticketing System | time: 20 minutes | handoff: Assignment Manager",
+            "recon_text": "Update the ticket | tools: ticketing system | time: 20 minutes | handoff: Assignment Manager"
+          },
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.931753,
+            "truth_text": "Open Ticket | tools: Ticketing System | time: 10 minutes | handoff: Update Specialist",
+            "recon_text": "Open a ticket | tools: ticketing system | time: 10 minutes | handoff: Update Specialist"
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 4,
+            "similarity": 0.91175,
+            "truth_text": "Closed | tools: Ticketing System | time: 5 minutes | handoff: ",
+            "recon_text": "Close the ticket | tools: ticketing system | time: 5 minutes | handoff: "
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 3,
+            "similarity": 0.86074,
+            "truth_text": "Status Change | tools: Status Management Software | time: 10 minutes | handoff: Closure Specialist",
+            "recon_text": "Change ticket status | tools: status management software | time: 10 minutes | handoff: Closure Specialist"
+          },
+          {
+            "truth_index": 2,
+            "recon_index": 2,
+            "similarity": 0.858168,
+            "truth_text": "Assignment | tools: Assignment Tool | time: 15 minutes | handoff: Status Manager",
+            "recon_text": "Assign the ticket | tools: assignment tool | time: 15 minutes | handoff: Status Manager"
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.961981,
+            "truth_text": "Ticket not assigned correctly | Prolonged resolution time | Re-evaluate ticket assignment and update",
+            "recon_text": "Ticket not being assigned correctly | Prolongs resolution time | Re-evaluate the ticket assignment and update it as needed"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.877235
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 0.9245
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.734263
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 0.9245
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].step_name",
+            "similarity": 0.511841
+          },
+          {
+            "path": "steps[4]↔[4].software_tools_used",
+            "similarity": 0.9245
+          },
+          {
+            "path": "steps[4]↔[4].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].step_name",
+            "similarity": 0.531741
+          },
+          {
+            "path": "steps[3]↔[3].software_tools_used",
+            "similarity": 0.953668
+          },
+          {
+            "path": "steps[3]↔[3].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].step_name",
+            "similarity": 0.527275
+          },
+          {
+            "path": "steps[2]↔[2].software_tools_used",
+            "similarity": 0.925206
+          },
+          {
+            "path": "steps[2]↔[2].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.971662
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.82658
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.958995
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      },
+      {
+        "truth_index": 2,
+        "recon_index": 2,
+        "process_name_similarity": 0.92367,
+        "aggregate_similarity": 0.910196,
+        "step_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.98561,
+            "truth_text": "Project Arrival | tools: Project Management Software | time: 1 hour | handoff: Registration Specialist",
+            "recon_text": "Project arrival | tools: project management software | time: 1 hour | handoff: Registration Specialist"
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 4,
+            "similarity": 0.961725,
+            "truth_text": "Visit in Loco | tools: Field Tools | time: 3 hours | handoff: ",
+            "recon_text": "Visit in loco | tools: field tools | time: 3 hours | handoff: "
+          },
+          {
+            "truth_index": 2,
+            "recon_index": 2,
+            "similarity": 0.954532,
+            "truth_text": "Evaluate Project | tools: Evaluation Tools | time: 2 hours | handoff: Report Filler",
+            "recon_text": "Evaluate the project | tools: evaluation tools | time: 2 hours | handoff: Report Filler"
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.934326,
+            "truth_text": "Register Project | tools: Database Software | time: 30 minutes | handoff: Evaluation Specialist",
+            "recon_text": "Register the project | tools: database software | time: 30 minutes | handoff: Evaluation Specialist"
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 3,
+            "similarity": 0.929688,
+            "truth_text": "Fill Report | tools: Reporting Software | time: 1 hour | handoff: Permit Issuer",
+            "recon_text": "Fill out reports | tools: reporting software | time: 1 hour | handoff: Permit Issuer"
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.84953,
+            "truth_text": "Incorrect project data entry | Incorrect evaluation outcome | Re-enter data and reassess project",
+            "recon_text": "Incorrect project data entry | Delays project progress | Re-enter the data and reassess the project"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.92343
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 0.923493
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].step_name",
+            "similarity": 0.861735
+          },
+          {
+            "path": "steps[4]↔[4].software_tools_used",
+            "similarity": 0.879502
+          },
+          {
+            "path": "steps[4]↔[4].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].step_name",
+            "similarity": 0.835124
+          },
+          {
+            "path": "steps[2]↔[2].software_tools_used",
+            "similarity": 0.911255
+          },
+          {
+            "path": "steps[2]↔[2].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.805775
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 0.906948
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].step_name",
+            "similarity": 0.744251
+          },
+          {
+            "path": "steps[3]↔[3].software_tools_used",
+            "similarity": 0.827597
+          },
+          {
+            "path": "steps[3]↔[3].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 1.0
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.328922
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.972991
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      },
+      {
+        "truth_index": 0,
+        "recon_index": 0,
+        "process_name_similarity": 0.918401,
+        "aggregate_similarity": 0.955119,
+        "step_alignments": [
+          {
+            "truth_index": 2,
+            "recon_index": 3,
+            "similarity": 0.991308,
+            "truth_text": "Schedule Scuba Diving | tools: Diving Scheduling Software | time: 45 minutes | handoff: Equipment Manager",
+            "recon_text": "Schedule scuba diving | tools: diving scheduling software | time: 45 minutes | handoff: Equipment Manager"
+          },
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.98353,
+            "truth_text": "Inform Reservation Data | tools: Reservation System | time: 30 minutes | handoff: Accommodation Specialist",
+            "recon_text": "Inform reservation data | tools: reservation system | time: 30 minutes | handoff: Accommodation Specialist"
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.978557,
+            "truth_text": "Choose Accommodations | tools: Booking Platform | time: 1 hour | handoff: Billing Department",
+            "recon_text": "Choose accommodations | tools: booking platform | time: 1 hour | handoff: Billing Department"
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 4,
+            "similarity": 0.964755,
+            "truth_text": "Book Diving Equipment | tools: Equipment Booking Tool | time: 30 minutes | handoff: ",
+            "recon_text": "Book diving equipment | tools: equipment booking tool | time: 30 minutes | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.908527,
+            "truth_text": "Reservation data is incomplete | Delays in booking accommodations | Contact customer to obtain missing information",
+            "recon_text": "Incomplete reservation data | Delays booking accommodations | Contact the customer to obtain the missing information"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[2]↔[3].step_name",
+            "similarity": 0.958219
+          },
+          {
+            "path": "steps[2]↔[3].software_tools_used",
+            "similarity": 0.962325
+          },
+          {
+            "path": "steps[2]↔[3].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[3].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.940512
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 0.916732
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.915908
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 0.926361
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[4].step_name",
+            "similarity": 0.879578
+          },
+          {
+            "path": "steps[3]↔[4].software_tools_used",
+            "similarity": 0.950437
+          },
+          {
+            "path": "steps[3]↔[4].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[4].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.823932
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.959199
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.950777
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [
+          {
+            "index": 2,
+            "text": "Billing process | tools:  | time:  | handoff: "
+          }
+        ],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      },
+      {
+        "truth_index": 3,
+        "recon_index": 3,
+        "process_name_similarity": 0.906543,
+        "aggregate_similarity": 0.884388,
+        "step_alignments": [
+          {
+            "truth_index": 3,
+            "recon_index": 3,
+            "similarity": 0.942986,
+            "truth_text": "Casting | tools: Casting Tools | time: 2 hours | handoff: Cutting Supervisor",
+            "recon_text": "Handle the casting process | tools: casting tools | time: 2 hours | handoff: Cutting Supervisor"
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.930242,
+            "truth_text": "Project Evaluation | tools: Evaluation Software | time: 1 hour | handoff: Production Forwarder",
+            "recon_text": "Conduct project evaluation | tools: evaluation software | time: 1 hour | handoff: Production Forwarder"
+          },
+          {
+            "truth_index": 5,
+            "recon_index": 5,
+            "similarity": 0.921798,
+            "truth_text": "Finishing | tools: Finishing Tools | time: 2 hours | handoff: ",
+            "recon_text": "Complete the process | tools: finishing tools | time: 2 hours | handoff: "
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 4,
+            "similarity": 0.915989,
+            "truth_text": "Cutting | tools: Cutting Equipment | time: 1 hour | handoff: Finishing Specialist",
+            "recon_text": "Manage the cutting process | tools: cutting equipment | time: 1 hour | handoff: Finishing Specialist"
+          },
+          {
+            "truth_index": 2,
+            "recon_index": 2,
+            "similarity": 0.889384,
+            "truth_text": "Forward Project to Production | tools: Production Scheduling Software | time: 30 minutes | handoff: Casting Coordinator",
+            "recon_text": "Forward project to Casting Coordinator | tools: production scheduling software | time: 30 minutes | handoff: Casting Coordinator"
+          },
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.883336,
+            "truth_text": "New Order | tools: Order Management System | time: 20 minutes | handoff: Project Manager",
+            "recon_text": "Handle a new order | tools: order management system | time: 20 minutes | handoff: Project Manager"
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.979667,
+            "truth_text": "Production delay due to equipment failure | Delayed order fulfillment | Initiate equipment repair and reschedule production tasks",
+            "recon_text": "Production delays due to equipment failure | Delays order fulfillment | Initiate equipment repair and reschedule production tasks"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[3]↔[3].step_name",
+            "similarity": 0.68512
+          },
+          {
+            "path": "steps[3]↔[3].software_tools_used",
+            "similarity": 0.827852
+          },
+          {
+            "path": "steps[3]↔[3].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.75929
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 0.919212
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[5]↔[5].step_name",
+            "similarity": 0.508515
+          },
+          {
+            "path": "steps[5]↔[5].software_tools_used",
+            "similarity": 0.942626
+          },
+          {
+            "path": "steps[5]↔[5].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[5]↔[5].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].step_name",
+            "similarity": 0.594884
+          },
+          {
+            "path": "steps[4]↔[4].software_tools_used",
+            "similarity": 0.936434
+          },
+          {
+            "path": "steps[4]↔[4].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].step_name",
+            "similarity": 0.565903
+          },
+          {
+            "path": "steps[2]↔[2].software_tools_used",
+            "similarity": 0.900897
+          },
+          {
+            "path": "steps[2]↔[2].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.420423
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 0.943986
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.970378
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.880806
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 1.0
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      }
+    ],
+    "missed_processes": [],
+    "extra_processes": [],
+    "overall_similarity": 0.900001,
+    "counts": {
+      "missed_processes": 0,
+      "extra_processes": 0,
+      "missed_steps": 0,
+      "extra_steps": 1,
+      "missed_exceptions": 0,
+      "extra_exceptions": 0
+    }
+  },
+  "judge": {
+    "scores": {
+      "activity_coverage": 5,
+      "control_flow_and_handoff_fidelity": 4,
+      "attribute_accuracy": 5,
+      "exception_and_edge_case_capture": 4,
+      "faithfulness_no_hallucination": 4
+    },
+    "justifications": {
+      "activity_coverage": "All original steps from each of the four processes are present in the reconstruction with no omissions. Core sequencing is preserved for the matched steps.",
+      "control_flow_and_handoff_fidelity": "Handoffs and overall sequence largely match the ground truth, but an extra 'Billing process' step with null handoff slightly distorts the vacation process flow. Otherwise, handoff targets and order remain consistent.",
+      "attribute_accuracy": "For the matched steps, tools, times, and handoff targets align closely with the ground truth; wording differences do not change meaning. No discrepancies found in micro-details for the core steps.",
+      "exception_and_edge_case_capture": "All processes include the expected exception entries; three match closely, while the construction process alters the impact to a generic delay instead of an incorrect evaluation outcome.",
+      "faithfulness_no_hallucination": "The reconstruction is mostly faithful but introduces a hallucinated 'Billing process' step in the vacation workflow. Other variations are rephrasings rather than inventions."
+    },
+    "raw_response": "{\n  \"justifications\": {\n    \"activity_coverage\": \"All original steps from each of the four processes are present in the reconstruction with no omissions. Core sequencing is preserved for the matched steps.\",\n    \"control_flow_and_handoff_fidelity\": \"Handoffs and overall sequence largely match the ground truth, but an extra 'Billing process' step with null handoff slightly distorts the vacation process flow. Otherwise, handoff targets and order remain consistent.\",\n    \"attribute_accuracy\": \"For the matched steps, tools, times, and handoff targets align closely with the ground truth; wording differences do not change meaning. No discrepancies found in micro-details for the core steps.\",\n    \"exception_and_edge_case_capture\": \"All processes include the expected exception entries; three match closely, while the construction process alters the impact to a generic delay instead of an incorrect evaluation outcome.\",\n    \"faithfulness_no_hallucination\": \"The reconstruction is mostly faithful but introduces a hallucinated 'Billing process' step in the vacation workflow. Other variations are rephrasings rather than inventions.\"\n  },\n  \"scores\": {\n    \"activity_coverage\": 5,\n    \"control_flow_and_handoff_fidelity\": 4,\n    \"attribute_accuracy\": 5,\n    \"exception_and_edge_case_capture\": 4,\n    \"faithfulness_no_hallucination\": 4\n  }\n}"
+  },
+  "run_id": "run_2",
+  "input_dir": "results/run_2",
+  "output_dir": "results/validation/run_2"
+}

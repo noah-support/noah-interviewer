@@ -69,16 +69,35 @@ def _fmt_alignment_compact(embeddings: dict[str, Any]) -> str:
 def render_validation_markdown(
     folder_name: str,
     reports_by_system: dict[str, dict[str, Any]],
+    *,
+    run_id: str = "",
 ) -> str:
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    title = (
+        f"# Validation report — {run_id} / persona {folder_name}"
+        if run_id
+        else f"# Validation report — persona {folder_name}"
+    )
     lines = [
-        f"# Validation report — persona {folder_name}",
+        title,
         "",
         f"Generated: {ts}",
         "",
-        f"Ground truth: `{PERSONA_JSON_FILENAME}` (backstory ignored for scoring).",
-        "",
     ]
+    if run_id:
+        lines.append(f"**Run:** `{run_id}`")
+        sample = next(iter(reports_by_system.values()), {})
+        if sample.get("input_dir"):
+            lines.append(f"**Input:** `{sample['input_dir']}`")
+        if sample.get("output_dir"):
+            lines.append(f"**Output:** `{sample['output_dir']}`")
+        lines.append("")
+    lines.extend(
+        [
+            f"Ground truth: `{PERSONA_JSON_FILENAME}` (backstory ignored for scoring).",
+            "",
+        ]
+    )
     for system in ("noah", "elevenlabs"):
         report = reports_by_system.get(system)
         if not report:
@@ -112,11 +131,12 @@ def write_validation_markdown(
     reports_by_system: dict[str, dict[str, Any]],
     *,
     force: bool = False,
+    run_id: str = "",
 ) -> Path:
     from interviewees.evaluation.io import write_text
     from interviewees.persona_layout import validation_md_in_folder
 
     path = validation_md_in_folder(folder)
-    content = render_validation_markdown(folder.name, reports_by_system)
+    content = render_validation_markdown(folder.name, reports_by_system, run_id=run_id)
     write_text(path, content + "\n", force=force)
     return path

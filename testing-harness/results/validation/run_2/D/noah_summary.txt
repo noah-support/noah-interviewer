@@ -1,0 +1,7 @@
+The interview is conducted in English. The interviewee, D, is an Academic Process Coordinator responsible for managing student processes, handling student tickets, and using Sipac to ensure smooth operations. D also coordinates the computer repair workflow and mentors new staff, sharing best practices. The main tasks have been confirmed as complete.
+
+The current focus is on the computer repair workflow, which has been detailed as follows: The process begins with a repair cost calculation, taking about 45 minutes without specific tools. It then moves to the Repair Technician for hardware checks and repairs, lasting about 2 hours with diagnostic tools. Next, the Software Technician configures the software over approximately 1.5 hours using configuration software. Quality Assurance follows, testing system functionality with testing software for about an hour. The Billing Department then handles billing using billing software, taking around 30 minutes. Finally, Customer Service returns the repaired computer to the customer, a process lasting about 20 minutes.
+
+A common issue in this workflow is unexpected hardware failure during testing, which can extend repair time and necessitate cost adjustments. When this occurs, the situation is reassessed, and the customer is informed of the updated repair timeline and cost changes.
+
+The interviewer has confirmed the repair workflow steps and is now transitioning to discuss how D mentors new staff. Details on mentoring practices are still open and need to be explored further.

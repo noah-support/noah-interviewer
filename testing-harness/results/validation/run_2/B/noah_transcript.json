@@ -1,0 +1,658 @@
+{
+  "items": [
+    {
+      "role": "assistant",
+      "content": [
+        "Hi B, I’m Noah, the AI interviewer. Which language would you like to continue in: Dutch (NL), French (FR), or English (EN)?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "English is fine."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Great — what’s your job title and scope, and what are you accountable for at work?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I'm a Computer Repair Technician at TechFix Solutions. I specialize in diagnosing and repairing hardware and software issues. I'm responsible for ensuring computers are repaired efficiently and providing accurate repair cost estimates to customers."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — I heard computer diagnosis and repair, plus preparing repair estimates; what other main tasks take up your time in a typical week?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "In a typical week, I spend a lot of time testing system functionality after repairs and handling any issues with unavailable hardware components by ordering them and informing customers. I also handle billing, especially if there are any errors with the software."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "I’ve got diagnosis and repair, repair estimates, testing system functionality, ordering hardware components, informing customers, and billing; did I miss anything important?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's mostly it. Occasionally, I also return computers without repair if that's the best option for the customer."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — is that list complete now, or is there anything else important you handle?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's complete for my main tasks. Everything else is pretty routine."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Understood — when a computer comes in for diagnosis and repair, what usually happens first in your normal flow?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "First, I assess whether the computer can be repaired or if it should be returned without repair. If it needs to be returned, I proceed with that step. If it can be repaired, I start with hardware diagnostics."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What’s the most common thing that goes wrong during the hardware diagnostics part?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The most common issue is finding that a necessary hardware component isn't available, which delays the repair process. In that case, I order the component and inform the customer about the delay."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually happens after you order the missing component and let the customer know?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Once the component arrives, I'll go back to the hardware repair process, install the component, and continue with the diagnostics to ensure everything is working properly."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Can you confirm I’ve understood the diagnosis-and-repair flow correctly, or is there anything I missed?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, go ahead and summarize what you've got so far."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "When a computer comes in, you first judge whether it’s worth repairing or should be returned without repair; if it’s repairable, you begin hardware diagnostics, and if a needed part isn’t available you order it, inform the customer about the delay, and then continue the repair once it arrives. What usually goes wrong after the repair is finished and you test whether everything is working properly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After repairs, the most common issue during system testing is finding that some configurations didn't take effect or new software problems have emerged. I would then go back and reconfigure the software as needed."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — and when you’re preparing a repair estimate, how do you usually work that out?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I use our billing software to calculate the repair cost based on the parts and labor involved. If there are any software errors, I manually calculate the cost and update the system."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong when you’re calculating or updating the repair estimate?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The main issue I encounter is billing software errors that lead to inaccurate cost estimates. When that happens, I manually calculate the costs and make sure the system is updated correctly."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "To make sure I’ve got the estimate process right: you use billing software to calculate the repair cost from parts and labor, and if the software gives an error or an inaccurate result, you calculate it manually and update the system. Is that correct, or did I miss anything?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's correct. You covered it all."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — what usually happens when you’re testing the system after a repair and something still isn’t working right?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "If something isn't working right during system testing, I go back to check and reconfigure the software or hardware as needed to resolve the issue. Then, I run the tests again to ensure everything is functioning properly."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What tends to go wrong most often during that testing-and-recheck part?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The most common problem is discovering that a software configuration didn't apply correctly or that a new issue has surfaced. In those cases, I go back to reconfigure the software or troubleshoot the new problem."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — when you need a hardware part that isn’t available, how do you handle that?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I order the missing hardware component and inform the customer about the delay in the repair process. Once the part arrives, I continue with the repair."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What do you do when you have to let the customer know there will be a delay?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I contact the customer, usually by phone or email, to explain the situation and inform them about the expected delay due to the unavailable component."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "When you can’t repair a computer and decide to return it without fixing it, what leads to that decision?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I decide to return a computer without repair if the damage is too extensive or if the cost of repair outweighs the value of the computer itself. I discuss the situation with the customer to make sure they understand the reasoning."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — when you’re handling billing for a repair, what does that usually look like?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Billing involves using our billing software to generate an invoice based on parts and labor costs. If the software is malfunctioning, I do a manual calculation and update the system accordingly. Then I provide the customer with the final cost."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Just to make sure I’ve got it right: for diagnosis and repair, you assess the problem, repair or replace parts as needed, keep going if a missing component delays things, and sometimes decide not to repair if the damage or cost doesn’t make sense; the main issues are unavailable parts and software/configuration problems that show up during testing — did I miss or misstate anything?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's mostly correct, but don't forget about providing accurate repair cost estimates and handling any billing issues that might arise. Those are also important parts of the process."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Got it — and for the testing after a repair, what tends to go wrong most often?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "During testing, the most common issue is incorrect software configurations or new software problems that arise. I then need to reconfigure or troubleshoot to resolve these issues."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "When you’re ordering a missing hardware component, how do you usually do that?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I place the order through our supplier's online system, making sure to select the correct component. Once the order is confirmed, I track its delivery status to keep the customer informed about any updates."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "I see — how do you usually order that part?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I use our supplier's online ordering system to select and order the needed component."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And when you inform the customer about the delay, how do you usually contact them?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I usually contact the customer by phone or email to inform them about the delay and provide any updates."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "How do you handle billing when the software doesn’t work properly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "When the billing software doesn't work properly, I manually calculate the repair costs based on parts and labor, then update the system with the correct information before providing the final cost to the customer."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "When you decide to return a computer without repairing it, what usually makes you choose that option?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I choose to return a computer without repair if the damage is too extensive or if the cost of repair is higher than the value of the computer."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — for the computer diagnosis and repair work, I understood that you first assess whether a machine is worth repairing, then diagnose the hardware, repair it when possible, and if a part is missing you order it and keep the customer updated; if billing software fails, you calculate the cost manually, and if the damage is too extensive or the repair would cost more than the computer’s value, you return it unrepaired. Did I get that right, or is there anything I missed?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You got it mostly right. Just remember that after hardware repair, I also check and configure software as needed, and make sure to test system functionality before finalizing any repair."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Understood — and after the hardware work, what do you usually check during that system test?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "During the system test, I check to ensure all hardware components are functioning correctly and that any software configurations are properly applied. This helps confirm that the system is fully operational before it's returned to the customer."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong during billing that slows you down or creates extra work?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Billing software errors are the main issue, leading to inaccurate cost estimates. When this happens, I have to manually calculate the costs, which takes extra time and effort."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong during billing that slows you down or creates extra work?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The main problem during billing is software errors that result in incorrect cost estimates. This requires me to manually calculate the costs, which adds extra work and takes more time."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — so billing usually means generating the invoice in the billing software, and if the software gives incorrect estimates or errors, you manually calculate the parts and labor, then update the system with the correct amount before giving the customer the final cost. Did I understand that correctly, or did I miss anything?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You understood that correctly. That's the process I follow for billing."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Great, thanks — I’ve got the billing process noted. What do you usually do first when you start diagnosing a computer for repair?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "First, I assess whether the computer can be repaired or if it should be returned without repair. If it can be repaired, I begin with hardware diagnostics."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "When you start the hardware diagnostics, what tool or software do you usually use?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I use a Hardware Diagnostic Tool to start the hardware diagnostics."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Roughly how long does the hardware diagnostics part usually take when everything goes smoothly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "When everything goes smoothly, hardware diagnostics usually take about an hour."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And after the diagnostics, do you hand the computer off to anyone, or do you continue with the repair yourself?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I continue with the repair myself after completing the diagnostics."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you walk me through what usually goes wrong during the computer diagnosis and repair process?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, during the diagnosis and repair process, the main issues are unavailable hardware components and software configuration problems. If a component is unavailable, I order it and inform the customer about the delay. With software, sometimes configurations don't apply correctly, so I have to troubleshoot and reconfigure as needed. Additionally, billing software errors can lead to inaccurate estimates, which I have to manually correct."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "You order missing parts and keep the customer updated on delays, and when software configurations or billing errors happen you troubleshoot, reconfigure, or correct the costs manually — is that right, or did I miss anything?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's right. You've covered the main points."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "When a computer is ready for testing after repair, what do you check to make sure everything is working properly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I check that all hardware components are functioning correctly and that software configurations are properly applied. This ensures the system is fully operational before it's returned to the customer."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "How often do you run into problems during that testing?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Problems during testing aren't uncommon. I often find software configurations haven't applied correctly or new issues have arisen."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "When those testing issues come up, what do you usually do next to fix them?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I usually reconfigure the software or troubleshoot the new issues to resolve them. Then, I retest the system to ensure everything is working properly."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What tools or software do you use when you test the system after a repair?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I use a System Testing Suite to check the system's functionality after a repair."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Roughly how long does the testing usually take when everything goes smoothly?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "When everything goes smoothly, the testing usually takes about 30 minutes."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Do you hand the computer off to anyone else after testing, or do you keep it with you?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "After testing, I handle the return of the repaired computer to the customer myself."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Just to confirm my understanding: you test the repaired computer with a System Testing Suite for about 30 minutes, check both hardware and applied software settings, and if something fails you reconfigure or troubleshoot, then retest; after that, you personally handle returning the repaired computer to the customer. Did I get that right, or am I missing anything?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You got that right. That's the process I follow after a repair."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you walk me through how you order any hardware parts that aren’t available right away?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, when a hardware component isn't available, I use our supplier's online ordering system to select and order the needed part. Once the order is placed, I keep track of its delivery status and make sure to update the customer about any delays or expected arrival times."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong or gets stuck when you’re ordering a part?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sometimes there can be delays from the supplier's side, or the part might be on backorder. In such cases, I stay in touch with the supplier for updates and keep the customer informed about any further delays."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Just to make sure I’ve got it: when a part isn’t available, you order it through the supplier’s online system, track delivery, and keep the customer updated; the main issues are supplier delays or backorders, and you follow up with the supplier and inform the customer if that happens. Did I capture that correctly, or is there anything I missed?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You've captured that correctly. That's how I handle ordering unavailable parts."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you tell me how you handle returning a computer without repair in practice when that happens?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "When I decide to return a computer without repair, I discuss the situation with the customer to explain why it's not feasible to repair, such as extensive damage or high costs. After that, I prepare the computer for return and provide any necessary documentation."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What tends to go wrong in that return-without-repair process?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "There aren't many issues with the return process itself, but sometimes customers may be upset or disappointed about not getting a repair. In those cases, I try to communicate clearly and offer any possible alternatives or advice."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Just to check I understood: if a repair isn’t feasible, you explain the reason to the customer, prepare the computer for return, and give the needed paperwork; the main difficulty is customer disappointment, which you handle by staying clear, calm, and offering alternatives or advice. Did I get that right, or is there anything else to add?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's exactly right. You've covered the process and the challenges involved."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you walk me through how you test a repaired computer and confirm everything is working?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Sure, when testing a repaired computer, I start by using the System Testing Suite to run diagnostics on both the hardware and software. I verify that all hardware components are functioning properly and check that any software configurations have been correctly applied. If everything passes the test, I consider the repair complete. If any issues are found, I address them by reconfiguring or troubleshooting before retesting the system."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually happens when a configuration doesn’t apply correctly during that testing?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "When a configuration doesn't apply correctly, I go back to reconfigure the software settings. After making the necessary adjustments, I run the tests again to ensure that everything is now working properly."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "And what’s the main thing that can still go wrong when you’re retesting after those adjustments?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The main issue during retesting is sometimes discovering new problems that weren't apparent before. If that happens, I troubleshoot further and make additional adjustments as needed."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Just to confirm my understanding: after a repair you run the System Testing Suite, check hardware and software configurations, and if something fails you reconfigure or troubleshoot and then retest; the main snag is that retesting can reveal new problems, which you handle with more troubleshooting and adjustments. Is that accurate, or did I miss anything?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "That's accurate. You've captured the testing process well."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you tell me how you usually handle informing customers when there’s a delay or an update about their repair?"
+      ]
+    }
+  ]
+}

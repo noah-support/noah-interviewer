@@ -1,0 +1,54 @@
+{
+  "name": "Alex Johnson",
+  "role": "Computer Repair Technician",
+  "processes": [
+    {
+      "process_name": "",
+      "steps": [
+        {
+          "step_name": "Check new repair requests",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Diagnose issues",
+          "software_tools_used": [],
+          "time_needed": "2–3 hours per day",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Repair and testing phase",
+          "software_tools_used": [],
+          "time_needed": "1.5–2 hours per job",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Calculate repair costs",
+          "software_tools_used": [
+            "billing software"
+          ],
+          "time_needed": "15–20 minutes per job",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Waiting for hardware components to arrive",
+          "impact": "Delays repairs and the completion of the affected job",
+          "recovery": "Keep the customer informed and manage expectations together; shift focus to other repairs"
+        },
+        {
+          "what_goes_wrong": "Billing software glitches affecting cost estimation",
+          "impact": "Adds about 20–30 minutes to the day and requires manual work",
+          "recovery": "Manually calculate the costs and update the system"
+        },
+        {
+          "what_goes_wrong": "Component failure after installation or miscommunication about a repair leading to rework",
+          "impact": "Leads to rework",
+          "recovery": "Double-check everything to prevent those situations"
+        }
+      ]
+    }
+  ]
+}

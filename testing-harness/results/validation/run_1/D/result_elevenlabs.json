@@ -1,0 +1,80 @@
+{
+  "name": "Alex Johnson",
+  "role": "Academic Process Coordinator",
+  "processes": [
+    {
+      "process_name": "Managing student tickets in Sipac",
+      "steps": [
+        {
+          "step_name": "Student opens a ticket in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": "CRA"
+        },
+        {
+          "step_name": "CRA opens the process in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "Academic Process Coordinator"
+        },
+        {
+          "step_name": "Forward the process for checking any pending issues",
+          "software_tools_used": [],
+          "time_needed": "30 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Forward to coordination",
+          "software_tools_used": [],
+          "time_needed": "20 minutes",
+          "handoff_to": "coordination"
+        },
+        {
+          "step_name": "Notify student about any pending issues via email",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "student"
+        },
+        {
+          "step_name": "Enter information into the academic system",
+          "software_tools_used": [
+            "academic system"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Notify about approval through email",
+          "software_tools_used": [
+            "email"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing documents or incorrect information from students",
+          "impact": "Delays in processing the ticket",
+          "recovery": "Follow up and request the right documents or corrections; can take an additional 15 to 30 minutes depending on student response"
+        },
+        {
+          "what_goes_wrong": "Delays from other departments during coordination",
+          "impact": "Impacts the overall process timeline and requires constant follow-up",
+          "recovery": "Proactive follow-up and chasing; can take about an extra hour depending on the issue and workload"
+        },
+        {
+          "what_goes_wrong": "Unexpected technical issues with Sipac or other systems",
+          "impact": "Disruptive and slows down work; can take a few hours to resolve",
+          "recovery": "Troubleshooting or contacting IT for support"
+        }
+      ]
+    }
+  ]
+}

@@ -68,16 +68,18 @@ Shows a progress bar per persona folder (`A`, `B`, `C`, `D`). See [TESTING.md](T
 
 Fields match the Postgres `Interview` row: `content`, `discovery_state_json`, `summary`.
 
-### Evaluate interview reconstructions
+### Post-processor (reconstruction + validation)
 
-Stage artifacts into each persona folder, then run reconstruction + validation against `persona.json`:
+One command per AI-to-AI run folder:
 
 ```bash
-python tools/evaluate_interviews.py stage --noah-export ./out/output-test-noah_*.json --transcripts-root ./transcripts/output-test
-python tools/evaluate_interviews.py batch
+python3 tools/evaluate_interviews.py run ./results/run_1
+python3 tools/evaluate_interviews.py run ./results/run_2
 ```
 
-See [TESTING.md](TESTING.md) for canonical filenames and outputs (`result_*.json`, `validation_*.json`, `validation.md`).
+Output goes to `results/validation/{run_name}/` with `run_manifest.json`, `validation_summary.json`, and per-persona `validation.md`. Default model: **gpt-5**.
+
+See [TESTING.md](TESTING.md) for layout and legacy `stage` + `batch` commands.
 
 ### Run a single interview (debugging)
 

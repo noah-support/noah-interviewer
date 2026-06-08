@@ -1,0 +1,102 @@
+{
+  "name": "B",
+  "role": "Computer Repair Technician",
+  "processes": [
+    {
+      "process_name": "Ordering Parts",
+      "steps": [
+        {
+          "step_name": "Diagnose the issue and identify the specific part needed",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Place the order with the supplier",
+          "software_tools_used": [
+            "inventory management system"
+          ],
+          "time_needed": "10 to 15 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Inform the customer about the expected delay and keep them updated on status",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Part might be out of stock with the supplier",
+          "impact": "Can delay the process",
+          "recovery": "Find an alternative supplier or inform the customer about a longer wait time"
+        }
+      ]
+    },
+    {
+      "process_name": "Testing Systems",
+      "steps": [
+        {
+          "step_name": "Run a series of tests using the System Testing Suite",
+          "software_tools_used": [
+            "System Testing Suite"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Complete the testing",
+          "software_tools_used": [],
+          "time_needed": "30 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Calculate the repair costs if required",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Prepare to return the computer to the customer",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Revisit the repair process if tests reveal an issue that wasn't fixed",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Tests might reveal an issue that wasn't fixed",
+          "impact": "Requires revisiting the repair process",
+          "recovery": "Revisit the repair process to address the issue"
+        }
+      ]
+    },
+    {
+      "process_name": "Assisting with Billing Issues",
+      "steps": [
+        {
+          "step_name": "Calculate the repair costs",
+          "software_tools_used": [
+            "billing software"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Billing software can have errors, leading to inaccurate cost estimates",
+          "impact": "Requires manual calculation of costs and updating the system",
+          "recovery": "Manually calculate the costs and update the system"
+        }
+      ]
+    }
+  ]
+}

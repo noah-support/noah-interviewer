@@ -1,0 +1,349 @@
+{
+  "folder": "C",
+  "system": "elevenlabs",
+  "reconstruction_file": "result_elevenlabs.json",
+  "ground_truth_file": "persona.json",
+  "embeddings": {
+    "scalar_fields": [
+      {
+        "path": "name",
+        "truth_text": "Alex Johnson",
+        "recon_text": "Alex Johnson",
+        "similarity": 1.0
+      },
+      {
+        "path": "role",
+        "truth_text": "Process Improvement Specialist",
+        "recon_text": "Process Improvement Specialist",
+        "similarity": 1.0
+      }
+    ],
+    "process_reports": [
+      {
+        "truth_index": 0,
+        "recon_index": 2,
+        "process_name_similarity": 1.0,
+        "aggregate_similarity": 0.922824,
+        "step_alignments": [],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.900442,
+            "truth_text": "Reservation data is incomplete | Delays in booking accommodations | Contact customer to obtain missing information",
+            "recon_text": "Reservation data is incomplete | Delays in booking accommodations and several hours lost each week | Contact customers to get the missing information"
+          }
+        ],
+        "step_field_similarities": [],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 1.0
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.782039
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.909255
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 0,
+            "text": "Inform Reservation Data | tools: Reservation System | time: 30 minutes | handoff: Accommodation Specialist"
+          },
+          {
+            "index": 1,
+            "text": "Choose Accommodations | tools: Booking Platform | time: 1 hour | handoff: Billing Department"
+          },
+          {
+            "index": 2,
+            "text": "Schedule Scuba Diving | tools: Diving Scheduling Software | time: 45 minutes | handoff: Equipment Manager"
+          },
+          {
+            "index": 3,
+            "text": "Book Diving Equipment | tools: Equipment Booking Tool | time: 30 minutes | handoff: "
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      },
+      {
+        "truth_index": 1,
+        "recon_index": 3,
+        "process_name_similarity": 1.0,
+        "aggregate_similarity": 0.787096,
+        "step_alignments": [],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.790457,
+            "truth_text": "Ticket not assigned correctly | Prolonged resolution time | Re-evaluate ticket assignment and update",
+            "recon_text": "Incorrect ticket assignments | Extends resolution times and adds to workload (around a couple of hours each week) | Re-evaluate and update the assignments"
+          }
+        ],
+        "step_field_similarities": [],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.872664
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.544274
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.731448
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 0,
+            "text": "Open Ticket | tools: Ticketing System | time: 10 minutes | handoff: Update Specialist"
+          },
+          {
+            "index": 1,
+            "text": "Update Ticket | tools: Ticketing System | time: 20 minutes | handoff: Assignment Manager"
+          },
+          {
+            "index": 2,
+            "text": "Assignment | tools: Assignment Tool | time: 15 minutes | handoff: Status Manager"
+          },
+          {
+            "index": 3,
+            "text": "Status Change | tools: Status Management Software | time: 10 minutes | handoff: Closure Specialist"
+          },
+          {
+            "index": 4,
+            "text": "Closed | tools: Ticketing System | time: 5 minutes | handoff: "
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      },
+      {
+        "truth_index": 2,
+        "recon_index": 4,
+        "process_name_similarity": 1.0,
+        "aggregate_similarity": 0.613531,
+        "step_alignments": [
+          {
+            "truth_index": 4,
+            "recon_index": 0,
+            "similarity": 0.630683,
+            "truth_text": "Visit in Loco | tools: Field Tools | time: 3 hours | handoff: ",
+            "recon_text": "Manual data entry and verification | tools:  | time: around 3-5 hours a week | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.733761,
+            "truth_text": "Incorrect project data entry | Incorrect evaluation outcome | Re-enter data and reassess project",
+            "recon_text": "The manual process is error-prone; incorrect information gets entered | Leads to an inaccurate evaluation outcome | Re-enter the data and reassess the project"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[4]↔[0].step_name",
+            "similarity": 0.219004
+          },
+          {
+            "path": "steps[4]↔[0].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[0].time_needed",
+            "similarity": 0.561909
+          },
+          {
+            "path": "steps[4]↔[0].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.455868
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.698473
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.972991
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 0,
+            "text": "Project Arrival | tools: Project Management Software | time: 1 hour | handoff: Registration Specialist"
+          },
+          {
+            "index": 1,
+            "text": "Register Project | tools: Database Software | time: 30 minutes | handoff: Evaluation Specialist"
+          },
+          {
+            "index": 2,
+            "text": "Evaluate Project | tools: Evaluation Tools | time: 2 hours | handoff: Report Filler"
+          },
+          {
+            "index": 3,
+            "text": "Fill Report | tools: Reporting Software | time: 1 hour | handoff: Permit Issuer"
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      },
+      {
+        "truth_index": 3,
+        "recon_index": 5,
+        "process_name_similarity": 0.307127,
+        "aggregate_similarity": 0.30034,
+        "step_alignments": [
+          {
+            "truth_index": 1,
+            "recon_index": 0,
+            "similarity": 0.617348,
+            "truth_text": "Project Evaluation | tools: Evaluation Software | time: 1 hour | handoff: Production Forwarder",
+            "recon_text": "Reporting and documentation | tools:  | time: around 5 hours a week | handoff: "
+          },
+          {
+            "truth_index": 5,
+            "recon_index": 1,
+            "similarity": 0.53797,
+            "truth_text": "Finishing | tools: Finishing Tools | time: 2 hours | handoff: ",
+            "recon_text": "Follow-up activities checking progress of implemented changes | tools:  | time: another few hours a week | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.278075,
+            "truth_text": "Production delay due to equipment failure | Delayed order fulfillment | Initiate equipment repair and reschedule production tasks",
+            "recon_text": "Hard to track the long-term performance of process improvements without more integrated tracking tools | Challenging to get a full picture of sustained effectiveness | "
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[1]↔[0].step_name",
+            "similarity": 0.453902
+          },
+          {
+            "path": "steps[1]↔[0].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[0].time_needed",
+            "similarity": 0.485099
+          },
+          {
+            "path": "steps[1]↔[0].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[1].step_name",
+            "similarity": 0.280573
+          },
+          {
+            "path": "steps[5]↔[1].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[1].time_needed",
+            "similarity": 0.501845
+          },
+          {
+            "path": "steps[5]↔[1].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.336104
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.239431
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.0
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 0,
+            "text": "New Order | tools: Order Management System | time: 20 minutes | handoff: Project Manager"
+          },
+          {
+            "index": 2,
+            "text": "Forward Project to Production | tools: Production Scheduling Software | time: 30 minutes | handoff: Casting Coordinator"
+          },
+          {
+            "index": 3,
+            "text": "Casting | tools: Casting Tools | time: 2 hours | handoff: Cutting Supervisor"
+          },
+          {
+            "index": 4,
+            "text": "Cutting | tools: Cutting Equipment | time: 1 hour | handoff: Finishing Specialist"
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      }
+    ],
+    "missed_processes": [],
+    "extra_processes": [
+      {
+        "index": 0,
+        "text": "Analyzing workflows"
+      },
+      {
+        "index": 1,
+        "text": "Implementing strategies to fix bottlenecks"
+      }
+    ],
+    "overall_similarity": 0.555622,
+    "counts": {
+      "missed_processes": 0,
+      "extra_processes": 2,
+      "missed_steps": 17,
+      "extra_steps": 0,
+      "missed_exceptions": 0,
+      "extra_exceptions": 0
+    }
+  },
+  "judge": {
+    "scores": {
+      "activity_coverage": 1,
+      "control_flow_and_handoff_fidelity": 1,
+      "attribute_accuracy": 1,
+      "exception_and_edge_case_capture": 3,
+      "faithfulness_no_hallucination": 1
+    },
+    "justifications": {
+      "activity_coverage": "Most ground-truth steps are missing, with no steps for Vacation Planning or Ticket Management, only one generic step for Construction, and the entire Manufacturing process omitted.",
+      "control_flow_and_handoff_fidelity": "The logical sequences and handoffs are not preserved since steps are largely absent and handoff targets are mostly null or unspecified.",
+      "attribute_accuracy": "For the few steps provided, tools, durations, and handoffs do not match the ground truth (e.g., vague weekly times, missing tools, and null handoffs).",
+      "exception_and_edge_case_capture": "Three of the four ground-truth exceptions are captured with close semantics, but the Manufacturing exception is missing and some impacts are altered.",
+      "faithfulness_no_hallucination": "Several invented processes and exceptions are introduced (e.g., analyzing workflows, reporting/follow-up), which are not present in the ground truth."
+    },
+    "raw_response": "{\n  \"justifications\": {\n    \"activity_coverage\": \"Most ground-truth steps are missing, with no steps for Vacation Planning or Ticket Management, only one generic step for Construction, and the entire Manufacturing process omitted.\",\n    \"control_flow_and_handoff_fidelity\": \"The logical sequences and handoffs are not preserved since steps are largely absent and handoff targets are mostly null or unspecified.\",\n    \"attribute_accuracy\": \"For the few steps provided, tools, durations, and handoffs do not match the ground truth (e.g., vague weekly times, missing tools, and null handoffs).\",\n    \"exception_and_edge_case_capture\": \"Three of the four ground-truth exceptions are captured with close semantics, but the Manufacturing exception is missing and some impacts are altered.\",\n    \"faithfulness_no_hallucination\": \"Several invented processes and exceptions are introduced (e.g., analyzing workflows, reporting/follow-up), which are not present in the ground truth.\"\n  },\n  \"scores\": {\n    \"activity_coverage\": 1,\n    \"control_flow_and_handoff_fidelity\": 1,\n    \"attribute_accuracy\": 1,\n    \"exception_and_edge_case_capture\": 3,\n    \"faithfulness_no_hallucination\": 1\n  }\n}"
+  },
+  "run_id": "run_2",
+  "input_dir": "results/run_2",
+  "output_dir": "results/validation/run_2"
+}

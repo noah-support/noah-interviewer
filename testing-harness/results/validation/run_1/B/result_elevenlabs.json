@@ -1,0 +1,67 @@
+{
+  "name": "Alex Johnson",
+  "role": "Computer Repair Technician",
+  "processes": [
+    {
+      "process_name": "",
+      "steps": [
+        {
+          "step_name": "Diagnose issues on received computers",
+          "software_tools_used": [
+            "Hardware Diagnostic Tool"
+          ],
+          "time_needed": "about an hour",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Perform hardware repairs",
+          "software_tools_used": [],
+          "time_needed": "about an hour",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Perform software configuration",
+          "software_tools_used": [
+            "Software Configuration Utility"
+          ],
+          "time_needed": "about an hour",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Test system functionality",
+          "software_tools_used": [
+            "System Testing Suite"
+          ],
+          "time_needed": "around 30 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Calculate repair costs",
+          "software_tools_used": [],
+          "time_needed": "about 15 minutes",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Handle billing",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "around 20 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Billing software errors",
+          "impact": "Disrupts the workflow and may add up to about an hour or so per week depending on how many errors occur.",
+          "recovery": "Manually calculate repair costs using a calculator and available records, then update the system with the correct information once the software is back up."
+        },
+        {
+          "what_goes_wrong": "Parts not available or delayed updates from the parts procurement team about availability/delivery",
+          "impact": "Sets repairs back by a few days and can push back repair timelines, keeping customers waiting; may cost an hour or two per week when waiting for updates.",
+          "recovery": "Wait for the parts to arrive and for updates from the parts procurement team."
+        }
+      ]
+    }
+  ]
+}

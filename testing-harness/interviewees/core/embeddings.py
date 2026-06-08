@@ -12,6 +12,9 @@ from interviewees.env import load_harness_env, require_env
 DEFAULT_EMBEDDING_MODEL = "text-embedding-3-large"
 DEFAULT_EMBEDDING_DIMENSIONS = 1024
 
+# OpenAI rejects empty strings in embedding input batches.
+_EMPTY_EMBEDDING_INPUT = "[empty]"
+
 
 def embedding_model() -> str:
     load_harness_env()
@@ -26,9 +29,14 @@ def embedding_dimensions() -> int:
     return DEFAULT_EMBEDDING_DIMENSIONS
 
 
+def _sanitize_embedding_input(text: str) -> str:
+    t = text if isinstance(text, str) else str(text)
+    return t.strip() or _EMPTY_EMBEDDING_INPUT
+
+
 def embed_texts(texts: Iterable[str]) -> list[list[float]]:
-    """Embed strings; empty input returns []."""
-    items = [t if isinstance(t, str) else str(t) for t in texts]
+    """Embed strings; empty input returns []. Blank strings are replaced before the API call."""
+    items = [_sanitize_embedding_input(t) for t in texts]
     if not items:
         return []
 

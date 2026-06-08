@@ -1,0 +1,113 @@
+{
+  "name": "Alex Johnson",
+  "role": "Computer Repair Technician",
+  "backstory": "Alex has been a technician at TechFix Solutions for over 5 years, specializing in hardware and software repair. They have a keen eye for detail and enjoy the challenge of diagnosing complex technical issues. Alex is passionate about learning new technologies and is known for their excellent customer service skills. Outside of work, Alex volunteers at a local community center, teaching basic computer skills to seniors.",
+  "processes": [
+    {
+      "process_name": "Computer Repair Process",
+      "steps": [
+        {
+          "step_name": "Return_Computer_Without_Repair",
+          "software_tools_used": [],
+          "time_needed": "10 minutes",
+          "handoff_to": "Provide_Repair_Cost_Calculation"
+        },
+        {
+          "step_name": "Check_and_Repair_Hardware",
+          "software_tools_used": [
+            "Hardware Diagnostic Tool"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Provide_Repair_Cost_Calculation"
+        },
+        {
+          "step_name": "Check_and_Configure_Software",
+          "software_tools_used": [
+            "Software Configuration Utility"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Provide_Repair_Cost_Calculation"
+        },
+        {
+          "step_name": "Test_System_Functionality",
+          "software_tools_used": [
+            "System Testing Suite"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "Provide_Repair_Cost_Calculation"
+        },
+        {
+          "step_name": "Provide_Repair_Cost_Calculation",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Hardware component not available",
+          "impact": "Delays the repair process",
+          "recovery": "Order component and inform the customer of the delay"
+        }
+      ]
+    },
+    {
+      "process_name": "Extended Computer Repair Process",
+      "steps": [
+        {
+          "step_name": "Return_Computer_Without_Repair",
+          "software_tools_used": [],
+          "time_needed": "10 minutes",
+          "handoff_to": "Provide_Repair_Cost_Calculation"
+        },
+        {
+          "step_name": "Check_and_Repair_Hardware",
+          "software_tools_used": [
+            "Hardware Diagnostic Tool"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Provide_Repair_Cost_Calculation"
+        },
+        {
+          "step_name": "Check_and_Configure_Software",
+          "software_tools_used": [
+            "Software Configuration Utility"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Provide_Repair_Cost_Calculation"
+        },
+        {
+          "step_name": "Billing",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "20 minutes",
+          "handoff_to": "Test_System_Functionality"
+        },
+        {
+          "step_name": "Test_System_Functionality",
+          "software_tools_used": [
+            "System Testing Suite"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "Return_Repaired_Computer"
+        },
+        {
+          "step_name": "Return_Repaired_Computer",
+          "software_tools_used": [],
+          "time_needed": "10 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Billing software error",
+          "impact": "Inaccurate cost estimation",
+          "recovery": "Manually calculate the cost and update the system"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "meta": {
+    "phase": "roundup",
+    "current_focus_process": null,
+    "tangent_to_acknowledge": null
+  },
+  "discovery": {
+    "interviewee_role": "Process Improvement Specialist",
+    "identified_main_processes": [
+      "vacation planning and booking",
+      "customer service ticket management",
+      "project management in construction",
+      "manufacturing order fulfillment"
+    ],
+    "is_completed": true
+  },
+  "process_details": {
+    "vacation planning and booking": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Inform reservation data",
+          "tools_software_used": "reservation system",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "Accommodation Specialist",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Choose accommodations",
+          "tools_software_used": "booking platform",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "Billing Department",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Billing process",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "Equipment Manager",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Schedule scuba diving",
+          "tools_software_used": "diving scheduling software",
+          "time_taken": "45 minutes",
+          "handoff_to_next_actor": "Equipment Manager",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Book diving equipment",
+          "tools_software_used": "equipment booking tool",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incomplete reservation data",
+          "impact": "Delays booking accommodations",
+          "recovery": "Contact the customer to obtain the missing information",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "customer service ticket management": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Open a ticket",
+          "tools_software_used": "ticketing system",
+          "time_taken": "10 minutes",
+          "handoff_to_next_actor": "Update Specialist",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Update the ticket",
+          "tools_software_used": "ticketing system",
+          "time_taken": "20 minutes",
+          "handoff_to_next_actor": "Assignment Manager",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Assign the ticket",
+          "tools_software_used": "assignment tool",
+          "time_taken": "15 minutes",
+          "handoff_to_next_actor": "Status Manager",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Change ticket status",
+          "tools_software_used": "status management software",
+          "time_taken": "10 minutes",
+          "handoff_to_next_actor": "Closure Specialist",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Close the ticket",
+          "tools_software_used": "ticketing system",
+          "time_taken": "5 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Ticket not being assigned correctly",
+          "impact": "Prolongs resolution time",
+          "recovery": "Re-evaluate the ticket assignment and update it as needed",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "project management in construction": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Project arrival",
+          "tools_software_used": "project management software",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "Registration Specialist",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Register the project",
+          "tools_software_used": "database software",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "Evaluation Specialist",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Evaluate the project",
+          "tools_software_used": "evaluation tools",
+          "time_taken": "2 hours",
+          "handoff_to_next_actor": "Report Filler",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Fill out reports",
+          "tools_software_used": "reporting software",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "Permit Issuer",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Visit in loco",
+          "tools_software_used": "field tools",
+          "time_taken": "3 hours",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incorrect project data entry",
+          "impact": "Delays project progress",
+          "recovery": "Re-enter the data and reassess the project",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "manufacturing order fulfillment": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Handle a new order",
+          "tools_software_used": "order management system",
+          "time_taken": "20 minutes",
+          "handoff_to_next_actor": "Project Manager",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Conduct project evaluation",
+          "tools_software_used": "evaluation software",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "Production Forwarder",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Forward project to Casting Coordinator",
+          "tools_software_used": "production scheduling software",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "Casting Coordinator",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Handle the casting process",
+          "tools_software_used": "casting tools",
+          "time_taken": "2 hours",
+          "handoff_to_next_actor": "Cutting Supervisor",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Manage the cutting process",
+          "tools_software_used": "cutting equipment",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "Finishing Specialist",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Complete the process",
+          "tools_software_used": "finishing tools",
+          "time_taken": "2 hours",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Production delays due to equipment failure",
+          "impact": "Delays order fulfillment",
+          "recovery": "Initiate equipment repair and reschedule production tasks",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    }
+  }
+}

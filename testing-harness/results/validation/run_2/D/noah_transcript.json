@@ -1,0 +1,178 @@
+{
+  "items": [
+    {
+      "role": "assistant",
+      "content": [
+        "Hi D, I’m Noah, your AI interviewer. Would you prefer to continue in Dutch (NL), French (FR), or English (EN)?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "English is fine with me."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — what’s your job title, and what are you accountable for at work?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I'm an Academic Process Coordinator. I'm responsible for managing student processes and ensuring smooth operations, particularly handling student tickets and using Sipac to keep things on track."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Got it — apart from student tickets and Sipac, what other main tasks fill your week?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "I also handle the computer repair workflow, coordinating repairs and ensuring everything goes smoothly from cost calculation to returning the repaired computer. Plus, I spend some time mentoring new staff and sharing best practices."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "You mentioned student tickets, Sipac, the computer repair workflow, and mentoring new staff — did I miss anything important?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "No, that's pretty much it. Those are the main areas I focus on."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks, D — let’s start with the computer repair workflow: what usually happens first when a computer needs repair?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "First, we provide a repair cost calculation. It takes about 45 minutes and doesn't require any specific tools. Then it goes to the Repair Technician."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "After the cost calculation, what happens next with the Repair Technician?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The Repair Technician checks and repairs the hardware. This step takes about 2 hours and involves using diagnostic tools. After that, it goes on to the Software Technician."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What does the Software Technician do next?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The Software Technician checks and configures the software. This takes around 1.5 hours using configuration software. Then it moves to Quality Assurance."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What happens in Quality Assurance?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "In Quality Assurance, they test the system functionality using testing software. This step takes about an hour and then it moves on to the Billing Department."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What does the Billing Department do before the computer is returned?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "The Billing Department handles the billing process using billing software. This takes about 30 minutes before it goes on to Customer Service."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What does Customer Service do at the end of the repair process?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Customer Service handles the return of the repaired computer to the customer. This part takes about 20 minutes, and that's where the process finishes."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually goes wrong or gets stuck in this repair process?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "One common issue is unexpected hardware failure during testing, which can increase repair time and lead to cost adjustments. When this happens, we reassess the hardware and provide the customer with an updated repair timeline."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "What usually happens when the hardware failure during testing leads to a cost adjustment?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "When there's a cost adjustment due to hardware failure, we reassess the situation and then inform the customer about the updated repair timeline and any cost changes. It's important to keep them in the loop about the situation."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "So for the repair process, I understand it as: the hardware is checked and repaired first, then the software is configured, the system is tested in quality assurance, billing is handled, and finally Customer Service returns the computer to the customer; if testing reveals unexpected hardware failure, you reassess, update the timeline, and inform the customer about any cost changes.\n\nDid I get that right, or is there anything I missed or should correct?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "You got it mostly right. Just to clarify, the process starts with the repair cost calculation before the hardware is checked and repaired. Otherwise, you've captured the steps correctly, including how we handle unexpected hardware failures."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Thanks — the repair cost calculation comes first, then the hardware repair, software configuration, testing, billing, and customer return, with unexpected hardware failures handled by reassessing and updating the customer; is that an accurate summary?"
+      ]
+    },
+    {
+      "role": "user",
+      "content": [
+        "Yes, that's an accurate summary of the repair workflow."
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        "Could you walk me through how you mentor new staff in practice?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "run_id": "run_1",
+  "generated_at": "2026-06-07T17:45:14Z",
+  "input_dir": "results/run_1",
+  "output_dir": "results/validation/run_1",
+  "ground_truth_root": "personas",
+  "sources": {
+    "noah_export": "results/run_1/noah/output-test-noah_20260605T104105Z.json",
+    "elevenlabs": {
+      "A": "results/run_1/elevenlabs/A.json",
+      "B": "results/run_1/elevenlabs/B.json",
+      "C": "results/run_1/elevenlabs/C.json",
+      "D": "results/run_1/elevenlabs/D.json"
+    }
+  },
+  "staged_files": [
+    "results/validation/run_1/A/persona.json",
+    "results/validation/run_1/B/persona.json",
+    "results/validation/run_1/C/persona.json",
+    "results/validation/run_1/D/persona.json",
+    "results/validation/run_1/A/noah_transcript.json",
+    "results/validation/run_1/A/noah_summary.txt",
+    "results/validation/run_1/A/noah_state.json",
+    "results/validation/run_1/B/noah_transcript.json",
+    "results/validation/run_1/B/noah_summary.txt",
+    "results/validation/run_1/B/noah_state.json",
+    "results/validation/run_1/C/noah_transcript.json",
+    "results/validation/run_1/C/noah_summary.txt",
+    "results/validation/run_1/C/noah_state.json",
+    "results/validation/run_1/D/noah_transcript.json",
+    "results/validation/run_1/D/noah_summary.txt",
+    "results/validation/run_1/D/noah_state.json",
+    "results/validation/run_1/A/elevenlabs_transcript.json",
+    "results/validation/run_1/B/elevenlabs_transcript.json",
+    "results/validation/run_1/C/elevenlabs_transcript.json",
+    "results/validation/run_1/D/elevenlabs_transcript.json"
+  ]
+}

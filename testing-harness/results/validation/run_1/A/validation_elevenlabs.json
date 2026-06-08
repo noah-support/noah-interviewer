@@ -1,0 +1,359 @@
+{
+  "folder": "A",
+  "system": "elevenlabs",
+  "reconstruction_file": "result_elevenlabs.json",
+  "ground_truth_file": "persona.json",
+  "embeddings": {
+    "scalar_fields": [
+      {
+        "path": "name",
+        "truth_text": "Emily Johnson",
+        "recon_text": "Emily Johnson",
+        "similarity": 1.0
+      },
+      {
+        "path": "role",
+        "truth_text": "Process Coordinator",
+        "recon_text": "Process Coordinator",
+        "similarity": 1.0
+      }
+    ],
+    "process_reports": [
+      {
+        "truth_index": 0,
+        "recon_index": 0,
+        "process_name_similarity": 0.980692,
+        "aggregate_similarity": 0.454668,
+        "step_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.739745,
+            "truth_text": "Student Opens Ticket | tools: Sipac | time: 15 minutes | handoff: CRA Team",
+            "recon_text": "Check new student tickets | tools: Sipac | time:  | handoff: "
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 2,
+            "similarity": 0.727279,
+            "truth_text": "Notify Student About Pending Issues | tools: Email | time: 10 minutes | handoff: Student",
+            "recon_text": "Request resubmission of correct information from students when details are missing or incorrect | tools: Email | time:  | handoff: "
+          },
+          {
+            "truth_index": 2,
+            "recon_index": 1,
+            "similarity": 0.642648,
+            "truth_text": "Forward Process for Checking Pending Issues | tools: Sipac | time: 2 hours | handoff: Coordination Team",
+            "recon_text": "Coordinate with teams to ensure process steps are followed | tools: Email, internal communication tools | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.871341,
+            "truth_text": "Incorrect ticket information | Delays in processing | Request student to resubmit the correct information",
+            "recon_text": "Incorrect ticket information from students | Causes delays by a few hours or even a day and creates back-and-forth emails | Request the student to resubmit the correct information via email"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.73496
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[2].step_name",
+            "similarity": 0.584289
+          },
+          {
+            "path": "steps[3]↔[2].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[2].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[2].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[1].step_name",
+            "similarity": 0.463889
+          },
+          {
+            "path": "steps[2]↔[1].software_tools_used",
+            "similarity": 0.222774
+          },
+          {
+            "path": "steps[2]↔[1].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[1].handoff_to",
+            "similarity": 0.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.821319
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.601842
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.864923
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 1,
+            "text": "CRA Opens Process in Sipac | tools: Sipac | time: 30 minutes | handoff: Coordinator"
+          },
+          {
+            "index": 4,
+            "text": "Enter in Academic System | tools: Academic System | time: 20 minutes | handoff: Approval Team"
+          },
+          {
+            "index": 5,
+            "text": "Notify Approval | tools: Email | time: 10 minutes | handoff: "
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": [
+          {
+            "index": 1,
+            "text": "Missing reference documents | Delays the process | Ask students to provide the needed details or documents"
+          }
+        ]
+      },
+      {
+        "truth_index": 1,
+        "recon_index": 1,
+        "process_name_similarity": 0.975661,
+        "aggregate_similarity": 0.425644,
+        "step_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.789922,
+            "truth_text": "New Complaint Received | tools: Complaint System | time: 15 minutes | handoff: Case Manager",
+            "recon_text": "Check new complaints | tools: Complaint System | time:  | handoff: "
+          },
+          {
+            "truth_index": 2,
+            "recon_index": 1,
+            "similarity": 0.689715,
+            "truth_text": "Forward Complaint Internally | tools: Internal Communication Tool | time: 20 minutes | handoff: External Team",
+            "recon_text": "Coordinate with teams to ensure process steps are followed | tools: Email, internal communication tools | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [],
+        "step_field_similarities": [
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.739588
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[1].step_name",
+            "similarity": 0.356028
+          },
+          {
+            "path": "steps[2]↔[1].software_tools_used",
+            "similarity": 0.759516
+          },
+          {
+            "path": "steps[2]↔[1].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[1].handoff_to",
+            "similarity": 0.0
+          }
+        ],
+        "exception_field_similarities": [],
+        "missed_steps": [
+          {
+            "index": 1,
+            "text": "Open a New Case | tools: Case Management Software | time: 30 minutes | handoff: Internal Team"
+          },
+          {
+            "index": 3,
+            "text": "Receive References | tools: Reference Database | time: 1 hour | handoff: Verification Team"
+          },
+          {
+            "index": 4,
+            "text": "Confirm External Reference | tools: Verification System | time: 45 minutes | handoff: Record Keeper"
+          },
+          {
+            "index": 5,
+            "text": "Inform Complainant | tools: Email | time: 10 minutes | handoff: "
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [
+          {
+            "index": 0,
+            "text": "Missing reference documents | Verification delays | Contact external sources for missing documents"
+          }
+        ],
+        "extra_exceptions": []
+      },
+      {
+        "truth_index": 2,
+        "recon_index": 2,
+        "process_name_similarity": 0.968232,
+        "aggregate_similarity": 0.454281,
+        "step_alignments": [
+          {
+            "truth_index": 4,
+            "recon_index": 1,
+            "similarity": 0.734926,
+            "truth_text": "Closed | tools: Incident Management System | time: 5 minutes | handoff: ",
+            "recon_text": "Review logs and update incident statuses manually when needed | tools: Incident Management System | time:  | handoff: "
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 0,
+            "similarity": 0.692704,
+            "truth_text": "Assignment | tools: Incident Management System | time: 15 minutes | handoff: Resolution Team",
+            "recon_text": "Coordinate with teams on incident progress | tools: Email, internal communication tools | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.801394,
+            "truth_text": "Status not updated correctly | Miscommunication on incident progress | Review logs and manually update status",
+            "recon_text": "Miscommunication about incident progress and status updates not done correctly | Requires extra time to review logs and update them manually, around 30 minutes to an hour each time; occurs a couple of times a week | Review logs and update incident statuses manually"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[4]↔[1].step_name",
+            "similarity": 0.176795
+          },
+          {
+            "path": "steps[4]↔[1].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[1].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[1].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[0].step_name",
+            "similarity": 0.243061
+          },
+          {
+            "path": "steps[1]↔[0].software_tools_used",
+            "similarity": 0.319556
+          },
+          {
+            "path": "steps[1]↔[0].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[0].handoff_to",
+            "similarity": 0.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.539466
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.360446
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.84382
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 0,
+            "text": "Open | tools: Incident Management System | time: 10 minutes | handoff: Assignment Team"
+          },
+          {
+            "index": 2,
+            "text": "Operator Update | tools: Communication Platform | time: 30 minutes | handoff: Quality Assurance"
+          },
+          {
+            "index": 3,
+            "text": "Status Change | tools: Incident Management System | time: 10 minutes | handoff: Closure Team"
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      }
+    ],
+    "missed_processes": [],
+    "extra_processes": [],
+    "overall_similarity": 0.435048,
+    "counts": {
+      "missed_processes": 0,
+      "extra_processes": 0,
+      "missed_steps": 10,
+      "extra_steps": 0,
+      "missed_exceptions": 1,
+      "extra_exceptions": 1
+    }
+  },
+  "judge": {
+    "scores": {
+      "activity_coverage": 2,
+      "control_flow_and_handoff_fidelity": 1,
+      "attribute_accuracy": 2,
+      "exception_and_edge_case_capture": 2,
+      "faithfulness_no_hallucination": 2
+    },
+    "justifications": {
+      "activity_coverage": "Majority of ground-truth steps across all three processes are missing; the reconstruction collapses detailed multi-step flows into a few high-level actions and omits key activities like case opening, forwarding, reference handling, assignment, and closure.",
+      "control_flow_and_handoff_fidelity": "The sequence and handoffs (e.g., Student → CRA → Coordinator → Approval teams) are not represented; most handoffs are null and the structured chains in the ground truth are lost.",
+      "attribute_accuracy": "Some tools match (Sipac, Email, Complaint System, Incident Management System), but times are omitted and handoffs are largely absent; the addition of generic 'internal communication tools' is imprecise relative to the specified tools.",
+      "exception_and_edge_case_capture": "It captures the incorrect ticket info and the incident status-update exception, but misses the complaint 'missing references' exception and misassigns 'missing reference documents' to the student tickets process.",
+      "faithfulness_no_hallucination": "It introduces generic coordination steps and an extra exception under student tickets, and adds impact/frequency details not in the ground truth, indicating hallucinated content."
+    },
+    "raw_response": "{\n  \"justifications\": {\n    \"activity_coverage\": \"Majority of ground-truth steps across all three processes are missing; the reconstruction collapses detailed multi-step flows into a few high-level actions and omits key activities like case opening, forwarding, reference handling, assignment, and closure.\",\n    \"control_flow_and_handoff_fidelity\": \"The sequence and handoffs (e.g., Student → CRA → Coordinator → Approval teams) are not represented; most handoffs are null and the structured chains in the ground truth are lost.\",\n    \"attribute_accuracy\": \"Some tools match (Sipac, Email, Complaint System, Incident Management System), but times are omitted and handoffs are largely absent; the addition of generic 'internal communication tools' is imprecise relative to the specified tools.\",\n    \"exception_and_edge_case_capture\": \"It captures the incorrect ticket info and the incident status-update exception, but misses the complaint 'missing references' exception and misassigns 'missing reference documents' to the student tickets process.\",\n    \"faithfulness_no_hallucination\": \"It introduces generic coordination steps and an extra exception under student tickets, and adds impact/frequency details not in the ground truth, indicating hallucinated content.\"\n  },\n  \"scores\": {\n    \"activity_coverage\": 2,\n    \"control_flow_and_handoff_fidelity\": 1,\n    \"attribute_accuracy\": 2,\n    \"exception_and_edge_case_capture\": 2,\n    \"faithfulness_no_hallucination\": 2\n  }\n}"
+  },
+  "run_id": "run_1",
+  "input_dir": "results/run_1",
+  "output_dir": "results/validation/run_1"
+}

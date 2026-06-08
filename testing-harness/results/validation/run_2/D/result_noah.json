@@ -1,0 +1,106 @@
+{
+  "name": "",
+  "role": "Academic Process Coordinator",
+  "processes": [
+    {
+      "process_name": "computer repair workflow",
+      "steps": [
+        {
+          "step_name": "Provide repair cost calculation",
+          "software_tools_used": [],
+          "time_needed": "45 minutes",
+          "handoff_to": "Repair Technician"
+        },
+        {
+          "step_name": "Check and repair the hardware",
+          "software_tools_used": [
+            "diagnostic tools"
+          ],
+          "time_needed": "2 hours",
+          "handoff_to": "Software Technician"
+        },
+        {
+          "step_name": "Check and configure the software",
+          "software_tools_used": [
+            "configuration software"
+          ],
+          "time_needed": "1.5 hours",
+          "handoff_to": "Quality Assurance"
+        },
+        {
+          "step_name": "Test the system functionality",
+          "software_tools_used": [
+            "testing software"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Billing Department"
+        },
+        {
+          "step_name": "Handle the billing process",
+          "software_tools_used": [
+            "billing software"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "Customer Service"
+        },
+        {
+          "step_name": "Return the repaired computer to the customer",
+          "software_tools_used": [],
+          "time_needed": "20 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Unexpected hardware failure during testing",
+          "impact": "Increases repair time and leads to cost adjustments",
+          "recovery": "Reassess the hardware and provide the customer with an updated repair timeline and any cost changes"
+        }
+      ]
+    },
+    {
+      "process_name": "mentoring new staff",
+      "steps": [
+        {
+          "step_name": "Introduce new staff to key processes and tools",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Guide them through specific steps of the processes",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Explain common issues and resolutions",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Encourage questions and offer support",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Share tips and best practices",
+          "software_tools_used": [],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "New staff struggle with the learning curve of new systems like Sipac",
+          "impact": "They may feel overwhelmed by the volume of information",
+          "recovery": "Break down the training into manageable parts and provide hands-on practice"
+        }
+      ]
+    }
+  ]
+}

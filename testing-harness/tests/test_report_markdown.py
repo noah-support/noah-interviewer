@@ -29,4 +29,10 @@ def test_render_validation_markdown_sections() -> None:
     assert "# Validation report — persona A" in md
     assert "## Noah" in md
     assert "activity_coverage" in md.lower() or "Activity Coverage" in md
+
+    reports["noah"]["input_dir"] = "results/run_1"
+    reports["noah"]["output_dir"] = "results/validation/run_1"
+    md_run = render_validation_markdown("A", reports, run_id="run_1")
+    assert "run_1 / persona A" in md_run
+    assert "results/run_1" in md_run
     assert "backstory ignored" in md

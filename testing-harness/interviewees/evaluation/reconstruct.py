@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import json
+import logging
 
 from pydantic import ValidationError
+
+logger = logging.getLogger("harness.evaluation")
 
 from interviewees.core.llm_json import MAX_JSON_ATTEMPTS, chat_json
 from interviewees.evaluation.interview_artifacts import (
@@ -86,6 +89,14 @@ def reconstruct_interview(
             last_error = str(e)
         except Exception as e:
             last_error = str(e)
+        logger.warning(
+            "reconstruction attempt %s/%s failed for %s/%s: %s",
+            attempt,
+            MAX_JSON_ATTEMPTS,
+            artifacts.system,
+            artifacts.folder.name,
+            last_error,
+        )
 
     raise RuntimeError(
         f"Reconstruction failed for {artifacts.system} in {artifacts.folder.name} "

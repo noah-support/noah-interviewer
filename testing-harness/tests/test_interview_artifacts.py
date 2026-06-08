@@ -36,6 +36,18 @@ def test_discover_missing_returns_none(tmp_path: Path) -> None:
     assert discover_interview_artifacts(folder, "elevenlabs") is None
 
 
+def test_elevenlabs_message_field_in_transcript(tmp_path: Path) -> None:
+    folder = tmp_path / "A"
+    folder.mkdir()
+    (folder / "elevenlabs_transcript.json").write_text(
+        '[{"role": "user", "message": "hello from elevenlabs"}]',
+        encoding="utf-8",
+    )
+    art = discover_interview_artifacts(folder, "elevenlabs")
+    assert art is not None
+    assert "hello from elevenlabs" in art.transcript_text
+
+
 def test_persona_json_never_in_sources(tmp_path: Path) -> None:
     folder = tmp_path / "A"
     folder.mkdir()

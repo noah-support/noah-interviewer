@@ -1,0 +1,108 @@
+{
+  "name": "Emily Johnson",
+  "role": "Process Coordinator",
+  "processes": [
+    {
+      "process_name": "Student Ticket Handling",
+      "steps": [
+        {
+          "step_name": "Monitor status of open student tickets",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "15 to 30 minutes per item",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Coordinate student tickets by forwarding cases and checking pending issues",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "20 minutes to a couple of hours",
+          "handoff_to": "right teams"
+        },
+        {
+          "step_name": "Communicate with students as needed",
+          "software_tools_used": [
+            "email",
+            "internal communication tools"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing or wrong information provided by the student in the ticket",
+          "impact": "Delays processing by a few hours",
+          "recovery": "Request the student to resubmit the correct information; handling these errors usually takes about 10 to 15 minutes each time"
+        }
+      ]
+    },
+    {
+      "process_name": "Complaint Management",
+      "steps": [
+        {
+          "step_name": "Monitor status of open complaints",
+          "software_tools_used": [
+            "Complaint System"
+          ],
+          "time_needed": "15 to 30 minutes per item",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Coordinate complaints by forwarding cases and checking pending issues",
+          "software_tools_used": [
+            "Complaint System"
+          ],
+          "time_needed": "20 minutes to a couple of hours",
+          "handoff_to": "right teams"
+        },
+        {
+          "step_name": "Communicate with complainants as needed",
+          "software_tools_used": [
+            "email",
+            "internal communication tools"
+          ],
+          "time_needed": "",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing reference documents in the complaint management process",
+          "impact": "Delays verification and causes time-consuming follow-up; chasing missing documents can take a couple of hours each time",
+          "recovery": "Contact external sources to obtain the missing documents"
+        }
+      ]
+    },
+    {
+      "process_name": "Incident Resolution",
+      "steps": [
+        {
+          "step_name": "Monitor status of open incidents",
+          "software_tools_used": [
+            "Incident Management System"
+          ],
+          "time_needed": "15 to 30 minutes per item",
+          "handoff_to": null
+        },
+        {
+          "step_name": "Coordinate incidents by forwarding cases and checking pending issues",
+          "software_tools_used": [
+            "Incident Management System"
+          ],
+          "time_needed": "20 minutes to a couple of hours",
+          "handoff_to": "right teams"
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incident status not updated correctly in the Incident Management System leading to miscommunication about incident progress",
+          "impact": "Creates a bottleneck and requires manual correction",
+          "recovery": "Review logs and manually update the status; sorting out and correcting the updates usually takes about 15 to 30 minutes"
+        }
+      ]
+    }
+  ]
+}

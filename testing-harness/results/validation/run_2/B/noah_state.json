@@ -1,0 +1,347 @@
+{
+  "meta": {
+    "phase": "roundup",
+    "current_focus_process": null,
+    "tangent_to_acknowledge": null
+  },
+  "discovery": {
+    "interviewee_role": "Computer Repair Technician",
+    "identified_main_processes": [
+      "computer diagnosis and repair",
+      "preparing repair estimates",
+      "testing system functionality",
+      "ordering hardware components",
+      "informing customers",
+      "handling billing",
+      "returning computers without repair"
+    ],
+    "is_completed": true
+  },
+  "process_details": {
+    "computer diagnosis and repair": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Assess whether the computer can be repaired or should be returned without repair",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Start with hardware diagnostics",
+          "tools_software_used": "Hardware Diagnostic Tool",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Order necessary hardware components",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "customer",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Install the component and continue with diagnostics",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Test system functionality after repairs",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Return the computer without repair",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "customer",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Check and configure software as needed",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Start hardware diagnostics",
+          "tools_software_used": "Hardware Diagnostic Tool",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Continue with the repair after diagnostics",
+          "tools_software_used": "unknown to interviewee",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Necessary hardware component isn't available",
+          "impact": "Delays the repair process",
+          "recovery": "Order the component and inform the customer about the delay",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "what_goes_wrong": "Some configurations didn't take effect or new software problems have emerged",
+          "impact": "System testing fails",
+          "recovery": "Reconfigure the software as needed",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "what_goes_wrong": "Billing software errors",
+          "impact": "Leads to inaccurate estimates",
+          "recovery": "Manually correct the estimates",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "preparing repair estimates": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Use billing software to calculate the repair cost based on parts and labor involved",
+          "tools_software_used": "billing software",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Billing software errors",
+          "impact": "Leads to inaccurate cost estimates",
+          "recovery": "Manually calculate the costs and ensure the system is updated correctly",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "testing system functionality": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Check that all hardware components are functioning correctly",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Reconfigure the software as needed",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Test the repaired computer with a System Testing Suite",
+          "tools_software_used": "System Testing Suite",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Check both hardware and applied software settings",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Troubleshoot if something fails and retest",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Software errors that result in incorrect cost estimates",
+          "impact": "Requires manual calculation of costs, adding extra work and time.",
+          "recovery": "Manually calculate the costs and ensure the system is updated correctly.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "ordering hardware components": {
+      "phase": "exceptions",
+      "steps": [
+        {
+          "step_name": "Use the supplier's online ordering system to select and order the needed part",
+          "tools_software_used": "supplier's online ordering system",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Delays from the supplier's side or the part might be on backorder",
+          "impact": "Delays the repair process",
+          "recovery": "Stay in touch with the supplier for updates and keep the customer informed about any further delays",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "informing customers": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Reconfigure the software settings",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "New problems discovered during retesting",
+          "impact": "Delays the process and requires further troubleshooting",
+          "recovery": "Troubleshoot further and make additional adjustments as needed.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "handling billing": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Generate an invoice based on parts and labor costs",
+          "tools_software_used": "billing software",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Manually calculate costs if software malfunctions",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Update the system with the final cost",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "customer",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Check the final system status before invoicing",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Billing software errors",
+          "impact": "Leads to inaccurate cost estimates",
+          "recovery": "Manually calculate the costs, which takes extra time and effort.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "returning computers without repair": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Discuss the situation with the customer to explain why it's not feasible to repair",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Prepare the computer for return",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Provide any necessary documentation",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Customers may be upset or disappointed about not getting a repair",
+          "impact": "Customer dissatisfaction",
+          "recovery": "Communicate clearly and offer any possible alternatives or advice",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    }
+  }
+}

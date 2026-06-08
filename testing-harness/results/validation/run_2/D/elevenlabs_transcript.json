@@ -1,0 +1,170 @@
+[
+  {
+    "role": "agent",
+    "message": "Hello Alex Johnson, I am Noah, an AI interviewer.\n\nThis conversation will take about 20 minutes. The goal is to get a deep understanding of your work, your role, expertise, daily tasks, the tools you use, any challenges you face, and your ambitions for the future.\nBefore we begin, could you let me know in which language you would like to do this interview? You can choose Dutch, French, German, or English."
+  },
+  {
+    "role": "user",
+    "message": "English works for me."
+  },
+  {
+    "role": "agent",
+    "message": "Perfect, we'll continue in English then.\n\nLet me start by getting to know you — what is your job title, and could you briefly walk me through what your role involves?"
+  },
+  {
+    "role": "user",
+    "message": "I'm an Academic Process Coordinator. My role involves handling student processes and managing student tickets to ensure everything runs smoothly. I also deal with any issues that come up and work to resolve them efficiently."
+  },
+  {
+    "role": "agent",
+    "message": "That sounds like a central role in keeping things running smoothly for students. Could you give me a concrete example of what a typical day looks like for you — what tasks do you actually spend your time on?"
+  },
+  {
+    "role": "user",
+    "message": "A typical day involves managing student tickets using Sipac, checking for any pending issues, and coordinating with different departments to resolve them. I also spend time communicating with students, especially if there are missing documents or if there are updates on their processes. Occasionally, I help with the computer repair workflow, like calculating repair costs or checking hardware."
+  },
+  {
+    "role": "agent",
+    "message": "Thanks for that overview — so you're juggling ticket management, interdepartmental coordination, and student communication. Roughly how much time would you say you spend on each of these main areas per day?"
+  },
+  {
+    "role": "user",
+    "message": "It varies, but I'd say I spend a good chunk, maybe half of my day, on ticket management using Sipac. Interdepartmental coordination and student communication take up the rest, probably split evenly. It's pretty dynamic depending on the issues that come up."
+  },
+  {
+    "role": "agent",
+    "message": "That's helpful — so roughly 50% on tickets, and 25% each on coordination and communication. When you're managing those tickets in Sipac, what does that process actually look like step by step?"
+  },
+  {
+    "role": "user",
+    "message": "Sure, when a student opens a ticket, they do it through Sipac, which takes about 10 minutes. Then the CRA opens the process in Sipac, spending around 15 minutes, and then it comes to me as the Coordinator. I forward the process for checking any pending issues, which might take about 30 minutes. After that, it's forwarded to coordination, taking about 20 minutes, and then we notify the student about any pending issues via email. Once that's settled, I enter it in the academic system, which takes another 20 minutes, and finally, I send a notification of approval by email. That's where my part finishes."
+  },
+  {
+    "role": "agent",
+    "message": "That's a detailed breakdown — so the total flow is about 2 hours from ticket creation to your final approval email. When you're checking for pending issues, what exactly are you looking for, and how often do you actually find problems?"
+  },
+  {
+    "role": "user",
+    "message": "When checking for pending issues, I'm looking for missing documents, incomplete information, or any discrepancies in the student's submission. Problems aren't uncommon; I'd say I find issues in maybe a quarter of the cases, often related to missing documents. When that happens, I notify the student and ask them to resubmit the necessary documents."
+  },
+  {
+    "role": "agent",
+    "message": "So about 25% of tickets have issues that require follow-up — that's a significant portion. When you send those notifications asking for missing documents, how long does it typically take for students to respond and resubmit?"
+  },
+  {
+    "role": "user",
+    "message": "It varies quite a bit. Some students respond quickly, within a day or two, while others might take a week or more. It really depends on how promptly they check their emails and gather the needed documents."
+  },
+  {
+    "role": "agent",
+    "message": "I see — so that waiting time can add real delays to the process. Beyond ticket management, you mentioned helping with the computer repair workflow; how often does that come up, and what does that involve exactly?"
+  },
+  {
+    "role": "user",
+    "message": "I help with the computer repair workflow when needed, which isn't every day, maybe a few times a month. It involves calculating repair costs, checking and repairing hardware, configuring software, and testing system functionality. Each step has its own tools and time requirements, like diagnostic tools for hardware checks and configuration software for setting up software."
+  },
+  {
+    "role": "agent",
+    "message": "A few times a month makes sense — that's more of an occasional task then. Let me shift gears a bit: what are you particularly good at or known for in your role, and what parts of your work do you find most energising?"
+  },
+  {
+    "role": "user",
+    "message": "I'm known for problem-solving, especially when complex issues arise with student processes. I really enjoy mentoring new staff and sharing best practices to improve our department's efficiency. It's rewarding to see things run smoothly because of those efforts."
+  },
+  {
+    "role": "agent",
+    "message": "That's great — so you thrive on solving complex problems and helping others improve. When you're mentoring new staff or sharing best practices, how does that typically happen, and how much time do you dedicate to that?"
+  },
+  {
+    "role": "user",
+    "message": "It usually happens informally, like when new staff have questions or need guidance on specific processes. Sometimes, I might set aside time for one-on-one sessions or small group discussions. It's not a fixed part of my schedule, but I try to dedicate time whenever I see an opportunity to help or when someone reaches out."
+  },
+  {
+    "role": "agent",
+    "message": "That sounds quite organic and reactive rather than structured — does that informal approach work well, or do you find there are gaps in knowledge sharing across your team?"
+  },
+  {
+    "role": "user",
+    "message": "The informal approach works well most of the time, as it allows us to address issues as they come up and tailor the guidance to specific needs. However, there can be gaps, so sometimes I think a more structured approach could help with consistency and ensuring everyone is on the same page."
+  },
+  {
+    "role": "agent",
+    "message": "Makes sense — structure could help with consistency. How about cooperation with other departments — does that flow smoothly, or do you run into bottlenecks when coordinating across teams?"
+  },
+  {
+    "role": "user",
+    "message": "Cooperation usually flows smoothly, but there can be occasional bottlenecks, especially if a department is busy or there's a delay in communication. We try to address those by maintaining open lines of communication and setting clear expectations when coordinating."
+  },
+  {
+    "role": "agent",
+    "message": "When those bottlenecks do happen, roughly how often would you say that occurs, and how much does it slow down your ticket resolution?"
+  },
+  {
+    "role": "user",
+    "message": "Bottlenecks aren't too frequent, maybe happening once every couple of weeks. When they do occur, they can slow down ticket resolution by a day or two, depending on the complexity of the issue and how quickly we can resolve the hold-up."
+  },
+  {
+    "role": "agent",
+    "message": "Fair enough — so it's manageable but still a real impact. Let me ask more broadly: what frustrates you most about your work, or what feels most inefficient in your day-to-day tasks?"
+  },
+  {
+    "role": "user",
+    "message": "The most frustrating part is when students don't provide all the necessary documents upfront, which delays the process. It feels inefficient because it requires follow-up communication and can drag out the timeline unnecessarily. Training or reminders at the start of processes might help reduce these issues."
+  },
+  {
+    "role": "agent",
+    "message": "That repeated back-and-forth on missing documents definitely sounds tedious — how much of your time would you estimate goes to those follow-ups and re-submissions each week?"
+  },
+  {
+    "role": "user",
+    "message": "It's hard to pinpoint exactly, but I’d say maybe a few hours each week are spent on follow-ups and handling resubmissions. It varies depending on how many tickets have issues in a given week."
+  },
+  {
+    "role": "agent",
+    "message": "A few hours a week adds up — that's meaningful time. Beyond the missing documents issue, are there other tasks that feel particularly manual or time-consuming that you wish were smoother?"
+  },
+  {
+    "role": "user",
+    "message": "Entering information into different systems can be quite manual and time-consuming. It would be smoother if there were better integration between our systems, reducing the need to input the same data multiple times. That would definitely save time and reduce errors."
+  },
+  {
+    "role": "agent",
+    "message": "So duplicate data entry across systems is a pain point — how many different systems are you typically entering the same information into, and roughly how much time does that take?"
+  },
+  {
+    "role": "user",
+    "message": "I'm usually entering the same information into two main systems: Sipac and the academic system. It can take about 20 minutes per entry, depending on the complexity, and doing it multiple times can add up throughout the day."
+  },
+  {
+    "role": "agent",
+    "message": "That's significant — so you're potentially spending an hour or more per day just re-entering the same data. Do those manual entries lead to errors sometimes, or does it mostly just feel like wasted time?"
+  },
+  {
+    "role": "user",
+    "message": "Mostly it feels like wasted time, but there's always a risk of errors when entering data manually. It's something we're mindful of, and double-checking is part of the process, but automation would definitely reduce that risk."
+  },
+  {
+    "role": "agent",
+    "message": "Understood — automation could be a real win there. Let me ask about your future now: how do you see your role evolving, and what would you ideally like to spend more time on?"
+  },
+  {
+    "role": "user",
+    "message": "Ideally, I'd like to spend more time on strategic improvements, like finding ways to streamline processes and enhance efficiency across the board. I'd also enjoy taking on more mentoring and training responsibilities to help the team grow and adapt to changes."
+  },
+  {
+    "role": "agent",
+    "message": "That's a great vision — moving from reactive ticket-handling to more strategic work. If you could wave a magic wand and fix one thing about your current workflow, what would it be?"
+  },
+  {
+    "role": "user",
+    "message": "I'd improve the integration between our systems to eliminate redundant data entry. That would save time, reduce errors, and let us focus more on solving actual student issues and improving processes."
+  },
+  {
+    "role": "agent",
+    "message": "That's a clear priority — better system integration would unlock time for the work you actually find meaningful. Before we wrap up, let me make sure I've covered everything: we've talked about your day-to-day tasks, your strengths, the bottlenecks with missing documents and system integration, and your vision for more strategic work — is there anything else about your role, your challenges, or your ambitions that feels important to mention?"
+  },
+  {
+    "role": "user",
+    "message": "I think we've covered the main points. Just to add, continued collaboration across departments would be great for fostering a smoother workflow and achieving those strategic goals."
+  }
+]

@@ -197,34 +197,47 @@ Place interview outputs in the persona folder using these **canonical names** (e
 
 Fallback globs if canonical files are missing: `*__livekit__*.json` (Noah), `*__elevenlabs__*.json` (ElevenLabs).
 
-**Stage harness outputs** into canonical names:
+### Run post-processor (recommended)
+
+Point at a run folder under `results/` (e.g. after `runner.py --output-dir ./results/run_1`):
+
+```bash
+python3 tools/evaluate_interviews.py run ./results/run_1
+python3 tools/evaluate_interviews.py run ./results/run_2
+```
+
+This stages Noah + ElevenLabs artifacts and writes validation output to `results/validation/{run_name}/` (e.g. `results/validation/run_1/`). Each run is self-contained: `run_manifest.json` records input sources; `validation_summary.json` and per-folder `validation.md` include the run id.
+
+**Expected run input layout:**
+
+```
+results/run_1/
+├── noah/output-test-noah_*.json
+└── elevenlabs/A.json … D.json
+```
+
+**Outputs per run** (`results/validation/run_1/`):
+
+- `run_manifest.json` — which input files were staged for this run
+- `validation_summary.json` — aggregate scores for `(persona, system)` pairs
+- Per persona folder (`A`–`D`): staged artifacts, `result_*.json`, `validation_*.json`, `validation.md`
+
+Default model: **gpt-5** (override with `--openai-model`). Flags: `--force`, `--skip-reconstruct`, `--skip-validate`, `--min-alignment-similarity`, `-v`/`--verbose` (progress + tracebacks on stderr). On completion, errors and skips are listed on stdout; exit code is 1 if any evaluation failed.
+
+### Legacy: stage + batch
 
 ```bash
 python tools/evaluate_interviews.py stage \
   --noah-export ./out/output-test-noah_20260531T120000Z.json \
   --transcripts-root ./transcripts/output-test
-```
 
-### Run evaluation
-
-```bash
-python tools/evaluate_interviews.py batch
+python tools/evaluate_interviews.py batch --personas-root ./results/validation/run_1
 ```
 
 For each folder (`A` → `D`), for Noah then ElevenLabs:
 
 1. **Reconstruction** — LLM extracts a strict profile from interview artifacts only (`persona.json` and `process*.json` are never read).
 2. **Validation** — embedding similarity (greedy alignment) + LLM judge (five dimensions, 1–5).
-
-**Outputs per folder:**
-
-- `result_noah.json`, `result_elevenlabs.json` — reconstructed profile (no `backstory`)
-- `validation_noah.json`, `validation_elevenlabs.json` — machine-readable reports
-- `validation.md` — human-readable summary for both systems
-
-**Top-level:** `personas/validation_summary.json` — one row per `(folder, system)` for cross-run comparison.
-
-Flags: `--force`, `--openai-model`, `--skip-reconstruct`, `--skip-validate`, `--min-alignment-similarity`.
 
 Requires `OPENAI_API_KEY` in `.env` (chat + embeddings).
 

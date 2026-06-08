@@ -1,0 +1,265 @@
+{
+  "meta": {
+    "phase": "roundup",
+    "current_focus_process": null,
+    "tangent_to_acknowledge": null
+  },
+  "discovery": {
+    "interviewee_role": "Process Coordinator",
+    "identified_main_processes": [
+      "student ticket handling",
+      "complaint management",
+      "incident resolution",
+      "process optimization",
+      "coordination"
+    ],
+    "is_completed": true
+  },
+  "process_details": {
+    "student ticket handling": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Open a ticket",
+          "tools_software_used": "Sipac",
+          "time_taken": "15 minutes",
+          "handoff_to_next_actor": "CRA team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "CRA team opens the process in Sipac",
+          "tools_software_used": "Sipac",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Check for pending issues",
+          "tools_software_used": "none",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Notify the student about pending issues",
+          "tools_software_used": "email",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "coordination team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Request correct ticket information",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incorrect ticket information",
+          "impact": "Delays processing",
+          "recovery": "Ask the student to resubmit the correct information",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "complaint management": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Receive a new complaint",
+          "tools_software_used": "Complaint System",
+          "time_taken": "15 minutes",
+          "handoff_to_next_actor": "case manager",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Forward the case internally",
+          "tools_software_used": "internal communication tool",
+          "time_taken": "20 minutes",
+          "handoff_to_next_actor": "external team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Receive references from the reference database",
+          "tools_software_used": "reference database",
+          "time_taken": "1 hour",
+          "handoff_to_next_actor": "verification team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Gather necessary references related to the complaint",
+          "tools_software_used": "reference database",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "verification team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Confirm external references",
+          "tools_software_used": "verification system",
+          "time_taken": "45 minutes",
+          "handoff_to_next_actor": "record keeper",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Inform the complainant about the outcome",
+          "tools_software_used": "email",
+          "time_taken": "10 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Obtain missing reference documents",
+          "tools_software_used": "external sources",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "verification team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing reference documents",
+          "impact": "Delays verification",
+          "recovery": "Contact external sources to obtain the missing documents",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "incident resolution": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Open an incident in the Incident Management System",
+          "tools_software_used": "Incident Management System",
+          "time_taken": "10 minutes",
+          "handoff_to_next_actor": "resolution team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Assign to the resolution team",
+          "tools_software_used": "none",
+          "time_taken": "15 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Update the operator using a communication platform",
+          "tools_software_used": "communication platform",
+          "time_taken": "30 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Change the status of the incident in the Incident Management System",
+          "tools_software_used": "Incident Management System",
+          "time_taken": "10 minutes",
+          "handoff_to_next_actor": "closure team",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Close the incident",
+          "tools_software_used": "none",
+          "time_taken": "5 minutes",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Status isn't updated correctly",
+          "impact": "Leads to miscommunication about the incident's progress",
+          "recovery": "Review logs and manually update the status",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": true,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "process optimization": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Analyze current workflows",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        },
+        {
+          "step_name": "Implement changes to streamline processes",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Resistance to change",
+          "impact": "Delays implementation of new processes",
+          "recovery": "Allow time for adaptation and make necessary adjustments to fit the team's workflow better",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    },
+    "coordination": {
+      "phase": "confirm",
+      "steps": [
+        {
+          "step_name": "Coordinate the processes involved",
+          "tools_software_used": "none",
+          "time_taken": "unknown to interviewee",
+          "handoff_to_next_actor": "none",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Issues usually arise within the specific processes, like incorrect ticket information or missing documents.",
+          "impact": "Affects overall coordination.",
+          "recovery": "Address these promptly to maintain overall coordination.",
+          "comments_to_explore": "",
+          "is_mapped": true
+        }
+      ],
+      "steps_flow_complete": false,
+      "summary_confirmed": true,
+      "is_completed": true
+    }
+  }
+}

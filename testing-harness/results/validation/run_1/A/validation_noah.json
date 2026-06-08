@@ -1,0 +1,485 @@
+{
+  "folder": "A",
+  "system": "noah",
+  "reconstruction_file": "result_noah.json",
+  "ground_truth_file": "persona.json",
+  "embeddings": {
+    "scalar_fields": [
+      {
+        "path": "name",
+        "truth_text": "Emily Johnson",
+        "recon_text": "",
+        "similarity": 0.0
+      },
+      {
+        "path": "role",
+        "truth_text": "Process Coordinator",
+        "recon_text": "Process Coordinator",
+        "similarity": 1.0
+      }
+    ],
+    "process_reports": [
+      {
+        "truth_index": 0,
+        "recon_index": 0,
+        "process_name_similarity": 0.945476,
+        "aggregate_similarity": 0.791409,
+        "step_alignments": [
+          {
+            "truth_index": 2,
+            "recon_index": 2,
+            "similarity": 0.933108,
+            "truth_text": "Forward Process for Checking Pending Issues | tools: Sipac | time: 2 hours | handoff: Coordination Team",
+            "recon_text": "Forward for checking pending issues | tools: Sipac | time: 2 hours | handoff: coordination team"
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 4,
+            "similarity": 0.930901,
+            "truth_text": "Enter in Academic System | tools: Academic System | time: 20 minutes | handoff: Approval Team",
+            "recon_text": "Enter details into the Academic System | tools: Academic System | time: 20 minutes | handoff: Approval Team"
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 3,
+            "similarity": 0.897209,
+            "truth_text": "Notify Student About Pending Issues | tools: Email | time: 10 minutes | handoff: Student",
+            "recon_text": "Notify the student about any pending matters | tools: email | time: 10 minutes | handoff: "
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.884051,
+            "truth_text": "CRA Opens Process in Sipac | tools: Sipac | time: 30 minutes | handoff: Coordinator",
+            "recon_text": "CRA team opens the process in Sipac | tools: Sipac | time:  | handoff: "
+          },
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.853293,
+            "truth_text": "Student Opens Ticket | tools: Sipac | time: 15 minutes | handoff: CRA Team",
+            "recon_text": "Open a ticket | tools: Sipac | time: 15 minutes | handoff: CRA team"
+          },
+          {
+            "truth_index": 5,
+            "recon_index": 5,
+            "similarity": 0.809745,
+            "truth_text": "Notify Approval | tools: Email | time: 10 minutes | handoff: ",
+            "recon_text": "Notify the Approval Team via email | tools: email | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.985357,
+            "truth_text": "Incorrect ticket information | Delays in processing | Request student to resubmit the correct information",
+            "recon_text": "Incorrect ticket information | Delays processing | Request the student to resubmit the correct information"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[2]↔[2].step_name",
+            "similarity": 0.870046
+          },
+          {
+            "path": "steps[2]↔[2].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[2]↔[2].handoff_to",
+            "similarity": 0.943337
+          },
+          {
+            "path": "steps[4]↔[4].step_name",
+            "similarity": 0.812891
+          },
+          {
+            "path": "steps[4]↔[4].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[4]↔[4].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].step_name",
+            "similarity": 0.856791
+          },
+          {
+            "path": "steps[3]↔[3].software_tools_used",
+            "similarity": 0.879213
+          },
+          {
+            "path": "steps[3]↔[3].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[3].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.884853
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.63676
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 0.978925
+          },
+          {
+            "path": "steps[5]↔[5].step_name",
+            "similarity": 0.665205
+          },
+          {
+            "path": "steps[5]↔[5].software_tools_used",
+            "similarity": 0.879213
+          },
+          {
+            "path": "steps[5]↔[5].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[5].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.999748
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.889735
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.91727
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [
+          {
+            "index": 6,
+            "text": "Recover the ticket after resubmission | tools: ticketing system | time:  | handoff: "
+          },
+          {
+            "index": 7,
+            "text": "Update the ticket in Sipac | tools: Sipac | time:  | handoff: "
+          }
+        ],
+        "missed_exceptions": [],
+        "extra_exceptions": [
+          {
+            "index": 1,
+            "text": "Delay in receiving correct information | Slows down the entire process and affects student timelines | Ensure timely communication with the student regarding the required information"
+          }
+        ]
+      },
+      {
+        "truth_index": 1,
+        "recon_index": 1,
+        "process_name_similarity": 0.934257,
+        "aggregate_similarity": 0.536953,
+        "step_alignments": [
+          {
+            "truth_index": 2,
+            "recon_index": 2,
+            "similarity": 0.880897,
+            "truth_text": "Forward Complaint Internally | tools: Internal Communication Tool | time: 20 minutes | handoff: External Team",
+            "recon_text": "Forward the complaint internally | tools: internal communication tool | time:  | handoff: "
+          },
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.874535,
+            "truth_text": "New Complaint Received | tools: Complaint System | time: 15 minutes | handoff: Case Manager",
+            "recon_text": "Receive a new complaint in the Complaint System | tools: Complaint System | time: 15 minutes | handoff: "
+          },
+          {
+            "truth_index": 5,
+            "recon_index": 6,
+            "similarity": 0.847445,
+            "truth_text": "Inform Complainant | tools: Email | time: 10 minutes | handoff: ",
+            "recon_text": "Inform the complainant via email | tools: email | time:  | handoff: "
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.827589,
+            "truth_text": "Open a New Case | tools: Case Management Software | time: 30 minutes | handoff: Internal Team",
+            "recon_text": "Open a case in the case management software | tools: case management software | time:  | handoff: "
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 3,
+            "similarity": 0.826913,
+            "truth_text": "Receive References | tools: Reference Database | time: 1 hour | handoff: Verification Team",
+            "recon_text": "Receive references for verification | tools:  | time:  | handoff: "
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 5,
+            "similarity": 0.725504,
+            "truth_text": "Confirm External Reference | tools: Verification System | time: 45 minutes | handoff: Record Keeper",
+            "recon_text": "Update the records after confirming the external reference | tools: verification system | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.957849,
+            "truth_text": "Missing reference documents | Verification delays | Contact external sources for missing documents",
+            "recon_text": "Missing reference documents | Causes verification delays | Contact external sources to get the missing documents"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[2]↔[2].step_name",
+            "similarity": 0.870754
+          },
+          {
+            "path": "steps[2]↔[2].software_tools_used",
+            "similarity": 0.942222
+          },
+          {
+            "path": "steps[2]↔[2].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[2].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.766126
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[6].step_name",
+            "similarity": 0.737254
+          },
+          {
+            "path": "steps[5]↔[6].software_tools_used",
+            "similarity": 0.879213
+          },
+          {
+            "path": "steps[5]↔[6].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[6].handoff_to",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.777591
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 0.963129
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[3].step_name",
+            "similarity": 0.813918
+          },
+          {
+            "path": "steps[3]↔[3].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[3].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[3].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[5].step_name",
+            "similarity": 0.707743
+          },
+          {
+            "path": "steps[4]↔[5].software_tools_used",
+            "similarity": 0.914581
+          },
+          {
+            "path": "steps[4]↔[5].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[5].handoff_to",
+            "similarity": 0.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 1.0
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.753569
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.974332
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [
+          {
+            "index": 4,
+            "text": "Confirm references | tools:  | time:  | handoff: "
+          }
+        ],
+        "missed_exceptions": [],
+        "extra_exceptions": [
+          {
+            "index": 1,
+            "text": "Missing reference documents still unavailable | Slows down the entire process until necessary documents are obtained from external sources | Keep reaching out to external sources and coordinate with relevant teams to find alternative ways to verify the information if possible"
+          }
+        ]
+      },
+      {
+        "truth_index": 2,
+        "recon_index": 2,
+        "process_name_similarity": 0.822491,
+        "aggregate_similarity": 0.463777,
+        "step_alignments": [],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.402529,
+            "truth_text": "Status not updated correctly | Miscommunication on incident progress | Review logs and manually update status",
+            "recon_text": "Incorrect ticket information | Usually causes delays | Request the student to resubmit the correct details"
+          }
+        ],
+        "step_field_similarities": [],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.370881
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.383397
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.278338
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 0,
+            "text": "Open | tools: Incident Management System | time: 10 minutes | handoff: Assignment Team"
+          },
+          {
+            "index": 1,
+            "text": "Assignment | tools: Incident Management System | time: 15 minutes | handoff: Resolution Team"
+          },
+          {
+            "index": 2,
+            "text": "Operator Update | tools: Communication Platform | time: 30 minutes | handoff: Quality Assurance"
+          },
+          {
+            "index": 3,
+            "text": "Status Change | tools: Incident Management System | time: 10 minutes | handoff: Closure Team"
+          },
+          {
+            "index": 4,
+            "text": "Closed | tools: Incident Management System | time: 5 minutes | handoff: "
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      }
+    ],
+    "missed_processes": [],
+    "extra_processes": [],
+    "overall_similarity": 0.631277,
+    "counts": {
+      "missed_processes": 0,
+      "extra_processes": 0,
+      "missed_steps": 5,
+      "extra_steps": 3,
+      "missed_exceptions": 0,
+      "extra_exceptions": 2
+    }
+  },
+  "judge": {
+    "scores": {
+      "activity_coverage": 2,
+      "control_flow_and_handoff_fidelity": 2,
+      "attribute_accuracy": 2,
+      "exception_and_edge_case_capture": 2,
+      "faithfulness_no_hallucination": 2
+    },
+    "justifications": {
+      "activity_coverage": "Student Ticket Handling and Complaint Management include most expected steps, but all five Incident Resolution steps are missing entirely. This creates a major recall gap despite partial coverage in the first two processes.",
+      "control_flow_and_handoff_fidelity": "Multiple handoffs are incorrect or omitted (e.g., CRA to Coordinator, Notify Student to Student, and nearly all Complaint Management handoffs), and extra steps disrupt the intended sequence. With Incident Resolution absent, the overall flow integrity is weak.",
+      "attribute_accuracy": "Several micro-details are missing or wrong: many time fields are blank, tools are omitted or misplaced (e.g., Reference Database and Verification System not used where expected), and key handoffs are incorrect or null.",
+      "exception_and_edge_case_capture": "The core exceptions for Student Tickets and Complaints are captured, but the Incident Resolution exception is missing and replaced with an unrelated one, and extra non-GT exceptions were added.",
+      "faithfulness_no_hallucination": "There are multiple invented elements, including extra steps (ticket recovery/update, records update), additional exceptions, a wrong exception for Incident Resolution, and an unspecified 'ticketing system'."
+    },
+    "raw_response": "{\n  \"justifications\": {\n    \"activity_coverage\": \"Student Ticket Handling and Complaint Management include most expected steps, but all five Incident Resolution steps are missing entirely. This creates a major recall gap despite partial coverage in the first two processes.\",\n    \"control_flow_and_handoff_fidelity\": \"Multiple handoffs are incorrect or omitted (e.g., CRA to Coordinator, Notify Student to Student, and nearly all Complaint Management handoffs), and extra steps disrupt the intended sequence. With Incident Resolution absent, the overall flow integrity is weak.\",\n    \"attribute_accuracy\": \"Several micro-details are missing or wrong: many time fields are blank, tools are omitted or misplaced (e.g., Reference Database and Verification System not used where expected), and key handoffs are incorrect or null.\",\n    \"exception_and_edge_case_capture\": \"The core exceptions for Student Tickets and Complaints are captured, but the Incident Resolution exception is missing and replaced with an unrelated one, and extra non-GT exceptions were added.\",\n    \"faithfulness_no_hallucination\": \"There are multiple invented elements, including extra steps (ticket recovery/update, records update), additional exceptions, a wrong exception for Incident Resolution, and an unspecified 'ticketing system'.\"\n  },\n  \"scores\": {\n    \"activity_coverage\": 2,\n    \"control_flow_and_handoff_fidelity\": 2,\n    \"attribute_accuracy\": 2,\n    \"exception_and_edge_case_capture\": 2,\n    \"faithfulness_no_hallucination\": 2\n  }\n}"
+  },
+  "run_id": "run_1",
+  "input_dir": "results/run_1",
+  "output_dir": "results/validation/run_1"
+}

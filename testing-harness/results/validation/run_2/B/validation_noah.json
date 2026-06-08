@@ -1,0 +1,388 @@
+{
+  "folder": "B",
+  "system": "noah",
+  "reconstruction_file": "result_noah.json",
+  "ground_truth_file": "persona.json",
+  "embeddings": {
+    "scalar_fields": [
+      {
+        "path": "name",
+        "truth_text": "Alex Johnson",
+        "recon_text": "",
+        "similarity": 0.0
+      },
+      {
+        "path": "role",
+        "truth_text": "Computer Repair Technician",
+        "recon_text": "Computer Repair Technician",
+        "similarity": 1.0
+      }
+    ],
+    "process_reports": [
+      {
+        "truth_index": 0,
+        "recon_index": 0,
+        "process_name_similarity": 0.693177,
+        "aggregate_similarity": 0.526069,
+        "step_alignments": [
+          {
+            "truth_index": 1,
+            "recon_index": 1,
+            "similarity": 0.801924,
+            "truth_text": "Check_and_Repair_Hardware | tools: Hardware Diagnostic Tool | time: 1 hour | handoff: Provide_Repair_Cost_Calculation",
+            "recon_text": "Start hardware diagnostics | tools: Hardware Diagnostic Tool | time: 1 hour | handoff: "
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 6,
+            "similarity": 0.800491,
+            "truth_text": "Test_System_Functionality | tools: System Testing Suite | time: 30 minutes | handoff: Provide_Repair_Cost_Calculation",
+            "recon_text": "Test system functionality after repairs | tools: System Testing Suite | time: 30 minutes | handoff: "
+          },
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.793994,
+            "truth_text": "Return_Computer_Without_Repair | tools:  | time: 10 minutes | handoff: Provide_Repair_Cost_Calculation",
+            "recon_text": "Assess whether the computer can be repaired or should be returned without repair | tools:  | time:  | handoff: "
+          },
+          {
+            "truth_index": 2,
+            "recon_index": 5,
+            "similarity": 0.744861,
+            "truth_text": "Check_and_Configure_Software | tools: Software Configuration Utility | time: 1 hour | handoff: Provide_Repair_Cost_Calculation",
+            "recon_text": "Check and configure software as needed | tools:  | time:  | handoff: "
+          },
+          {
+            "truth_index": 4,
+            "recon_index": 2,
+            "similarity": 0.595813,
+            "truth_text": "Provide_Repair_Cost_Calculation | tools: Billing Software | time: 15 minutes | handoff: ",
+            "recon_text": "Continue with the repair after diagnostics | tools:  | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.947572,
+            "truth_text": "Hardware component not available | Delays the repair process | Order component and inform the customer of the delay",
+            "recon_text": "Necessary hardware component isn't available | Delays the repair process | Order the component and inform the customer about the delay"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[1]↔[1].step_name",
+            "similarity": 0.613509
+          },
+          {
+            "path": "steps[1]↔[1].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[1]↔[1].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[6].step_name",
+            "similarity": 0.617657
+          },
+          {
+            "path": "steps[3]↔[6].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[6].time_needed",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[3]↔[6].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[0].step_name",
+            "similarity": 0.653484
+          },
+          {
+            "path": "steps[0]↔[0].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[0].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[0].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[5].step_name",
+            "similarity": 0.829067
+          },
+          {
+            "path": "steps[2]↔[5].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[5].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[2]↔[5].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[2].step_name",
+            "similarity": 0.431465
+          },
+          {
+            "path": "steps[4]↔[2].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[2].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[4]↔[2].handoff_to",
+            "similarity": 1.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.858577
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 1.0
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.928723
+          }
+        ],
+        "missed_steps": [],
+        "extra_steps": [
+          {
+            "index": 3,
+            "text": "Order the needed hardware component if unavailable | tools: supplier's online ordering system | time:  | handoff: "
+          },
+          {
+            "index": 4,
+            "text": "Install the component and continue diagnostics | tools:  | time:  | handoff: "
+          },
+          {
+            "index": 7,
+            "text": "Return repaired computer to the customer | tools:  | time:  | handoff: customer"
+          }
+        ],
+        "missed_exceptions": [],
+        "extra_exceptions": [
+          {
+            "index": 1,
+            "text": "Some configurations didn't take effect or new software problems emerged | System testing fails | Reconfigure the software as needed"
+          },
+          {
+            "index": 2,
+            "text": "Billing software errors during the process | Leads to inaccurate estimates | Manually correct the estimates"
+          }
+        ]
+      },
+      {
+        "truth_index": 1,
+        "recon_index": 6,
+        "process_name_similarity": 0.60572,
+        "aggregate_similarity": 0.26458,
+        "step_alignments": [
+          {
+            "truth_index": 5,
+            "recon_index": 3,
+            "similarity": 0.732144,
+            "truth_text": "Return_Repaired_Computer | tools:  | time: 10 minutes | handoff: ",
+            "recon_text": "Return the computer to the customer | tools:  | time:  | handoff: customer"
+          },
+          {
+            "truth_index": 0,
+            "recon_index": 1,
+            "similarity": 0.64294,
+            "truth_text": "Return_Computer_Without_Repair | tools:  | time: 10 minutes | handoff: Provide_Repair_Cost_Calculation",
+            "recon_text": "Prepare the computer for return | tools:  | time:  | handoff: "
+          },
+          {
+            "truth_index": 3,
+            "recon_index": 2,
+            "similarity": 0.557987,
+            "truth_text": "Billing | tools: Billing Software | time: 20 minutes | handoff: Test_System_Functionality",
+            "recon_text": "Provide any necessary documentation | tools:  | time:  | handoff: "
+          },
+          {
+            "truth_index": 1,
+            "recon_index": 0,
+            "similarity": 0.54859,
+            "truth_text": "Check_and_Repair_Hardware | tools: Hardware Diagnostic Tool | time: 1 hour | handoff: Provide_Repair_Cost_Calculation",
+            "recon_text": "Discuss the situation with the customer to explain why it's not feasible to repair | tools:  | time:  | handoff: "
+          }
+        ],
+        "exception_alignments": [
+          {
+            "truth_index": 0,
+            "recon_index": 0,
+            "similarity": 0.304291,
+            "truth_text": "Billing software error | Inaccurate cost estimation | Manually calculate the cost and update the system",
+            "recon_text": "Customers may be upset or disappointed about not getting a repair | Customer dissatisfaction | Communicate clearly and offer any possible alternatives or advice"
+          }
+        ],
+        "step_field_similarities": [
+          {
+            "path": "steps[5]↔[3].step_name",
+            "similarity": 0.658386
+          },
+          {
+            "path": "steps[5]↔[3].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[5]↔[3].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[5]↔[3].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[1].step_name",
+            "similarity": 0.553224
+          },
+          {
+            "path": "steps[0]↔[1].software_tools_used",
+            "similarity": 1.0
+          },
+          {
+            "path": "steps[0]↔[1].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[0]↔[1].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[2].step_name",
+            "similarity": 0.343236
+          },
+          {
+            "path": "steps[3]↔[2].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[2].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[3]↔[2].handoff_to",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[0].step_name",
+            "similarity": 0.326698
+          },
+          {
+            "path": "steps[1]↔[0].software_tools_used",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[0].time_needed",
+            "similarity": 0.0
+          },
+          {
+            "path": "steps[1]↔[0].handoff_to",
+            "similarity": 0.0
+          }
+        ],
+        "exception_field_similarities": [
+          {
+            "path": "exceptions[0]↔[0].what_goes_wrong",
+            "similarity": 0.313774
+          },
+          {
+            "path": "exceptions[0]↔[0].impact",
+            "similarity": 0.321216
+          },
+          {
+            "path": "exceptions[0]↔[0].recovery",
+            "similarity": 0.169336
+          }
+        ],
+        "missed_steps": [
+          {
+            "index": 2,
+            "text": "Check_and_Configure_Software | tools: Software Configuration Utility | time: 1 hour | handoff: Provide_Repair_Cost_Calculation"
+          },
+          {
+            "index": 4,
+            "text": "Test_System_Functionality | tools: System Testing Suite | time: 30 minutes | handoff: Return_Repaired_Computer"
+          }
+        ],
+        "extra_steps": [],
+        "missed_exceptions": [],
+        "extra_exceptions": []
+      }
+    ],
+    "missed_processes": [],
+    "extra_processes": [
+      {
+        "index": 1,
+        "text": "preparing repair estimates"
+      },
+      {
+        "index": 2,
+        "text": "testing system functionality"
+      },
+      {
+        "index": 3,
+        "text": "ordering hardware components"
+      },
+      {
+        "index": 4,
+        "text": "informing customers"
+      },
+      {
+        "index": 5,
+        "text": "handling billing"
+      }
+    ],
+    "overall_similarity": 0.400196,
+    "counts": {
+      "missed_processes": 0,
+      "extra_processes": 5,
+      "missed_steps": 2,
+      "extra_steps": 3,
+      "missed_exceptions": 0,
+      "extra_exceptions": 2
+    }
+  },
+  "judge": {
+    "scores": {
+      "activity_coverage": 4,
+      "control_flow_and_handoff_fidelity": 2,
+      "attribute_accuracy": 2,
+      "exception_and_edge_case_capture": 5,
+      "faithfulness_no_hallucination": 2
+    },
+    "justifications": {
+      "activity_coverage": "Core activities—return without repair, hardware repair, software configuration, testing, billing/estimate, and returning the repaired computer—are all present. However, they are fragmented across multiple processes and some are duplicated or loosely specified.",
+      "control_flow_and_handoff_fidelity": "The ground truth defines clear handoffs (most steps to Provide_Repair_Cost_Calculation; extended Billing → Testing → Return), but the reconstruction leaves most handoffs null or to 'customer' and does not reflect the prescribed chains. Sequencing is inconsistent with both variants.",
+      "attribute_accuracy": "Some tools and durations match (Hardware Diagnostic Tool at 1 hour; System Testing Suite at 30 minutes), but many times are missing, Software Configuration Utility is omitted, and billing durations/targets are wrong or absent. Handoffs and specific timing (10/15/20 minutes) are largely not captured.",
+      "exception_and_edge_case_capture": "Both expected exceptions are captured with correct impacts and recoveries (hardware part unavailable; billing software error). Additional edge cases are included but do not detract from coverage of the required unhappy paths.",
+      "faithfulness_no_hallucination": "The reconstruction introduces multiple new processes, steps, tools, and exceptions (supplier ordering system, informing customers, extra testing and communication flows) not in the ground truth. This adds considerable hallucinated content beyond the specified processes."
+    },
+    "raw_response": "{\n  \"justifications\": {\n    \"activity_coverage\": \"Core activities—return without repair, hardware repair, software configuration, testing, billing/estimate, and returning the repaired computer—are all present. However, they are fragmented across multiple processes and some are duplicated or loosely specified.\",\n    \"control_flow_and_handoff_fidelity\": \"The ground truth defines clear handoffs (most steps to Provide_Repair_Cost_Calculation; extended Billing → Testing → Return), but the reconstruction leaves most handoffs null or to 'customer' and does not reflect the prescribed chains. Sequencing is inconsistent with both variants.\",\n    \"attribute_accuracy\": \"Some tools and durations match (Hardware Diagnostic Tool at 1 hour; System Testing Suite at 30 minutes), but many times are missing, Software Configuration Utility is omitted, and billing durations/targets are wrong or absent. Handoffs and specific timing (10/15/20 minutes) are largely not captured.\",\n    \"exception_and_edge_case_capture\": \"Both expected exceptions are captured with correct impacts and recoveries (hardware part unavailable; billing software error). Additional edge cases are included but do not detract from coverage of the required unhappy paths.\",\n    \"faithfulness_no_hallucination\": \"The reconstruction introduces multiple new processes, steps, tools, and exceptions (supplier ordering system, informing customers, extra testing and communication flows) not in the ground truth. This adds considerable hallucinated content beyond the specified processes.\"\n  },\n  \"scores\": {\n    \"activity_coverage\": 4,\n    \"control_flow_and_handoff_fidelity\": 2,\n    \"attribute_accuracy\": 2,\n    \"exception_and_edge_case_capture\": 5,\n    \"faithfulness_no_hallucination\": 2\n  }\n}"
+  },
+  "run_id": "run_2",
+  "input_dir": "results/run_2",
+  "output_dir": "results/validation/run_2"
+}
