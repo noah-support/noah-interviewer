@@ -1,0 +1,126 @@
+{
+  "name": "Alex Johnson",
+  "role": "Coordinator of Academic Processes",
+  "processes": [
+    {
+      "process_name": "Student Support Ticket Handling",
+      "steps": [
+        {
+          "step_name": "Student Submits Ticket",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": "CRA"
+        },
+        {
+          "step_name": "CRA Initiates Workflow in Sipac",
+          "software_tools_used": [
+            "Sipac"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "Coordinator"
+        },
+        {
+          "step_name": "Route Case for Review of Outstanding Items",
+          "software_tools_used": [],
+          "time_needed": "30 minutes",
+          "handoff_to": "Coordinator"
+        },
+        {
+          "step_name": "Send to Coordination",
+          "software_tools_used": [],
+          "time_needed": "20 minutes",
+          "handoff_to": "Student"
+        },
+        {
+          "step_name": "Inform Student of Outstanding Requirements",
+          "software_tools_used": [
+            "Email"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": "Student"
+        },
+        {
+          "step_name": "Record in Academic System",
+          "software_tools_used": [
+            "Academic System"
+          ],
+          "time_needed": "20 minutes",
+          "handoff_to": "Coordinator"
+        },
+        {
+          "step_name": "Communicate Approval",
+          "software_tools_used": [
+            "Email"
+          ],
+          "time_needed": "10 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Student does not submit the required documents.",
+          "impact": "Ticket processing is delayed.",
+          "recovery": "Inform the student of the missing documents and ask for a new submission."
+        }
+      ]
+    },
+    {
+      "process_name": "Computer Repair Process",
+      "steps": [
+        {
+          "step_name": "Prepare Repair Cost Estimate",
+          "software_tools_used": [],
+          "time_needed": "45 minutes",
+          "handoff_to": "Repair Technician"
+        },
+        {
+          "step_name": "Diagnose and Fix Hardware",
+          "software_tools_used": [
+            "Diagnostic Tools"
+          ],
+          "time_needed": "2 hours",
+          "handoff_to": "Software Technician"
+        },
+        {
+          "step_name": "Verify and Configure Software",
+          "software_tools_used": [
+            "Configuration Software"
+          ],
+          "time_needed": "1.5 hours",
+          "handoff_to": "Quality Assurance"
+        },
+        {
+          "step_name": "Validate System Functionality",
+          "software_tools_used": [
+            "Testing Software"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Billing Department"
+        },
+        {
+          "step_name": "Issue Billing",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "Customer Service"
+        },
+        {
+          "step_name": "Deliver Repaired Computer",
+          "software_tools_used": [],
+          "time_needed": "20 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Unanticipated hardware failure occurs during testing.",
+          "impact": "Repair time increases and costs may need adjustment.",
+          "recovery": "Reevaluate the hardware and share a revised repair timeline with the customer."
+        }
+      ]
+    }
+  ]
+}

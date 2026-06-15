@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import pingouin as pg
 import scipy.stats as stats
+import seaborn as sns
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -94,6 +95,17 @@ LIKERT_TEXT_MAP = {
 }
 
 CRONBACH_ALPHA_THRESHOLD = 0.70
+BOOTSTRAP_N_RESAMPLES = 5000
+BOOTSTRAP_CONFIDENCE = 0.95
+
+DIRECTION_LABELS = {
+    "typeA": "Leans Type A",
+    "typeB": "Leans Type B",
+    "tie": "Neutral",
+    "insufficient_data": "Insufficient data",
+    "not_tested": "Not tested",
+}
+DIRECTION_PRINT_ORDER = ["typeA", "typeB", "tie", "insufficient_data"]
 
 # Mann-Whitney U: asymptotic normal approximation with tie + continuity correction
 # (required for clustered Likert responses; exact method does not correct for ties).
@@ -379,15 +391,67 @@ def _split_groups(df: pd.DataFrame, item: str) -> tuple[np.ndarray, np.ndarray]:
     return a, b
 
 
-def _higher_group_median(a: np.ndarray, b: np.ndarray) -> str:
-    if len(a) == 0 or len(b) == 0:
+def _higher_group_effect(rbc: float) -> str:
+    """Direction of effect from rank-biserial correlation (positive = typeA higher)."""
+    if np.isnan(rbc):
         return "insufficient_data"
-    med_a, med_b = np.median(a), np.median(b)
-    if med_a > med_b:
+    if rbc > 0:
         return "typeA"
-    if med_b > med_a:
+    if rbc < 0:
         return "typeB"
     return "tie"
+
+
+def _rank_biserial_mwu(a: np.ndarray, b: np.ndarray) -> float:
+    """Rank-biserial correlation from Mann-Whitney U (group A vs group B)."""
+    if len(a) == 0 or len(b) == 0:
+        return np.nan
+    return float(pg.mwu(a, b, alternative="two-sided").squeeze()["RBC"])
+
+
+def bootstrap_rbc_ci(
+    a: np.ndarray,
+    b: np.ndarray,
+    *,
+    n_resamples: int = BOOTSTRAP_N_RESAMPLES,
+    confidence_level: float = BOOTSTRAP_CONFIDENCE,
+    rng: np.random.Generator | None = None,
+) -> tuple[float, float]:
+    """95% percentile bootstrap CI for independent-samples rank-biserial correlation."""
+    a = np.asarray(a, dtype=float)
+    b = np.asarray(b, dtype=float)
+    if len(a) < 1 or len(b) < 1:
+        return np.nan, np.nan
+
+    boot_rng = rng or np.random.default_rng(RANDOM_SEED)
+    n_a, n_b = len(a), len(b)
+    boot_stats = np.empty(n_resamples, dtype=float)
+    for i in range(n_resamples):
+        boot_a = a[boot_rng.integers(0, n_a, size=n_a)]
+        boot_b = b[boot_rng.integers(0, n_b, size=n_b)]
+        boot_stats[i] = _rank_biserial_mwu(boot_a, boot_b)
+
+    alpha = 1.0 - confidence_level
+    lo, hi = np.nanpercentile(boot_stats, [100 * alpha / 2, 100 * (1 - alpha / 2)])
+    return float(lo), float(hi)
+
+
+def _format_rbc_with_ci(
+    rbc: float,
+    ci_lower: float,
+    ci_upper: float,
+) -> str:
+    if np.isnan(rbc):
+        return "RBC: n/a"
+    if np.isnan(ci_lower) or np.isnan(ci_upper):
+        return f"RBC={rbc:.3f}"
+    return f"RBC={rbc:.3f}, 95% CI [{ci_lower:.3f}, {ci_upper:.3f}]"
+
+
+def _format_p_values(p_raw: float, p_fdr: float) -> str:
+    raw_str = f"{p_raw:.4f}" if not np.isnan(p_raw) else "n/a"
+    fdr_str = f"{p_fdr:.4f}" if not np.isnan(p_fdr) else "n/a"
+    return f"(p_raw={raw_str}, p_fdr={fdr_str})"
 
 
 def run_mann_whitney_battery(
@@ -416,6 +480,8 @@ def run_mann_whitney_battery(
                     "U": np.nan,
                     "p_raw": np.nan,
                     "rankBiserial": np.nan,
+                    "rbc_ci_lower": np.nan,
+                    "rbc_ci_upper": np.nan,
                     "r_from_z": np.nan,
                     "higherGroup": "insufficient_data",
                 }
@@ -424,9 +490,8 @@ def run_mann_whitney_battery(
 
         u_res = _mann_whitney_u(a, b)
 
-        # pingouin for rank-biserial correlation (index label is "MWU")
-        mwu_pg = pg.mwu(a, b, alternative="two-sided").squeeze()
-        rbc = float(mwu_pg["RBC"])
+        rbc = _rank_biserial_mwu(a, b)
+        rbc_ci_lower, rbc_ci_upper = bootstrap_rbc_ci(a, b)
         u_stat = float(u_res.statistic)
 
         # r = |Z| / sqrt(N) using normal approximation for U
@@ -443,43 +508,18 @@ def run_mann_whitney_battery(
                 "U": float(u_res.statistic),
                 "p_raw": float(u_res.pvalue),
                 "rankBiserial": rbc,
+                "rbc_ci_lower": rbc_ci_lower,
+                "rbc_ci_upper": rbc_ci_upper,
                 "r_from_z": r_from_z,
-                "higherGroup": _higher_group_median(a, b),
+                "higherGroup": _higher_group_effect(rbc),
             }
         )
         print(
-            f"  {item}: U={u_res.statistic:.4g}, p={u_res.pvalue:.4g}, "
-            f"RBC={rbc:.3f}, higher={rows[-1]['higherGroup']}"
+            f"  {item}: {_format_rbc_with_ci(rbc, rbc_ci_lower, rbc_ci_upper)}, "
+            f"U={u_res.statistic:.4g}, p={u_res.pvalue:.4g}, "
+            f"higher={rows[-1]['higherGroup']}"
         )
 
-    return pd.DataFrame(rows)
-
-
-def run_welch_battery(df: pd.DataFrame, items: list[str]) -> pd.DataFrame:
-    """Phase 4 secondary: Welch t-test and Cohen's d."""
-    rows = []
-    for item in items:
-        a, b = _split_groups(df, item)
-        if len(a) < 2 or len(b) < 2:
-            rows.append(
-                {
-                    "camelCase": item,
-                    "t_welch": np.nan,
-                    "p_welch": np.nan,
-                    "cohens_d": np.nan,
-                }
-            )
-            continue
-        t_res = stats.ttest_ind(a, b, equal_var=False)
-        d = pg.compute_effsize(a, b, eftype="cohen")
-        rows.append(
-            {
-                "camelCase": item,
-                "t_welch": float(t_res.statistic),
-                "p_welch": float(t_res.pvalue),
-                "cohens_d": float(d),
-            }
-        )
     return pd.DataFrame(rows)
 
 
@@ -510,6 +550,17 @@ def run_shapiro_appendix(df: pd.DataFrame, items: list[str]) -> pd.DataFrame:
                         "W": np.nan,
                         "p_shapiro": np.nan,
                         "note": "n > 5000",
+                    }
+                )
+            elif np.var(vals) == 0 or len(np.unique(vals)) == 1:
+                rows.append(
+                    {
+                        "item": item,
+                        "group": grp,
+                        "n": n,
+                        "W": np.nan,
+                        "p_shapiro": np.nan,
+                        "note": "zero variance",
                     }
                 )
             else:
@@ -648,6 +699,8 @@ def analyze_section_composites(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataF
                     "U": np.nan,
                     "p_raw": np.nan,
                     "rankBiserial": np.nan,
+                    "rbc_ci_lower": np.nan,
+                    "rbc_ci_upper": np.nan,
                     "higherGroup": "not_tested",
                     "test_method": "",
                     "note": alpha_rows[-1]["note"]
@@ -675,6 +728,8 @@ def analyze_section_composites(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataF
                     "U": np.nan,
                     "p_raw": np.nan,
                     "rankBiserial": np.nan,
+                    "rbc_ci_lower": np.nan,
+                    "rbc_ci_upper": np.nan,
                     "higherGroup": "insufficient_data",
                     "test_method": MWU_METHOD,
                     "note": "Insufficient data per group for Mann-Whitney U.",
@@ -683,7 +738,8 @@ def analyze_section_composites(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataF
             continue
 
         u_res = _mann_whitney_u(a, b)
-        mwu_pg = pg.mwu(a, b, alternative="two-sided").squeeze()
+        rbc = _rank_biserial_mwu(a, b)
+        rbc_ci_lower, rbc_ci_upper = bootstrap_rbc_ci(a, b)
 
         composite_rows.append(
             {
@@ -695,15 +751,18 @@ def analyze_section_composites(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataF
                 "median_typeB": float(np.median(b)),
                 "U": float(u_res.statistic),
                 "p_raw": float(u_res.pvalue),
-                "rankBiserial": float(mwu_pg["RBC"]),
-                "higherGroup": _higher_group_median(a, b),
+                "rankBiserial": rbc,
+                "rbc_ci_lower": rbc_ci_lower,
+                "rbc_ci_upper": rbc_ci_upper,
+                "higherGroup": _higher_group_effect(rbc),
                 "test_method": MWU_METHOD,
                 "note": "",
             }
         )
         print(
-            f"    Mann-Whitney on composite: U={u_res.statistic:.4g}, "
-            f"p={u_res.pvalue:.4g}, higher={composite_rows[-1]['higherGroup']}"
+            f"    Mann-Whitney on composite: {_format_rbc_with_ci(rbc, rbc_ci_lower, rbc_ci_upper)}, "
+            f"U={u_res.statistic:.4g}, p={u_res.pvalue:.4g}, "
+            f"higher={composite_rows[-1]['higherGroup']}"
         )
 
     comp_df = pd.DataFrame(composite_rows)
@@ -716,7 +775,7 @@ def plot_items(
     question_map: dict[str, str],
     out_dir: Path,
 ) -> None:
-    """Violin + box plots per item."""
+    """Box + strip plots per item (every response visible; no KDE)."""
     plots_dir = out_dir / "plots"
     plots_dir.mkdir(parents=True, exist_ok=True)
 
@@ -734,37 +793,33 @@ def plot_items(
 
         fig, ax = plt.subplots(figsize=(8, 5))
         groups = ["Type A", "Type B"]
-        data = [sub.loc[sub["system"] == g, item].values for g in groups]
 
-        parts = ax.violinplot(
-            data,
-            positions=[1, 2],
-            showmeans=False,
-            showmedians=True,
-            showextrema=False,
-        )
-        for pc in parts["bodies"]:
-            pc.set_alpha(0.35)
-
-        bp = ax.boxplot(
-            data,
-            positions=[1, 2],
-            widths=0.15,
-            patch_artist=True,
-            showfliers=True,
+        sns.boxplot(
+            data=sub,
+            x="system",
+            y=item,
+            order=groups,
+            ax=ax,
+            width=0.45,
+            showfliers=False,
+            boxprops={"facecolor": "lightgray", "alpha": 0.35},
             medianprops={"color": "black", "linewidth": 2},
+            zorder=1,
         )
-        for patch in bp["boxes"]:
-            patch.set_facecolor("white")
-            patch.set_alpha(0.8)
+        sns.stripplot(
+            data=sub,
+            x="system",
+            y=item,
+            order=groups,
+            color="0.25",
+            size=8,
+            jitter=0.12,
+            alpha=0.85,
+            ax=ax,
+            zorder=2,
+        )
 
-        # jitter points
-        for i, (g, vals) in enumerate(zip(groups, data), start=1):
-            jitter = np.random.default_rng(RANDOM_SEED).uniform(-0.08, 0.08, size=len(vals))
-            ax.scatter(np.full(len(vals), i) + jitter, vals, alpha=0.7, s=40, zorder=3)
-
-        ax.set_xticks([1, 2])
-        ax.set_xticklabels(groups)
+        ax.set_xlabel("")
         ax.set_yticks(y_ticks)
         ax.set_ylabel("Score")
         ax.set_title(question_map.get(item, item), fontsize=10, wrap=True)
@@ -778,6 +833,36 @@ def plot_items(
         print(f"  Saved plot: {out_path}")
 
 
+def _print_item_result(row: pd.Series) -> None:
+    med_a = row["median_typeA"]
+    med_b = row["median_typeB"]
+    med_a_str = f"{med_a:.2f}" if not np.isnan(med_a) else "n/a"
+    med_b_str = f"{med_b:.2f}" if not np.isnan(med_b) else "n/a"
+    rbc_line = _format_rbc_with_ci(
+        row["rankBiserial"],
+        row["rbc_ci_lower"],
+        row["rbc_ci_upper"],
+    )
+    print(f"  - {row['camelCase']}")
+    print(f"      Medians: Type A={med_a_str}, Type B={med_b_str}")
+    print(f"      {rbc_line}")
+    print(f"      {_format_p_values(row['p_raw'], row['p_fdr'])}")
+
+
+def _print_composite_result(comp: pd.Series) -> None:
+    rbc_line = _format_rbc_with_ci(
+        comp["rankBiserial"],
+        comp["rbc_ci_lower"],
+        comp["rbc_ci_upper"],
+    )
+    print(
+        f"      Medians: Type A={comp['median_typeA']:.2f}, "
+        f"Type B={comp['median_typeB']:.2f}"
+    )
+    print(f"      {rbc_line}")
+    print(f"      (p_raw={comp['p_raw']:.4g})")
+
+
 def print_summary(
     df: pd.DataFrame,
     results: pd.DataFrame,
@@ -785,7 +870,7 @@ def print_summary(
     alpha_df: pd.DataFrame,
     output_dir: Path,
 ) -> None:
-    """Phase 7: Printed summary."""
+    """Phase 7: Printed summary (effect-size first; underpowered n=15)."""
     print("\n" + "=" * 60)
     print("=== UX survey analysis summary ===")
     print("=" * 60)
@@ -797,44 +882,33 @@ def print_summary(
         "Primary test: Mann-Whitney U (two-sided), "
         f"{MWU_METHOD_LABEL}"
     )
-    print(f"Multiplicity correction: Benjamini-Hochberg FDR (alpha={ALPHA})")
-    print("Primary descriptives: medians and IQRs; significance flagged on FDR-adjusted p")
+    print(
+        "Interpretation: with n=15, emphasize effect direction and "
+        "rank-biserial correlation (RBC) with 95% bootstrap CIs; "
+        "p-values (incl. FDR) are secondary."
+    )
 
-    sig = results[results["sig_fdr"] == True]  # noqa: E712
-    not_sig = results[results["sig_fdr"] != True]  # noqa: E712
-
-    print("\nSignificant after FDR correction:")
-    if len(sig) == 0:
-        print("  (none)")
-    else:
-        for _, row in sig.iterrows():
-            direction = row["higherGroup"]
-            disp = SYSTEM_LABEL_TO_DISPLAY.get(direction, direction)
-            print(
-                f"  - {row['camelCase']}: {disp} higher "
-                f"(median A={row['median_typeA']:.2f}, B={row['median_typeB']:.2f}; "
-                f"p_fdr={row['p_fdr']:.4f}, RBC={row['rankBiserial']:.3f})"
-            )
-
-    print("\nNot significant after FDR:")
-    for _, row in not_sig.iterrows():
-        p_fdr = row["p_fdr"]
-        p_str = f"{p_fdr:.4f}" if not np.isnan(p_fdr) else "NA"
-        print(f"  - {row['camelCase']}: p_fdr={p_str}")
+    print("\nItem results grouped by direction of effect (RBC sign):")
+    for direction_key in DIRECTION_PRINT_ORDER:
+        label = DIRECTION_LABELS[direction_key]
+        subset = results[results["higherGroup"] == direction_key]
+        print(f"\n  {label} ({len(subset)} item(s)):")
+        if len(subset) == 0:
+            print("    (none)")
+            continue
+        for _, row in subset.iterrows():
+            _print_item_result(row)
 
     print("\nSection composites (Cronbach alpha >= 0.70 required for testing):")
     for _, row in alpha_df.iterrows():
         section = row["section"]
         alpha = row["cronbach_alpha"]
-        alpha_str = f"{alpha:.3f}" if not np.isnan(alpha) else "NA"
+        alpha_str = f"{alpha:.3f}" if not np.isnan(alpha) else "n/a"
         if row["composite_tested"]:
             comp = section_results[section_results["section"] == section].iloc[0]
-            print(
-                f"  - {section}: TESTED (alpha={alpha_str}), "
-                f"U={comp['U']:.4g}, p_raw={comp['p_raw']:.4g}, "
-                f"higher={comp['higherGroup']}, "
-                f"median typeA={comp['median_typeA']:.2f}, typeB={comp['median_typeB']:.2f}"
-            )
+            direction = DIRECTION_LABELS.get(comp["higherGroup"], comp["higherGroup"])
+            print(f"  - {section}: TESTED (alpha={alpha_str}), {direction}")
+            _print_composite_result(comp)
         else:
             note = row.get("note", "") or "Composite not tested."
             print(f"  - {section}: NOT TESTED (alpha={alpha_str}) — {note}")
@@ -842,8 +916,8 @@ def print_summary(
     tested = section_results[section_results["composite_tested"] == True]  # noqa: E712
     if len(tested) > 0:
         print(
-            "\n  Note: With n=15 split across two groups, a non-significant composite "
-            "result cannot be taken as evidence of equivalence; power is limited."
+            "\n  Note: With n=15 split across two groups, wide bootstrap CIs and "
+            "non-significant p-values cannot be taken as evidence of equivalence."
         )
 
     print(f"\nOutputs written to: {output_dir.resolve()}/")
@@ -898,12 +972,10 @@ def main() -> None:
 
     # Phase 4
     mwu_results = run_mann_whitney_battery(df, ITEMS, question_map)
-    welch_results = run_welch_battery(df, ITEMS)
     shapiro_df = run_shapiro_appendix(df, ITEMS)
     shapiro_df.to_csv(output_dir / "shapiro_appendix.csv", index=False)
 
-    results = mwu_results.merge(welch_results, on="camelCase", how="left")
-    results = apply_mcc(results)
+    results = apply_mcc(mwu_results)
     results = _merge_descriptives_into_results(results, desc)
 
     # Column order for final table
@@ -919,21 +991,19 @@ def main() -> None:
         "n_typeA",
         "n_typeB",
         "U",
+        "rankBiserial",
+        "rbc_ci_lower",
+        "rbc_ci_upper",
+        "higherGroup",
         "p_raw",
         "p_fdr",
         "p_holm",
-        "rankBiserial",
-        "r_from_z",
-        "higherGroup",
         "sig_fdr",
         "sig_holm",
-        "t_welch",
-        "p_welch",
-        "cohens_d",
+        "r_from_z",
     ]
     results = results[[c for c in col_order if c in results.columns]]
     results.to_csv(output_dir / "survey_test_results.csv", index=False)
-    welch_results.to_csv(output_dir / "secondary_tests.csv", index=False)
 
     # Phase 6
     alpha_df, section_results = analyze_section_composites(df)

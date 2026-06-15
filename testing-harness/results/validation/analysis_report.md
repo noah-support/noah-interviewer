@@ -1,6 +1,6 @@
 # Interview Validation Comparison Report
 
-Generated: 2026-06-07 19:44:06 UTC
+Generated: 2026-06-15 06:41:00 UTC
 
 ## Data sources
 
@@ -51,18 +51,18 @@ Is the Noah interview system significantly better than the ElevenLabs interviewe
 
 ## Paired tests (one-sided: Noah > ElevenLabs (pre-specified), α = 0.05)
 
-Matched pairs: each (run_id, persona) contributes one Noah and one ElevenLabs score against the same ground truth. Primary p-value: **exact sign-flip permutation** (enumerates all 2^n sign patterns; no asymptotic approximation). Cross-check: exact Wilcoxon signed-rank (drops zero-difference pairs; see `n_wilcoxon`). Multiplicity: **Benjamini-Hochberg FDR** across eight metrics.
+Matched pairs: each (run_id, persona) contributes one Noah and one ElevenLabs score against the same ground truth. Primary p-value: **exact sign-flip permutation** (enumerates all 2^n sign patterns; no asymptotic approximation). Cross-check: exact Wilcoxon signed-rank (drops zero-difference pairs; see `n_wilcoxon`). Effect size: **matched-pairs rank-biserial correlation** with 95% percentile bootstrap CI (resample pairs with replacement). Multiplicity: **Benjamini-Hochberg FDR** across eight metrics.
 
 | label | n_pairs | n_wilcoxon | p_raw | p_wilcoxon | p_fdr | rank_biserial | noah_significantly_better_fdr |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Overall Embedding Similarity | 8 | 8 | 0.3438 | 0.3711 | 0.4583 | 0.1667 | No |
-| Activity Coverage | 8 | 7 | 0.1562 | 0.1094 | 0.3000 | 0.5714 | No |
-| Control Flow & Handoff Fidelity | 8 | 5 | 0.1250 | 0.0938 | 0.3000 | 0.7333 | No |
-| Attribute Accuracy | 8 | 4 | 0.1875 | 0.1875 | 0.3000 | 0.7000 | No |
-| Exception & Edge Case Capture | 8 | 6 | 0.0938 | 0.0781 | 0.3000 | 0.7143 | No |
-| Faithfulness (No Hallucination) | 8 | 5 | 0.5938 | 0.5938 | 0.6786 | -0.0667 | No |
-| Total Missed Items | 8 | 8 | 0.1289 | 0.1562 | 0.3000 | 0.4722 | No |
-| Total Extra / Hallucinated Items | 8 | 7 | 0.8125 | 0.7656 | 0.8125 | -0.2500 | No |
+| Overall Embedding Similarity | 8 | 8 | 0.3438 | 0.3711 | 0.4583 | 0.167 [-0.667, 0.833] | No |
+| Activity Coverage | 8 | 7 | 0.1562 | 0.1094 | 0.3000 | 0.571 [-0.429, 1.000] | No |
+| Control Flow & Handoff Fidelity | 8 | 5 | 0.1250 | 0.0938 | 0.3000 | 0.733 [-0.075, 1.000] | No |
+| Attribute Accuracy | 8 | 4 | 0.1875 | 0.1875 | 0.3000 | 0.700 [-0.400, 1.000] | No |
+| Exception & Edge Case Capture | 8 | 6 | 0.0938 | 0.0781 | 0.3000 | 0.714 [0.000, 1.000] | No |
+| Faithfulness (No Hallucination) | 8 | 5 | 0.5938 | 0.5938 | 0.6786 | -0.067 [-1.000, 1.000] | No |
+| Total Missed Items | 8 | 8 | 0.1289 | 0.1562 | 0.3000 | 0.472 [-0.278, 1.000] | No |
+| Total Extra / Hallucinated Items | 8 | 7 | 0.8125 | 0.7656 | 0.8125 | -0.250 [-0.867, 0.612] | No |
 
 ## Verdict
 
@@ -74,15 +74,15 @@ Tests: paired exact sign-flip permutation on matched (run_id, persona) differenc
 
 The directional hypothesis (Noah > ElevenLabs) was pre-specified in the analysis plan before inspecting validation outcomes.
 
-Effect sizes: matched-pairs rank-biserial correlation (r), oriented so positive means Noah better. Directional lead/no-lead groupings follow the sign of r, not the median.
+Effect sizes: matched-pairs rank-biserial correlation (r) with 95% percentile bootstrap CI, oriented so positive means Noah better. Directional lead/no-lead groupings follow the sign of r, not the median.
 
 Limitation (permutation granularity): with 8 pairs the one-sided exact permutation p-value has a floor of 1/256 (≈0.0039). Many ordinal judge-score paired differences are zero (e.g. Faithfulness, where ElevenLabs has zero IQR), so the number of distinguishable sign patterns is smaller still and achievable p-values are coarser. This granularity, not only the small sample, is part of why no metric reaches significance.
 
 Limitation (Wilcoxon cross-check): the exact Wilcoxon signed-rank p-values drop zero-difference pairs, so the effective pair count is below 8 for several metrics (see n_wilcoxon in the test table). Wilcoxon is reported only as a cross-check, not the primary result.
 
-Noah leads (rank-based) but not significantly on: Overall Embedding Similarity (p_raw=0.3438, r=0.167), Activity Coverage (p_raw=0.1562, r=0.571), Control Flow & Handoff Fidelity (p_raw=0.1250, r=0.733), Attribute Accuracy (p_raw=0.1875, r=0.700), Exception & Edge Case Capture (p_raw=0.0938, r=0.714), Total Missed Items (p_raw=0.1289, r=0.472).
+Noah leads (rank-based) but not significantly on: Overall Embedding Similarity (r=0.167 [-0.667, 0.833], p_raw=0.3438), Activity Coverage (r=0.571 [-0.429, 1.000], p_raw=0.1562), Control Flow & Handoff Fidelity (r=0.733 [-0.075, 1.000], p_raw=0.1250), Attribute Accuracy (r=0.700 [-0.400, 1.000], p_raw=0.1875), Exception & Edge Case Capture (r=0.714 [0.000, 1.000], p_raw=0.0938), Total Missed Items (r=0.472 [-0.278, 1.000], p_raw=0.1289).
 
-Noah does not lead (rank-based), or is tied, on: Faithfulness (No Hallucination) (tie, p_raw=0.5938, r=-0.067), Total Extra / Hallucinated Items (p_raw=0.8125, r=-0.250).
+Noah does not lead (rank-based), or is tied, on: Faithfulness (No Hallucination) (tie, r=-0.067 [-1.000, 1.000], p_raw=0.5938), Total Extra / Hallucinated Items (r=-0.250 [-0.867, 0.612], p_raw=0.8125).
 
 ## Discussion
 

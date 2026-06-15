@@ -20,6 +20,9 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_OUTPUT = REPO_ROOT / "testing-harness/results/validation/analysis_report.md"
 
 ALPHA = 0.05
+RANDOM_SEED = 42
+BOOTSTRAP_N_RESAMPLES = 5000
+BOOTSTRAP_CONFIDENCE = 0.95
 RESEARCH_QUESTION = (
     "Is the Noah interview system significantly better than the ElevenLabs interviewer?"
 )
@@ -427,6 +430,42 @@ def matched_pairs_rank_biserial(diffs: np.ndarray) -> float:
     return float((w_plus - w_minus) / denom)
 
 
+def bootstrap_matched_rbc_ci(
+    diffs: np.ndarray,
+    *,
+    n_resamples: int = BOOTSTRAP_N_RESAMPLES,
+    confidence_level: float = BOOTSTRAP_CONFIDENCE,
+    rng: np.random.Generator | None = None,
+) -> tuple[float, float]:
+    """95% percentile bootstrap CI for matched-pairs rank-biserial correlation."""
+    diffs = np.asarray(diffs, dtype=float)
+    if len(diffs) < 2:
+        return np.nan, np.nan
+
+    boot_rng = rng or np.random.default_rng(RANDOM_SEED)
+    n = len(diffs)
+    boot_stats = np.empty(n_resamples, dtype=float)
+    for i in range(n_resamples):
+        boot_diffs = diffs[boot_rng.integers(0, n, size=n)]
+        boot_stats[i] = matched_pairs_rank_biserial(boot_diffs)
+
+    alpha = 1.0 - confidence_level
+    lo, hi = np.nanpercentile(boot_stats, [100 * alpha / 2, 100 * (1 - alpha / 2)])
+    return float(lo), float(hi)
+
+
+def _format_rbc_with_ci(
+    rbc: float,
+    ci_lower: float,
+    ci_upper: float,
+) -> str:
+    if np.isnan(rbc):
+        return "n/a"
+    if np.isnan(ci_lower) or np.isnan(ci_upper):
+        return f"{rbc:.3f}"
+    return f"{rbc:.3f} [{ci_lower:.3f}, {ci_upper:.3f}]"
+
+
 def exact_sign_flip_pvalue(
     diffs: np.ndarray,
     *,
@@ -525,6 +564,8 @@ def run_paired_tests(
                     "p_raw": np.nan,
                     "p_wilcoxon": np.nan,
                     "rank_biserial": np.nan,
+                    "rbc_ci_lower": np.nan,
+                    "rbc_ci_upper": np.nan,
                     "noah_leads": "n/a",
                     "noah_significantly_better": "insufficient_data",
                 }
@@ -534,6 +575,7 @@ def run_paired_tests(
         p_perm = exact_sign_flip_pvalue(diffs, alternative=alternative)
         p_wilcox = wilcoxon_exact_pvalue(diffs, alternative=alternative)
         rbc = matched_pairs_rank_biserial(diffs)
+        rbc_ci_lower, rbc_ci_upper = bootstrap_matched_rbc_ci(diffs)
         noah_leads = noah_leads_from_oriented_r(rbc)
 
         rows.append(
@@ -547,6 +589,8 @@ def run_paired_tests(
                 "p_raw": p_perm,
                 "p_wilcoxon": p_wilcox,
                 "rank_biserial": rbc,
+                "rbc_ci_lower": rbc_ci_lower,
+                "rbc_ci_upper": rbc_ci_upper,
                 "noah_leads": noah_leads,
                 "noah_significantly_better": (
                     "yes"
@@ -610,7 +654,11 @@ def build_verdict(
 
     for _, row in test_results.iterrows():
         label = row["label"]
-        rbc = _format_float(row["rank_biserial"], 3)
+        rbc = _format_rbc_with_ci(
+            row["rank_biserial"],
+            row["rbc_ci_lower"],
+            row["rbc_ci_upper"],
+        )
         if row["noah_significantly_better"] == "insufficient_data":
             insufficient.append(label)
             continue
@@ -619,15 +667,15 @@ def build_verdict(
         p_fdr = _format_float(row["p_fdr"])
 
         if row["noah_significantly_better_fdr"] == "yes":
-            sig_fdr.append(f"{label} (p_fdr={p_fdr}, r={rbc})")
+            sig_fdr.append(f"{label} (r={rbc}, p_fdr={p_fdr})")
         elif row["noah_significantly_better"] == "yes":
-            sig_raw_only.append(f"{label} (p_raw={p_raw}, p_fdr={p_fdr}, r={rbc})")
+            sig_raw_only.append(f"{label} (r={rbc}, p_raw={p_raw}, p_fdr={p_fdr})")
         elif row["noah_leads"] == "yes":
-            descriptive_only.append(f"{label} (p_raw={p_raw}, r={rbc})")
+            descriptive_only.append(f"{label} (r={rbc}, p_raw={p_raw})")
         elif row["noah_leads"] == "tie":
-            no_advantage.append(f"{label} (tie, p_raw={p_raw}, r={rbc})")
+            no_advantage.append(f"{label} (tie, r={rbc}, p_raw={p_raw})")
         else:
-            no_advantage.append(f"{label} (p_raw={p_raw}, r={rbc})")
+            no_advantage.append(f"{label} (r={rbc}, p_raw={p_raw})")
 
     testable = test_results[
         test_results["noah_significantly_better"] != "insufficient_data"
@@ -689,9 +737,9 @@ def build_verdict(
         ),
         direction_note,
         (
-            "Effect sizes: matched-pairs rank-biserial correlation (r), oriented so "
-            "positive means Noah better. Directional lead/no-lead groupings follow "
-            "the sign of r, not the median."
+            "Effect sizes: matched-pairs rank-biserial correlation (r) with 95% "
+            "percentile bootstrap CI, oriented so positive means Noah better. "
+            "Directional lead/no-lead groupings follow the sign of r, not the median."
         ),
         (
             f"Limitation (permutation granularity): with 8 pairs the one-sided exact "
@@ -757,21 +805,25 @@ def print_descriptive_table(desc_with_leads: pd.DataFrame) -> None:
 def print_test_table(test_results: pd.DataFrame) -> None:
     print(f"\nResearch question: {RESEARCH_QUESTION}")
     print(
-        f"\n{'Metric':<36} {'n':>3} {'p_perm':>8} {'p_fdr':>8} "
-        f"{'r':>7} {'Sig(FDR)':>9}"
+        f"\n{'Metric':<36} {'n':>3} {'r [95% CI]':>22} "
+        f"{'p_perm':>8} {'p_fdr':>8} {'Sig(FDR)':>9}"
     )
-    print("-" * 76)
+    print("-" * 92)
     for _, row in test_results.iterrows():
         if row["noah_significantly_better"] == "insufficient_data":
-            p_perm = p_fdr = r = sig = "n/a"
+            rbc = p_perm = p_fdr = sig = "n/a"
         else:
+            rbc = _format_rbc_with_ci(
+                row["rank_biserial"],
+                row["rbc_ci_lower"],
+                row["rbc_ci_upper"],
+            )
             p_perm = _format_float(row["p_raw"])
             p_fdr = _format_float(row["p_fdr"])
-            r = _format_float(row["rank_biserial"], 3)
             sig = "Yes" if row["noah_significantly_better_fdr"] == "yes" else "No"
         print(
-            f"{row['label']:<36} {row['n_pairs']:>3} {p_perm:>8} {p_fdr:>8} "
-            f"{r:>7} {sig:>9}"
+            f"{row['label']:<36} {row['n_pairs']:>3} {rbc:>22} "
+            f"{p_perm:>8} {p_fdr:>8} {sig:>9}"
         )
 
 
@@ -821,7 +873,15 @@ def write_markdown_report(
 
     test_display = test_results.copy()
     test_display = test_display.rename(columns={"n_wilcoxon_nonzero": "n_wilcoxon"})
-    for col in ("p_raw", "p_wilcoxon", "p_fdr", "rank_biserial"):
+    test_display["rank_biserial"] = test_display.apply(
+        lambda r: _format_rbc_with_ci(
+            r["rank_biserial"],
+            r["rbc_ci_lower"],
+            r["rbc_ci_upper"],
+        ),
+        axis=1,
+    )
+    for col in ("p_raw", "p_wilcoxon", "p_fdr"):
         test_display[col] = test_display[col].apply(
             lambda v: _format_float(v) if pd.notna(v) else "n/a"
         )
@@ -888,7 +948,7 @@ Judge scores (1–5 ordinal): **median and IQR** per system. Embedding similarit
 
 ## Paired tests ({alt_label}, α = {ALPHA})
 
-Matched pairs: each (run_id, persona) contributes one Noah and one ElevenLabs score against the same ground truth. Primary p-value: **exact sign-flip permutation** (enumerates all 2^n sign patterns; no asymptotic approximation). Cross-check: exact Wilcoxon signed-rank (drops zero-difference pairs; see `n_wilcoxon`). Multiplicity: **Benjamini-Hochberg FDR** across eight metrics.
+Matched pairs: each (run_id, persona) contributes one Noah and one ElevenLabs score against the same ground truth. Primary p-value: **exact sign-flip permutation** (enumerates all 2^n sign patterns; no asymptotic approximation). Cross-check: exact Wilcoxon signed-rank (drops zero-difference pairs; see `n_wilcoxon`). Effect size: **matched-pairs rank-biserial correlation** with 95% percentile bootstrap CI (resample pairs with replacement). Multiplicity: **Benjamini-Hochberg FDR** across eight metrics.
 
 {_dataframe_to_markdown_table(test_display, ['label', 'n_pairs', 'n_wilcoxon', 'p_raw', 'p_wilcoxon', 'p_fdr', 'rank_biserial', 'noah_significantly_better_fdr'])}
 

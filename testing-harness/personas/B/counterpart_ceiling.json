@@ -1,0 +1,112 @@
+{
+  "name": "Alex Johnson",
+  "role": "Computer Repair Specialist",
+  "processes": [
+    {
+      "process_name": "Computer Repair Procedure",
+      "steps": [
+        {
+          "step_name": "Return_Computer_Unrepaired",
+          "software_tools_used": [],
+          "time_needed": "10 minutes",
+          "handoff_to": "Provide_Repair_Cost_Estimate"
+        },
+        {
+          "step_name": "Inspect_and_Fix_Hardware",
+          "software_tools_used": [
+            "Hardware Diagnostic Tool"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Provide_Repair_Cost_Estimate"
+        },
+        {
+          "step_name": "Review_and_Configure_Software",
+          "software_tools_used": [
+            "Software Configuration Utility"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Provide_Repair_Cost_Estimate"
+        },
+        {
+          "step_name": "Verify_System_Functionality",
+          "software_tools_used": [
+            "System Testing Suite"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "Provide_Repair_Cost_Estimate"
+        },
+        {
+          "step_name": "Provide_Repair_Cost_Estimate",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "15 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Required hardware part is unavailable",
+          "impact": "Slows down the repair timeline",
+          "recovery": "Order the part and notify the customer about the delay"
+        }
+      ]
+    },
+    {
+      "process_name": "Extended Computer Repair Procedure",
+      "steps": [
+        {
+          "step_name": "Return_Computer_Unrepaired",
+          "software_tools_used": [],
+          "time_needed": "10 minutes",
+          "handoff_to": "Provide_Repair_Cost_Estimate"
+        },
+        {
+          "step_name": "Inspect_and_Fix_Hardware",
+          "software_tools_used": [
+            "Hardware Diagnostic Tool"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Provide_Repair_Cost_Estimate"
+        },
+        {
+          "step_name": "Review_and_Configure_Software",
+          "software_tools_used": [
+            "Software Configuration Utility"
+          ],
+          "time_needed": "1 hour",
+          "handoff_to": "Provide_Repair_Cost_Estimate"
+        },
+        {
+          "step_name": "Process_Billing",
+          "software_tools_used": [
+            "Billing Software"
+          ],
+          "time_needed": "20 minutes",
+          "handoff_to": "Verify_System_Functionality"
+        },
+        {
+          "step_name": "Verify_System_Functionality",
+          "software_tools_used": [
+            "System Testing Suite"
+          ],
+          "time_needed": "30 minutes",
+          "handoff_to": "Deliver_Repaired_Computer"
+        },
+        {
+          "step_name": "Deliver_Repaired_Computer",
+          "software_tools_used": [],
+          "time_needed": "10 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Billing application malfunction",
+          "impact": "Leads to an incorrect cost estimate",
+          "recovery": "Compute the cost manually and update the system"
+        }
+      ]
+    }
+  ]
+}

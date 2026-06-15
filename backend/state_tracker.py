@@ -35,7 +35,11 @@ load_dotenv(".env.local", override=True)
 
 
 def _tracker_model() -> str:
-    return os.getenv("STATE_TRACKER_MODEL", "gpt-4o-mini")
+    return os.getenv("STATE_TRACKER_MODEL", "gpt-5.4")
+
+
+def _tracker_reasoning_effort() -> str:
+    return os.getenv("STATE_TRACKER_REASONING_EFFORT", "medium")
 
 
 def _tracker_openai_timeout_s() -> float:
@@ -82,18 +86,23 @@ def run_state_tracker(*, room_name: str, allow_empty_buffer: bool = False) -> bo
         len(user_lines),
     )
     try:
-        completion = client.chat.completions.create(
-            model=model,
-            response_format={"type": "json_object"},
-            temperature=0.2,
-            messages=[
+        kwargs: dict[str, Any] = {
+            "model": model,
+            "response_format": {"type": "json_object"},
+            "messages": [
                 {"role": "system", "content": STATE_TRACKER_SYSTEM},
                 {
                     "role": "user",
                     "content": json.dumps(user_payload, ensure_ascii=False),
                 },
             ],
-        )
+        }
+        model_key = model.lower().strip()
+        if model_key.startswith(("gpt-5", "o1", "o3", "o4")):
+            kwargs["reasoning_effort"] = _tracker_reasoning_effort()
+        else:
+            kwargs["temperature"] = 0.2
+        completion = client.chat.completions.create(**kwargs)
     except Exception as e:
         logger.exception(
             "OpenAI merge failed room=%s after %.2fs: %s",

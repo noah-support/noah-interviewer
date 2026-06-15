@@ -6,7 +6,7 @@ import typer
 
 from interviewees.core.logging_config import configure_harness_logging
 from interviewees.env import load_harness_env
-from interviewees.evaluation.defaults import DEFAULT_EVALUATION_MODEL
+from interviewees.evaluation.defaults import DEFAULT_EVALUATION_MODEL, DEFAULT_JUDGE_MODEL
 from interviewees.evaluation.pipeline import run_batch_evaluation, run_evaluation_from_input
 from interviewees.evaluation.report import format_run_report
 from interviewees.evaluation.stage import stage_artifacts
@@ -45,7 +45,12 @@ def run(
     openai_model: str = typer.Option(
         DEFAULT_EVALUATION_MODEL,
         "--openai-model",
-        help=f"OpenAI model for reconstruction and judge (default: {DEFAULT_EVALUATION_MODEL})",
+        help=f"OpenAI model for reconstruction (default: {DEFAULT_EVALUATION_MODEL})",
+    ),
+    judge_model: str = typer.Option(
+        DEFAULT_JUDGE_MODEL,
+        "--judge-model",
+        help=f"OpenAI model for LLM judge (default: {DEFAULT_JUDGE_MODEL})",
     ),
     force: bool = typer.Option(False, "--force"),
     skip_reconstruct: bool = typer.Option(False, "--skip-reconstruct"),
@@ -65,6 +70,7 @@ def run(
     paths, rows = run_evaluation_from_input(
         input_dir.resolve(),
         openai_model=openai_model,
+        judge_model=judge_model,
         force=force,
         skip_reconstruct=skip_reconstruct,
         skip_validate=skip_validate,
@@ -83,6 +89,7 @@ def batch(
         dir_okay=True,
     ),
     openai_model: str = typer.Option(DEFAULT_EVALUATION_MODEL, "--openai-model"),
+    judge_model: str = typer.Option(DEFAULT_JUDGE_MODEL, "--judge-model"),
     force: bool = typer.Option(False, "--force"),
     skip_reconstruct: bool = typer.Option(False, "--skip-reconstruct"),
     skip_validate: bool = typer.Option(False, "--skip-validate"),
@@ -101,6 +108,7 @@ def batch(
     rows = run_batch_evaluation(
         personas_root=personas_root.resolve(),
         openai_model=openai_model,
+        judge_model=judge_model,
         force=force,
         skip_reconstruct=skip_reconstruct,
         skip_validate=skip_validate,

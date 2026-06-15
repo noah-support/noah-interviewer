@@ -37,7 +37,7 @@ class IntervieweeLLM:
         response = self._client.chat.completions.create(
             model=self._model,
             messages=messages,
-            temperature=0.7,
+            temperature=0.2,
         )
         content = response.choices[0].message.content
         if not content:

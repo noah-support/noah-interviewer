@@ -1,0 +1,64 @@
+Similarity baseline evaluation
+Generated: 2026-06-15T07:56:07Z
+Personas root: /Users/cesarvanleuffelen/Documents/Noah/Research/noah-interviewer/testing-harness/personas
+Judge model: gpt-5 (skip_judge=True)
+
+=== Reference baselines ===
+[floor-persona / floor]
+  overall_embedding_similarity: 0.335
+  judge: (judge skipped)
+  alignment_counts: missed_processes=1, extra_processes=0, missed_steps=3, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+
+[ceiling-persona / ceiling]
+  overall_embedding_similarity: 0.893
+  judge: (judge skipped)
+  alignment_counts: missed_processes=0, extra_processes=0, missed_steps=0, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+
+=== Per-persona floor & ceiling ===
+--- Persona A ---
+  floor (vs unrelated document):
+    overall_embedding_similarity: 0.335
+    judge: (judge skipped)
+    alignment_counts: missed_processes=1, extra_processes=0, missed_steps=3, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+  ceiling (vs paraphrase):
+    overall_embedding_similarity: 0.953
+    judge: (judge skipped)
+    alignment_counts: missed_processes=0, extra_processes=0, missed_steps=0, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+
+--- Persona B ---
+  floor (vs unrelated document):
+    overall_embedding_similarity: 0.303
+    judge: (judge skipped)
+    alignment_counts: missed_processes=0, extra_processes=0, missed_steps=3, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+  ceiling (vs paraphrase):
+    overall_embedding_similarity: 0.919
+    judge: (judge skipped)
+    alignment_counts: missed_processes=0, extra_processes=0, missed_steps=0, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+
+--- Persona C ---
+  floor (vs unrelated document):
+    overall_embedding_similarity: 0.410
+    judge: (judge skipped)
+    alignment_counts: missed_processes=2, extra_processes=0, missed_steps=2, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+  ceiling (vs paraphrase):
+    overall_embedding_similarity: 0.914
+    judge: (judge skipped)
+    alignment_counts: missed_processes=0, extra_processes=0, missed_steps=0, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+
+--- Persona D ---
+  floor (vs unrelated document):
+    overall_embedding_similarity: 0.368
+    judge: (judge skipped)
+    alignment_counts: missed_processes=0, extra_processes=0, missed_steps=5, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+  ceiling (vs paraphrase):
+    overall_embedding_similarity: 0.935
+    judge: (judge skipped)
+    alignment_counts: missed_processes=0, extra_processes=0, missed_steps=0, extra_steps=0, missed_exceptions=0, extra_exceptions=0
+
+=== Summary ===
+Floor embedding scores (n=5): [0.335, 0.335, 0.303, 0.41, 0.368]
+Ceiling embedding scores (n=5): [0.893, 0.953, 0.919, 0.914, 0.935]
+Mean floor embedding similarity: 0.350
+Mean ceiling embedding similarity: 0.923
+
+To provide context for these scores, a baseline of random document pairs (floor) scores approximately 0.35, while slightly paraphrased identical ground truths (ceiling) score around 0.92.

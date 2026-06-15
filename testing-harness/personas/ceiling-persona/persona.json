@@ -1,0 +1,145 @@
+{
+  "name": "Emily Johnson",
+  "role": "Process Coordinator",
+  "backstory": "Emily has been with the organization for over seven years, specializing in process optimization and coordination. She started her career as an administrative assistant and progressively advanced to her current role due to her keen interest in improving operational efficiency. Emily is known for her meticulous attention to detail and her ability to streamline workflows. Her experience in handling various administrative processes has equipped her with the skills necessary to manage complex operations smoothly.",
+  "processes": [
+    {
+      "process_name": "Student Ticket Handling",
+      "steps": [
+        {
+          "step_name": "Student Opens Ticket",
+          "software_tools_used": ["Sipac"],
+          "time_needed": "15 minutes",
+          "handoff_to": "CRA Team"
+        },
+        {
+          "step_name": "CRA Opens Process in Sipac",
+          "software_tools_used": ["Sipac"],
+          "time_needed": "30 minutes",
+          "handoff_to": "Coordinator"
+        },
+        {
+          "step_name": "Forward Process for Checking Pending Issues",
+          "software_tools_used": ["Sipac"],
+          "time_needed": "2 hours",
+          "handoff_to": "Coordination Team"
+        },
+        {
+          "step_name": "Notify Student About Pending Issues",
+          "software_tools_used": ["Email"],
+          "time_needed": "10 minutes",
+          "handoff_to": "Student"
+        },
+        {
+          "step_name": "Enter in Academic System",
+          "software_tools_used": ["Academic System"],
+          "time_needed": "20 minutes",
+          "handoff_to": "Approval Team"
+        },
+        {
+          "step_name": "Notify Approval",
+          "software_tools_used": ["Email"],
+          "time_needed": "10 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Incorrect ticket information",
+          "impact": "Delays in processing",
+          "recovery": "Request student to resubmit the correct information"
+        }
+      ]
+    },
+    {
+      "process_name": "Complaint Management",
+      "steps": [
+        {
+          "step_name": "New Complaint Received",
+          "software_tools_used": ["Complaint System"],
+          "time_needed": "15 minutes",
+          "handoff_to": "Case Manager"
+        },
+        {
+          "step_name": "Open a New Case",
+          "software_tools_used": ["Case Management Software"],
+          "time_needed": "30 minutes",
+          "handoff_to": "Internal Team"
+        },
+        {
+          "step_name": "Forward Complaint Internally",
+          "software_tools_used": ["Internal Communication Tool"],
+          "time_needed": "20 minutes",
+          "handoff_to": "External Team"
+        },
+        {
+          "step_name": "Receive References",
+          "software_tools_used": ["Reference Database"],
+          "time_needed": "1 hour",
+          "handoff_to": "Verification Team"
+        },
+        {
+          "step_name": "Confirm External Reference",
+          "software_tools_used": ["Verification System"],
+          "time_needed": "45 minutes",
+          "handoff_to": "Record Keeper"
+        },
+        {
+          "step_name": "Inform Complainant",
+          "software_tools_used": ["Email"],
+          "time_needed": "10 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Missing reference documents",
+          "impact": "Verification delays",
+          "recovery": "Contact external sources for missing documents"
+        }
+      ]
+    },
+    {
+      "process_name": "Incident Resolution",
+      "steps": [
+        {
+          "step_name": "Open",
+          "software_tools_used": ["Incident Management System"],
+          "time_needed": "10 minutes",
+          "handoff_to": "Assignment Team"
+        },
+        {
+          "step_name": "Assignment",
+          "software_tools_used": ["Incident Management System"],
+          "time_needed": "15 minutes",
+          "handoff_to": "Resolution Team"
+        },
+        {
+          "step_name": "Operator Update",
+          "software_tools_used": ["Communication Platform"],
+          "time_needed": "30 minutes",
+          "handoff_to": "Quality Assurance"
+        },
+        {
+          "step_name": "Status Change",
+          "software_tools_used": ["Incident Management System"],
+          "time_needed": "10 minutes",
+          "handoff_to": "Closure Team"
+        },
+        {
+          "step_name": "Closed",
+          "software_tools_used": ["Incident Management System"],
+          "time_needed": "5 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Status not updated correctly",
+          "impact": "Miscommunication on incident progress",
+          "recovery": "Review logs and manually update status"
+        }
+      ]
+    }
+  ]
+}

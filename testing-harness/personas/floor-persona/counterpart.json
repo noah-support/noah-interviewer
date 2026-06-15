@@ -1,0 +1,78 @@
+{
+  "name": "Dr. Marina Reef",
+  "role": "Marine Field Station Logistics Manager",
+  "processes": [
+    {
+      "process_name": "Deep-Sea Specimen Collection",
+      "steps": [
+        {
+          "step_name": "Calibrate ROV Sensors",
+          "software_tools_used": ["Nautilus Control Suite"],
+          "time_needed": "45 minutes",
+          "handoff_to": "Dive Operations Lead"
+        },
+        {
+          "step_name": "Deploy Submersible Net",
+          "software_tools_used": ["Winch Controller"],
+          "time_needed": "2 hours",
+          "handoff_to": "Marine Biologist"
+        },
+        {
+          "step_name": "Catalog Specimens On Deck",
+          "software_tools_used": ["Specimen Tracker"],
+          "time_needed": "1 hour",
+          "handoff_to": "Cryo Lab Technician"
+        },
+        {
+          "step_name": "Freeze Samples for Transport",
+          "software_tools_used": ["Cryogenic Storage Unit"],
+          "time_needed": "30 minutes",
+          "handoff_to": "Shipping Coordinator"
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "ROV cable snaps during descent",
+          "impact": "Loss of equipment and missed sampling window",
+          "recovery": "Abort dive and schedule emergency cable replacement"
+        }
+      ]
+    },
+    {
+      "process_name": "Antarctic Supply Resupply",
+      "steps": [
+        {
+          "step_name": "Receive Cargo Manifest",
+          "software_tools_used": ["Polar Logistics Portal"],
+          "time_needed": "20 minutes",
+          "handoff_to": "Customs Officer"
+        },
+        {
+          "step_name": "Inspect Perishable Goods",
+          "software_tools_used": ["Temperature Logger"],
+          "time_needed": "40 minutes",
+          "handoff_to": "Warehouse Team"
+        },
+        {
+          "step_name": "Load Palletized Freight",
+          "software_tools_used": ["Forklift Fleet Manager"],
+          "time_needed": "3 hours",
+          "handoff_to": "Ice Runway Coordinator"
+        },
+        {
+          "step_name": "Dispatch Ski-Equipped Hauler",
+          "software_tools_used": ["GPS Route Planner"],
+          "time_needed": "15 minutes",
+          "handoff_to": null
+        }
+      ],
+      "exceptions": [
+        {
+          "what_goes_wrong": "Blizzard closes ice runway",
+          "impact": "Supply chain delay of several days",
+          "recovery": "Reroute shipment to coastal backup depot"
+        }
+      ]
+    }
+  ]
+}

@@ -10,7 +10,7 @@ from typing import Any, Literal
 
 logger = logging.getLogger("harness.evaluation")
 
-from interviewees.evaluation.defaults import DEFAULT_EVALUATION_MODEL
+from interviewees.evaluation.defaults import DEFAULT_EVALUATION_MODEL, DEFAULT_JUDGE_MODEL
 from interviewees.evaluation.embedding_compare import compare_embeddings, embedding_report_to_dict
 from interviewees.evaluation.run_folder import RunPaths, resolve_run_paths
 from interviewees.evaluation.stage import stage_from_run_folder
@@ -121,6 +121,7 @@ def run_batch_evaluation(
     *,
     personas_root: Path | None = None,
     openai_model: str = DEFAULT_EVALUATION_MODEL,
+    judge_model: str = DEFAULT_JUDGE_MODEL,
     force: bool = False,
     skip_reconstruct: bool = False,
     skip_validate: bool = False,
@@ -134,9 +135,10 @@ def run_batch_evaluation(
         raise FileNotFoundError(f"Personas root not found: {root}")
 
     logger.info(
-        "batch evaluation start root=%s model=%s force=%s skip_reconstruct=%s skip_validate=%s",
+        "batch evaluation start root=%s reconstruct_model=%s judge_model=%s force=%s skip_reconstruct=%s skip_validate=%s",
         root,
         openai_model,
+        judge_model,
         force,
         skip_reconstruct,
         skip_validate,
@@ -196,7 +198,7 @@ def run_batch_evaluation(
                     reconstructed,
                     min_alignment_similarity=min_alignment_similarity,
                 )
-                judge_report = run_llm_judge(truth, reconstructed, model=openai_model)
+                judge_report = run_llm_judge(truth, reconstructed, model=judge_model)
                 emb_dict = embedding_report_to_dict(emb_report)
                 validation = _build_validation_report(
                     folder.name,
@@ -261,6 +263,7 @@ def run_evaluation_from_input(
     input_dir: Path,
     *,
     openai_model: str = DEFAULT_EVALUATION_MODEL,
+    judge_model: str = DEFAULT_JUDGE_MODEL,
     force: bool = False,
     skip_reconstruct: bool = False,
     skip_validate: bool = False,
@@ -293,6 +296,7 @@ def run_evaluation_from_input(
     rows = run_batch_evaluation(
         personas_root=paths.validation_root,
         openai_model=openai_model,
+        judge_model=judge_model,
         force=force,
         skip_reconstruct=skip_reconstruct,
         skip_validate=skip_validate,

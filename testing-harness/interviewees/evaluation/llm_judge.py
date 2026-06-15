@@ -11,6 +11,7 @@ logger = logging.getLogger("harness.evaluation")
 from pydantic import BaseModel, Field, ValidationError
 
 from interviewees.core.llm_json import MAX_JSON_ATTEMPTS, chat_json
+from interviewees.evaluation.defaults import DEFAULT_JUDGE_MODEL
 from interviewees.evaluation.reconstructed_schema import GroundTruthProfile, ReconstructedPersona
 
 JUDGE_DIMENSIONS = (
@@ -47,7 +48,7 @@ def run_llm_judge(
     truth: GroundTruthProfile,
     reconstructed: ReconstructedPersona,
     *,
-    model: str,
+    model: str = DEFAULT_JUDGE_MODEL,
 ) -> JudgeReport:
     system = (
         "You are an expert AI evaluator assessing the performance of an automated interview system. "
@@ -106,7 +107,7 @@ def run_llm_judge(
                 system=system,
                 user=user_msg,
                 model=model,
-                temperature=0.2, # Low temperature is perfect for evaluation consistency
+                temperature=0.2,
             )
             out = JudgeOutput.model_validate(parsed)
             return JudgeReport(
